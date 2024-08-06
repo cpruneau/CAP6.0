@@ -116,6 +116,7 @@ export CAP_BIN_PATH="$CAP_ROOT_PATH/bin/"
 export CAP_LIB_PATH="$CAP_ROOT_PATH/lib/"
 export CAP_GRID_PATH="$CAP_ROOT_PATH/Grid/"
 export CAP_GRID_PATH_WSU="$CAP_ROOT_PATH/Grid/WSU/"
+export CAP_GRID_PATH_ROM="$CAP_ROOT_PATH/Grid/ROM/"
 export CAP_MACROS_PATH="$CAP_SRC_PATH/Macros/"
 export PATH="$CAP_BIN_PATH:$PATH"
 export DYLD_LIBRARY_PATH="$CAP_LIB_PATH:$DYLD_LIBRARY_PATH"
@@ -127,7 +128,7 @@ export CAP_DATA_EXPORT_PATH="$DataOutputPath"
 export CAP_HISTOS_IMPORT_PATH="$HistosInputPath"
 export CAP_HISTOS_EXPORT_PATH="$HistosOutputPath"
 
-echo " "
+echo "========================================================================================"
 echo " Source code  (CAP_SRC_PATH)................................: " $CAP_SRC_PATH
 echo " CAP Database   (CAP_DATABASE_PATH).........................: " $CAP_DATABASE_PATH
 echo " Job configuration files (.ini) (CAP_PROJECTS_PATH).........: " $CAP_PROJECTS_PATH
