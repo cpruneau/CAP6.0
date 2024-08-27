@@ -106,8 +106,8 @@ void SpherocityCalculator::createHistograms()
 {
   if (reportStart(__FUNCTION__)) { /* noops*/ };
   String prefixName = getName(); prefixName += "_";
-  std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
-  std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
+  //std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
+  //std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
 //  for (auto & eventFilter : eventFilters)
 //    {
 //    ;

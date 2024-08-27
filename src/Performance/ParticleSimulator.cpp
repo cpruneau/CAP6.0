@@ -12,6 +12,8 @@
 #include "TRandom.h"
 #include "ParticleSimulator.hpp"
 #include "PrintHelpers.hpp"
+#include "ResolutionFunction.hpp"
+#include "EfficiencyFunction.hpp"
 
 ClassImp(CAP::ParticleSimulator);
 
@@ -24,26 +26,19 @@ HistogramGroup(),
 filterIndex(0),
 useSameSetForAll(true),
 resolutionOption(0),
-efficiencyOption(0),
-biasPtHistogram(),
-rmsPtHistogram(),
-biasEtaHistogram(),
-rmsEtaHistogram(),
-biasPhiHistogram(),
-rmsPhiHistogram(),
-ptFunction(),
-etaFunction(),
-phiFunction()
+efficiencyOption(0)
 {
   //  initialize();
 }
 
 void ParticleSimulator::setDefaultConfiguration()
-{}
+{
+
+}
 
 void ParticleSimulator::initialize()
 {
-  const String & bn  = getName();
+  // const String & bn  = getName();
   const String & ptn = getParentName();
   const String & ppn = getParentPathName();
   useSameSetForAll = configuration.getValueBool(ptn,"useSameSetForAll");
@@ -140,10 +135,10 @@ void ParticleSimulator::initialize()
     printValue("effA1",effA1);
     printValue("effA2",effA2);
     }
-  ptFunction  = new ResolutionFunction(0,biasAinv,biasA0,biasA1,biasA2,rmsAinv,rmsA0,rmsA1,rmsA2);
-  etaFunction = new ResolutionFunction(1,biasAinv,biasA0,biasA1,biasA2,rmsAinv,rmsA0,rmsA1,rmsA2);
-  phiFunction = new ResolutionFunction(0,biasAinv,biasA0,biasA1,biasA2,rmsAinv,rmsA0,rmsA1,rmsA2);
-  efficiencyFunction = new EfficiencyFunction(effPeakAmp,effPeakPt,effPeakRms,effA1,effA2);
+//  ptFunction  = new ResolutionFunction(0,biasAinv,biasA0,biasA1,biasA2,rmsAinv,rmsA0,rmsA1,rmsA2);
+//  etaFunction = new ResolutionFunction(1,biasAinv,biasA0,biasA1,biasA2,rmsAinv,rmsA0,rmsA1,rmsA2);
+//  phiFunction = new ResolutionFunction(0,biasAinv,biasA0,biasA1,biasA2,rmsAinv,rmsA0,rmsA1,rmsA2);
+//  efficiencyFunction = new EfficiencyFunction(effPeakAmp,effPeakPt,effPeakRms,effA1,effA2);
 }
 
 void ParticleSimulator::smearMomentum(const LorentzVector &in, LorentzVector & out)
@@ -161,137 +156,36 @@ void ParticleSimulator::smearMomentum(const LorentzVector &in, LorentzVector & o
 }
 
 void ParticleSimulator::smearMomentum(double pt, double eta, double phi,
-                                                 double &smearedPt, double &smearedEta, double &smearedPhi)
+                                      double &smearedPt, double &smearedEta, double &smearedPhi)
 {
-  double bias;
-  double rms;
-  double zeroRms = 0.0001;
-  
-  smearFromFunction(pt, eta, phi, ptFunction, bias, rms);
-  smearedPt  = gRandom->Gaus(pt+bias,rms);
-  smearFromFunction(pt, eta, phi, etaFunction, bias, rms);
-  smearedEta = gRandom->Gaus(eta+bias,rms);
-  smearFromFunction(pt, eta, phi, phiFunction, bias, rms);
-  smearedPhi = gRandom->Gaus(phi+bias,rms);
+  ptFunction ->smear(pt, eta, phi, smearedPt);
+  etaFunction->smear(pt, eta, phi, smearedEta);
+  phiFunction->smear(pt, eta, phi, smearedPhi);
 }
 
-void ParticleSimulator::smearFromHisto(double pt, double eta, double phi,
-                                                  TH1 * biasHisto, TH1 * rmsHisto,
-                                                  double & bias, double & rms)
-{
-  int bin;
-  if (biasHisto->IsA() == TH1::Class())
-    {
-    bin = biasHisto->FindBin(pt);
-    bias = biasHisto->GetBinContent(bin);
-    }
-  else  if (biasHisto->IsA() == TH2::Class())
-    {
-    bin = biasHisto->FindBin(pt,eta);
-    bias = biasHisto->GetBinContent(bin);
-    }
-  else if (biasHisto->IsA() == TH3::Class())
-    {
-    bin = biasHisto->FindBin(pt,eta,phi);
-    bias = biasHisto->GetBinContent(bin);
-    }
-  if (rmsHisto->IsA() == TH1::Class())
-    {
-    bin = rmsHisto->FindBin(pt);
-    rms = rmsHisto->GetBinContent(bin);
-    }
-  else  if (rmsHisto->IsA() == TH2::Class())
-    {
-    bin = rmsHisto->FindBin(pt,eta);
-    rms = rmsHisto->GetBinContent(bin);
-    }
-  else if (rmsHisto->IsA() == TH3::Class())
-    {
-    bin = rmsHisto->FindBin(pt,eta,phi);
-    rms = rmsHisto->GetBinContent(bin);
-    }
-}
+//  smearedPt  = gRandom->Gaus(pt+bias,rms);
+//  smearFromFunction(pt, eta, phi, etaFunction, bias, rms);
+//  smearedEta = gRandom->Gaus(eta+bias,rms);
+//  smearFromFunction(pt, eta, phi, phiFunction, bias, rms);
+//  smearedPhi = gRandom->Gaus(phi+bias,rms);
 
-void ParticleSimulator::smearFromFunction(double pt, double eta, double phi,
-                                                     ResolutionFunction* f,
-                                                     double & bias, double & rms)
-{
-  bias = f->getBias(pt,eta,phi);
-  rms  = f->getRms(pt,eta,phi);
-}
+
 
 
 bool ParticleSimulator::accept(const LorentzVector& momentum)
 {
-  bool accepting = false;
   double pt  = momentum.Pt();
   double eta = momentum.Eta();
   double phi = momentum.Phi();
-  switch (efficiencyOption)
-    {
-      default:
-      case 0:
-      accepting = true;
-      break;
-      case 1:
-      accepting = acceptFromFunction(pt, eta, phi);
-      break;
-      case 2:
-      accepting = acceptFromHisto(pt, eta, phi);
-      break;
-    }
-  return accepting;
+  return accept(pt, eta, phi);
 }
 
 
-bool ParticleSimulator::accept(double pt, double eta, double phi)
+bool ParticleSimulator::accept(double pt, 
+                               double eta,
+                               double phi)
 {
-  bool accepting = false;
-  switch (efficiencyOption)
-    {
-      default:
-      case 0:
-      accepting = true;
-      break;
-      case 1:
-      accepting = acceptFromFunction(pt, eta, phi);
-      break;
-      case 2:
-      accepting = acceptFromHisto(pt, eta, phi);
-      break;
-    }
-  return accepting;
-}
-
-bool ParticleSimulator::acceptFromHisto(double pt, double eta, double phi)
-{
-  int bin;
-  double efficiency = 1.0;
-  bool   accepting  = false;
-  if (efficienyHistogram->IsA() == TH1::Class())
-    {
-    bin = efficienyHistogram->FindBin(pt);
-    efficiency = efficienyHistogram->GetBinContent(bin);
-    }
-  else  if (efficienyHistogram->IsA() == TH2::Class())
-    {
-    bin = efficienyHistogram->FindBin(pt,eta);
-    efficiency = efficienyHistogram->GetBinContent(bin);
-    }
-  else if (efficienyHistogram->IsA() == TH3::Class())
-    {
-    bin = efficienyHistogram->FindBin(pt,eta,phi);
-    efficiency = efficienyHistogram->GetBinContent(bin);
-    }
-  if (gRandom->Rndm()<efficiency) accepting = true;
-  return accepting;
-}
-
-bool ParticleSimulator::acceptFromFunction(double pt, double eta, double phi)
-{
-  bool   accepting  = false;
-  double efficiency = efficiencyFunction->getEfficiency(pt,eta,phi);
-  if (gRandom->Rndm()<efficiency) accepting = true;
+  bool accepting = true;
   return accepting;
 }
 

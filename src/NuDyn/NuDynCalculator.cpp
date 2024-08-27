@@ -138,7 +138,7 @@ void NuDynCalculator::execute()
 {
   if (reportStart(__FUNCTION__))   { /* no ops */ }
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
-  std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
+  //std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
   for (unsigned int iEventFilter=0; iEventFilter<eventFilters.size(); iEventFilter++ )
     {
       NuDynHistos & baseHistos    = (NuDynHistos &) getGroupAt(0,iEventFilter);

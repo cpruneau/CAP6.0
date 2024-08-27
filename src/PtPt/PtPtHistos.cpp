@@ -186,7 +186,7 @@ void PtPtHistos::fill(double mult,
                       vector<double> & q4Sum)
 {
   unsigned int nFilters = counts.size();
-  unsigned int index = 0;
+  ////unsigned int index = 0;
   for (unsigned int i1=0; i1<nFilters; i1++)
     {
     double n1 = counts[i1];

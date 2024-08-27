@@ -60,7 +60,6 @@ bool EventFilter::accept(const Event & event)
   if (getNConditions()<1) return true;
   bool accepting = false;
 
-  unsigned int k=0;
   for (auto & condition : conditions)
     {
     const String & filterType    = condition->conditionType;
@@ -81,9 +80,6 @@ bool EventFilter::accept(const Event & event)
       else if (filterSubType.EqualTo("PTSUM"))
         accepting = condition->accept( event.getValueDouble(keyword+"PTSUM") );
       }
-//    printValue("EventFilter::accept() condition Index",k);
-//    printValue("EventFilter::accept() accepting",accepting);
-
     if (!accepting)  return false;
     }
     return true;

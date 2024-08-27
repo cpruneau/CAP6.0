@@ -3069,7 +3069,6 @@ void calculateF1(TH1* h_f1_1, TH1* h_F1_1)
 {
   if (!ptrExist(__FUNCTION__,h_f1_1, h_F1_1)) throw NullPointerException(__FUNCTION__);
   double f1_1, ef1_1;
-  double F1_1, eF1_1;
   int nBins = h_f1_1->GetNbinsX();
   for (int iBin = 1; iBin <=nBins; iBin++)
     {

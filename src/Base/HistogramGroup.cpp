@@ -191,7 +191,7 @@ void HistogramGroup::divideHistogram(const TH1 * h1,
 void HistogramGroup::differenceHistogram(const TH1 * h1,
                                          const TH1 * h2,
                                          TH1 * diff,
-                                         bool correlatedUncertainties)
+                                         bool correlatedUncertainties __attribute__(( unused)))
 {
   if (!sameDimensions(__FUNCTION__,h1,h2,diff)) throw IncompatibleHistogramException(__FUNCTION__);
   diff->Add(h1,h2,1.0,-1.0);
@@ -283,7 +283,7 @@ void HistogramGroup::divideGroup(const HistogramGroup & g1,
 
 void HistogramGroup::differenceGroup(const HistogramGroup & g1,
                                      const HistogramGroup & ref,
-                                     bool correlatedUncertainties)
+                                     bool correlatedUncertainties __attribute__((unused)) )
 {
   if (!sameSizeAs(g1)) throw IncompatibleGroupException(__FUNCTION__);
   for (unsigned int k=0; k<histograms.size(); k++)

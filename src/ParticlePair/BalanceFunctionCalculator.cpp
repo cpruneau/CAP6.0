@@ -236,7 +236,8 @@ TH2* BalanceFunctionCalculator::calculate_BalFct(const String & histoBaseName,
   double wx = obs->GetXaxis()->GetBinWidth(1);
   //double wy = obs->GetYaxis()->GetBinWidth(1);
   obs->Scale(1.0/wx); // make this a function of delta y
-  //double rho1Integral = rho1_2->Integral();
+  double rho1Integral = rho1_2->Integral();
+  printValue("rho1Integral",rho1Integral);
   //obs->Scale(1.0/rho1Integral);
   hGroup->push_back(obs);
 

@@ -160,8 +160,8 @@ void SpherocityAnalyzer::execute()
     {
     if (!accepted) continue;
     String evfName = eventFilters[iEventFilter]->getName();
-    unsigned int  baseSingle   = iEventFilter*nParticleFilters;
-     s0Filtered.assign(nParticleFilters,0.0);
+    //unsigned int  baseSingle = iEventFilter*nParticleFilters;
+    s0Filtered.assign(nParticleFilters,0.0);
     s1Filtered.assign(nParticleFilters,0.0);
     for (unsigned int iParticleFilter=0; iParticleFilter<nParticleFilters; iParticleFilter++ )
       {

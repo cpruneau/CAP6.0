@@ -1,8 +1,8 @@
 ################################################################################################
 #
-# CMakeLists.txt for CAP package.
+# CMakeLists.txt for CAP package. Versoin 6.0
 #
-# Creates  libraries with dictionary and various executables
+# Creates  libraries with dictionary
 #
 ################################################################################################
 
@@ -22,11 +22,11 @@ endif()
 # Project CAP
 ################################################################################################
 set(CMAKE_CXX_STANDARD 14)
-#set(CMAKE_CXX_STANDARD 17)
+####set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-# configure_file(TutorialConfig.h.in TutorialConfig.h)
-set(CAP_ROOT "${CAP_SRC}")
-set(PYTHIA8_INCLUDE "$ENV{PYTHIA8_INCLUDE_DIR}")
+set(CAP_ROOT_PATH "$ENV{CAP_ROOT_PATH}")
+#####set(CAP_PYTHIA_LIB_PATH "$ENV{PYTHIA8_LIB_PATH}")
+####set(CAP_PYTHIA_INCLUDE_PATH "$ENV{PYTHIA8_INCLUDE_PATH}")
 
 
 ################################################################################################
@@ -40,25 +40,18 @@ list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
 #---Locate the ROOT package and defines a number of variables (e.g. ROOT_INCLUDE_DIRS)
 ################################################################################################
 find_package(ROOT REQUIRED COMPONENTS EG MathCore MathMore RIO Hist Tree Net )
-find_library(PYTHIA8_LIB pythia8 PATHS $ENV{PYTHIA8}/lib)
-#find_library(EGPYTHIA8 EGPythia8)
-
+find_library(PYTHIA8_LIB pythia8 PATHS $ENV{PYTHIA8_LIB_PATH})
 
 ################################################################################################
 # Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
 ################################################################################################
 include(${ROOT_USE_FILE})
-include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS} "Base" "Math" "Xml" "ParticleDb" "Particles"  "SubSample"  "CAPPythia"  "Global"  "Spherocity" "ParticleSingle" "ParticlePair" "NuDyn" "PtPt" "Performance" "Plotting" "Therminator"  "Exec" "$ENV{ROOTSYS}/include" "$ENV{PYTHIA8}/include" "$ENV{PYTHIA8}/include/Pythia8")
-####include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS} "Base" "Math" "Xml" "ParticleDb" "Particles"  "BasicGen" "SubSample"   "Ampt"  "CAPPythia"   "Global"  "Spherocity" "ParticleSingle" "ParticlePair" "NuDyn" "Plotting" "Therminator"  "Exec" "$ENV{ROOTSYS}/include" "$ENV{PYTHIA8}/include" "$ENV{PYTHIA8}/include/Pythia8")
-
+include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS} "Base" "Math" "Xml" "ParticleDb" "Particles"  "SubSample"  "CAPPythia"  "Global"  "Spherocity" "ParticleSingle" "ParticlePair" "NuDyn" "PtPt"  "Plotting" "Therminator"  "Performance" "Exec" "$ENV{ROOTSYS}/include" "$ENV{PYTHIA8_INCLUDE_PATH}" "$ENV{PYTHIA8_INCLUDE_PATH}/Pythia8/" )
 add_definitions(${ROOT_CXX_FLAGS})
 add_compile_options(-Wall -Wextra -pedantic)
 add_library(EG SHARED IMPORTED)
-#add_library(EGPYTHIA8 SHARED IMPORTED)
 add_library(PYTHIA8_LIB SHARED IMPORTED)
-
 set_target_properties(PYTHIA8_LIB PROPERTIES IMPORTED_LOCATION ${PYTHIA8_LIB})
-#set_target_properties(EGPYTHIA8 PROPERTIES IMPORTED_LOCATION ${EGPYTHIA8})
 
 add_subdirectory(Base)
 add_subdirectory(Math)
@@ -66,9 +59,7 @@ add_subdirectory(Xml)
 add_subdirectory(ParticleDb)
 add_subdirectory(Particles)
 add_subdirectory(Therminator)
-#add_subdirectory(BasicGen)
 add_subdirectory(SubSample)
-#add_subdirectory(ThermalGas)
 add_subdirectory(CAPPythia)
 add_subdirectory(Global)
 add_subdirectory(Spherocity)
@@ -77,13 +68,15 @@ add_subdirectory(ParticlePair)
 add_subdirectory(NuDyn)
 add_subdirectory(PtPt)
 add_subdirectory(Performance)
+#add_subdirectory(BasicGen)
+#add_subdirectory(ThermalGas)
 #add_subdirectory(CollGeom)
 #add_subdirectory(Epos)
 #add_subdirectory(Urqmd)
 #add_subdirectory(Ampt)
 #add_subdirectory(Hijing)
 #add_subdirectory(Herwig)
-add_subdirectory(Plotting)
-add_subdirectory(Exec)
 #add_subdirectory(Blastwave)
 #add_subdirectory(Identity)
+add_subdirectory(Plotting)
+add_subdirectory(Exec)

@@ -57,14 +57,14 @@ void EnvironmentVariables::initialize()
 
 void EnvironmentVariables::print(std::ostream & os, int style, int size) const
 {
-  printValue("CAP_DATABASE_PATH",      variables.getValueString("CAP_DATABASE_PATH"));
-  printValue("CAP_PROJECTS_PATH",      variables.getValueString("CAP_PROJECTS_PATH"));
-  printValue("CAP_DATA_IMPORT_PATH",   variables.getValueString("CAP_DATA_IMPORT_PATH"));
-  printValue("CAP_DATA_EXPORT_PATH",   variables.getValueString("CAP_DATA_EXPORT_PATH"));
-  printValue("CAP_HISTOS_IMPORT_PATH", variables.getValueString("CAP_HISTOS_IMPORT_PATH"));
-  printValue("CAP_HISTOS_EXPORT_PATH", variables.getValueString("CAP_HISTOS_EXPORT_PATH"));
-  printValue("CAP_CALIB_IMPORT_PATH",  variables.getValueString("CAP_CALIB_IMPORT_PATH"));
-  printValue("CAP_CALIB_EXPORT_PATH",  variables.getValueString("CAP_CALIB_EXPORT_PATH"));
+  printValue("CAP_DATABASE_PATH",      variables.getValueString("CAP_DATABASE_PATH"),os,style,size);
+  printValue("CAP_PROJECTS_PATH",      variables.getValueString("CAP_PROJECTS_PATH"),os,style,size);
+  printValue("CAP_DATA_IMPORT_PATH",   variables.getValueString("CAP_DATA_IMPORT_PATH"),os,style,size);
+  printValue("CAP_DATA_EXPORT_PATH",   variables.getValueString("CAP_DATA_EXPORT_PATH"),os,style,size);
+  printValue("CAP_HISTOS_IMPORT_PATH", variables.getValueString("CAP_HISTOS_IMPORT_PATH"),os,style,size);
+  printValue("CAP_HISTOS_EXPORT_PATH", variables.getValueString("CAP_HISTOS_EXPORT_PATH"),os,style,size);
+  printValue("CAP_CALIB_IMPORT_PATH",  variables.getValueString("CAP_CALIB_IMPORT_PATH"),os,style,size);
+  printValue("CAP_CALIB_EXPORT_PATH",  variables.getValueString("CAP_CALIB_EXPORT_PATH"),os,style,size);
 } // namespace CAP
 
 void  EnvironmentVariables::addEnvVariable(const char* aKeyword, const char* aValue)

@@ -81,7 +81,7 @@ void FileIterator::execute()
 {
   if (reportStart(__FUNCTION__)) {  /* no ops */ };
   start();
-  TaskAccountant:increment();
+  TaskAccountant::increment();
   VectorString  importPathNames;
   VectorString  exportPathNames;
   String importPath = getHistoImportPath();
