@@ -46,7 +46,7 @@ void ClosureIterator::execute()
   String appendedString        = String("_Closure");
   String histogramsImportPath  = getValueString("HistogramsImportPath");
   String histogramsExportPath  = getValueString("HistogramsExportPath");
-  bool histosForceRewrite      = getValueBool(  "HistogramsForceRewrite");
+  bool histogramForceRewrite      = getValueBool(  "HistogramsForceRewrite");
   int selectedMethod           = getValueInt(   "SelectedMethod");
 
   unsigned int nSubTasks = subTasks.size();
@@ -89,7 +89,7 @@ void ClosureIterator::execute()
       closureConfig.addProperty("HistogramsImportPath",   histogramsImportPath);
       closureConfig.addProperty("HistogramsExportPath",   histogramsExportPath);
       closureConfig.addProperty("AppendedString",         appendedString);
-      closureConfig.addProperty("HistogramsForceRewrite", histosForceRewrite);
+      closureConfig.addProperty("HistogramsForceRewrite", histogramForceRewrite);
       closureConfig.addProperty("SelectedMethod",         selectedMethod);
       closureConfig.addProperty("HistoGeneratorFileName", histoGeneratorFileName);
       closureConfig.addProperty("HistoDetectorFileName",  histoDetectorFileName);

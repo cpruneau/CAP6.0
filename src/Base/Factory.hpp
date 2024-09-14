@@ -69,6 +69,7 @@ protected:
   void reset()
   {
   for (auto & object : objects) object->reset();
+  last = 0;
   }
 
   void clear()

@@ -13,6 +13,7 @@
 #include "RootHelpers.hpp"
 #include "PrintHelpers.hpp"
 #include "Exceptions.hpp"
+#include "TParameter.h"
 
 ClassImp(CAP::TaskAccountant);
 
@@ -79,9 +80,37 @@ void TaskAccountant::exportNEexecutedTask(TFile & outputFile)
 long TaskAccountant::importNEexecutedTask(TFile & inputFile)
 {
   String parameterName;
-  parameterName  = "nTaskExecuted";
-  nTaskExecuted   = importParameter(inputFile,parameterName);
-  return nTaskExecuted;
+  int nExec = 0;
+  try
+  {
+  parameterName   = "taskExecuted";
+  printValue("Seeking",parameterName);
+  TObject * object = inputFile.Get("taskExecuted");
+  std::cout << "object:" << object << std::endl;
+  TParameter<Long64_t> *par = (TParameter<Long64_t> *) object;
+  // TParameter<Long64_t> *par = (TParameter<Long64_t> *) inputFile.Get("taskExecuted");
+  nExec = par->GetVal();
+  //nExec   = importParameter(inputFile,parameterName);
+  printValue("taskExecuted",nExec);
+
+  }
+  catch (...)
+  {
+  try
+    {
+    printString("Seeking nTaskExecuted");
+    parameterName   = "nTaskExecuted";
+    nExec   = importParameter(inputFile,parameterName);
+    printValue("nTaskExecuted",nExec);
+    }
+  catch (...)
+    {
+    throw TaskException("Parameter name 'nTaskExecuted' or 'taskExecuted' not found in input file",__FUNCTION__);
+    }
+  }
+  nTaskExecuted += nExec;
+  printString("Completed");
+  return nExec;
 }
 
 

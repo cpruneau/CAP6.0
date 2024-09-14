@@ -19,10 +19,13 @@
 #include "NamedObject.hpp"
 #include "MessageLogger.hpp"
 #include "Exceptions.hpp"
-#include "Task.hpp"
+
 
 namespace CAP
 {
+
+class Task;
+
 class HistogramGroup
 :
 public NamedObject,
@@ -47,7 +50,7 @@ public:
   virtual void createHistograms();
   virtual void importHistograms(TFile & file);
   virtual void exportHistograms(TFile & file);
-  virtual void exportHistograms(ofstream & outputFile);
+  virtual void exportHistograms(std::ofstream & outputFile);
   virtual void scaleHistograms(double a);
 
   void setOwnership(bool _own);

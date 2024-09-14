@@ -49,10 +49,10 @@ void DerivedHistoIterator::configure()
     printCR();
     printValue("Configuring task",getName());
     }
-  histosForceRewrite  = getValueBool(  "HistogramsForceRewrite");
-  histosImportPath    = getValueString("HistogramsImportPath");
-  histosExportPath    = getValueString("HistogramsExportPath");
-  histosExportFile    = getName();
+  histogramForceRewrite  = getValueBool(  "HistogramsForceRewrite");
+  histogramImportPath    = getValueString("HistogramsImportPath");
+  histogramExportPath    = getValueString("HistogramsExportPath");
+  histogramExportFile    = getName();
   maximumDepth        = 1; //getValueInt(   "MaximumDepth");
   defaultGroupSize    = 50; //getValueInt(   "DefaultGroupSize");
 
@@ -60,9 +60,9 @@ void DerivedHistoIterator::configure()
     {
     printCR();
     printLine();
-    printValue("HistogramsImportPath",histosImportPath);
-    printValue("HistogramsExportPath",histosExportPath);
-    printValue("HistogramsExportFile",histosExportFile);
+    printValue("HistogramsImportPath",histogramImportPath);
+    printValue("HistogramsExportPath",histogramExportPath);
+    printValue("HistogramsExportFile",histogramExportFile);
     printValue("DefaultGroupSize",    defaultGroupSize);
     printValue("MaximumDepth",        maximumDepth);
     printLine();
@@ -101,8 +101,8 @@ void DerivedHistoIterator::execute()
       printCR();
       printLine();
       printValue("SubTask Name",analyzerName);
-      printValue("HistogramsImportPath",histosImportPath);
-      printValue("HistogramsExportPath",histosExportPath);
+      printValue("HistogramsImportPath",histogramImportPath);
+      printValue("HistogramsExportPath",histogramExportPath);
       for (auto & pattern : includePatterns) printValue("Include Pattern",pattern);
       for (auto & pattern : excludePatterns) printValue("Exclude Pattern",pattern);
       printLine();
@@ -110,22 +110,22 @@ void DerivedHistoIterator::execute()
     bool prependPath = true;
     bool verbose = false;
     int  maximumDepth = 2;
-    VectorString  allFilesToProcess = listFilesInDir(histosImportPath,includePatterns,excludePatterns, prependPath, verbose, maximumDepth,0);
+    VectorString  allFilesToProcess = listFilesInDir(histogramImportPath,includePatterns,excludePatterns, prependPath, verbose, maximumDepth,0);
     if (allFilesToProcess.size()<1) throw TaskException("No files to analyze","DerivedHistoIterator::execute()");
-    for (auto & histosImportFile : allFilesToProcess)
+    for (auto & histogramImportFile : allFilesToProcess)
       {
-      histosExportFile  = removeRootExtension(histosImportFile);
-      histosExportFile += "_Derived";
+      histogramExportFile  = removeRootExtension(histogramImportFile);
+      histogramExportFile += "_Derived";
       if (reportDebug(__FUNCTION__))
         {
         printCR();
         printLine();
-        printValue("Input file",histosImportFile);
-        printValue("Output file",histosExportFile);
+        printValue("Input file",histogramImportFile);
+        printValue("Output file",histogramExportFile);
         }
       String nullString = "";
       subTask->setHistosImportPath(nullString);
-      subTask->setHistosImportFile(histosImportFile);
+      subTask->setHistosImportFile(histogramImportFile);
       subTask->setHistosForceRewrite(true);
       if (reportDebug(__FUNCTION__))
         {

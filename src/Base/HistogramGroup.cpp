@@ -21,8 +21,7 @@
 #include "MathBasicFunctions.hpp"
 #include "PrintHelpers.hpp"
 #include "RootHelpers.hpp"
-using std::cout;
-using std::endl;
+#include "Task.hpp"
 
 ClassImp(CAP::HistogramGroup);
 

@@ -10,16 +10,20 @@
 
 namespace CAP
 {
-TFile * openRootFile(const String & path,const String & name,const String & ioOption);
+TFile * openRootFile(const String & path, const String & name,const String & ioOption);
 TFile * openRootFile(const String & name, const String & ioOption);
-TFile * openOldRootFile(const String & name);
-TFile * openNewRootFile(const String & name);
-TFile * openRecreateRootFile(const String & name);
 TFile * openOldRootFile(const String & path, const String & name);
+TFile * openOldRootFile(const String & name);
 TFile * openNewRootFile(const String & path, const String & name);
+TFile * openNewRootFile(const String & name);
 TFile * openRecreateRootFile(const String & path, const String & name);
+TFile * openRecreateRootFile(const String & name);
 std::vector<TFile*> openRootFiles(std::vector<String> & names, const String   & ioOption);
 std::vector<TFile*> openRootFiles(const String & path,std::vector<String> & names,const String   & ioOption);
+
+std::vector<String> listDirsIn(const String & pathname,
+                                  bool verbose=true);
+
 
 std::vector<String> listFilesInDir(const String & pathname,
                                    const String & ext,

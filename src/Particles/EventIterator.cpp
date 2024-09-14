@@ -154,32 +154,32 @@ void EventIterator::partial()
 void EventIterator::execute()
 {
   //taskHistosImportPath
-//  String histosImportPath = getValueString("HistogramsImportPath");
-//  String histosExportPath = getValueString("HistogramsExportPath");
-//  if (histosImportPath.EqualTo("DEFAULT"))
+//  String histogramImportPath = getValueString("HistogramsImportPath");
+//  String histogramExportPath = getValueString("HistogramsExportPath");
+//  if (histogramImportPath.EqualTo("DEFAULT"))
 //    {
-//    histosImportPath = taskHistosImportPath;
+//    histogramImportPath = taskHistosImportPath;
 //    }
-//  else if (!histosImportPath.BeginsWith("/"))
-//    {
-//    String temp = taskHistosImportPath;
-//    temp += "/";
-//    temp += histosImportPath;
-//    histosImportPath = temp;
-//    }
-//  if (histosExportPath.EqualTo("DEFAULT"))
-//    {
-//    histosExportPath = taskHistosExportPath;
-//    }
-//  else if (!histosExportPath.BeginsWith("/"))
+//  else if (!histogramImportPath.BeginsWith("/"))
 //    {
 //    String temp = taskHistosImportPath;
 //    temp += "/";
-//    temp += histosExportPath;
-//    histosExportPath = temp;
+//    temp += histogramImportPath;
+//    histogramImportPath = temp;
 //    }
-//  addProperty("HistogramsImportPath",histosImportPath);
-//  addProperty("HistogramsExportFile",histosExportPath);
+//  if (histogramExportPath.EqualTo("DEFAULT"))
+//    {
+//    histogramExportPath = taskHistosExportPath;
+//    }
+//  else if (!histogramExportPath.BeginsWith("/"))
+//    {
+//    String temp = taskHistosImportPath;
+//    temp += "/";
+//    temp += histogramExportPath;
+//    histogramExportPath = temp;
+//    }
+//  addProperty("HistogramsImportPath",histogramImportPath);
+//  addProperty("HistogramsExportFile",histogramExportPath);
 
 //  printCR();
 //  printLine();
@@ -228,12 +228,12 @@ void EventIterator::execute()
 
     // in local mode, with partial saves on
     //
-//    if (histosExportPartial  && !isGrid)
+//    if (histogramExportPartial  && !isGrid)
 //      {
 //      if (iEvent%(nBunches*nSubbunchesPerBunch*nEventsPerSubbunch)==0)
 //        {
 //        // subbunch is completed
-//        //partial(histosExportPath);
+//        //partial(histogramExportPath);
 //        partial();
 //        iSubBunch++;
 //        if (iSubBunch==nSubbunchesPerBunch)

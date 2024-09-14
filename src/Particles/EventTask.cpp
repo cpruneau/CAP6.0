@@ -147,15 +147,15 @@ void EventTask::finalize()
     printCR();
     printLine();
     printValue("Histos Export Path",histoPath);
-    printValue("Histos Export File",histosExportFile);
+    printValue("Histos Export File",histogramExportFile);
     printLine();
     }
   if (histoPath.Length()>2) createDirectory(histoPath);
-  if (histosExportFile.Length()<5)
-    throw FileException(histosExportFile,"File name too short. Must have 5 character or more...",__FUNCTION__);
+  if (histogramExportFile.Length()<5)
+    throw FileException(histogramExportFile,"File name too short. Must have 5 character or more...",__FUNCTION__);
   String option = "NEW";
-  if (histosForceRewrite) option = "RECREATE";
-  TFile & rootOutputFile = *openRootFile(histoPath,histosExportFile,option);
+  if (histogramForceRewrite) option = "RECREATE";
+  TFile & rootOutputFile = *openRootFile(histoPath,histogramExportFile,option);
   exportNEexecutedTask(rootOutputFile);
   exportEventsAccepted(rootOutputFile);
   exportHistograms(rootOutputFile);

@@ -12,10 +12,15 @@
 namespace CAP
 {
 
+//!
+//!Open Root file at the given path and with the given file name
+//!ioOption : OLD, NEW, RECREATE
+//
 TFile * openRootFile(const String & path,
                      const String & name,
                      const String & ioOption)
 {
+  verbose = true;
   String fileName;
   if (name.BeginsWith("/"))
     fileName = name;
@@ -69,24 +74,24 @@ TFile * openOldRootFile(const String & name)
   return openRootFile(name,"OLD");
 }
 
-TFile * openNewRootFile(const String & name)
-{
-  return openRootFile(name,"NEW");
-}
-
-TFile * openRecreateRootFile(const String & name)
-{
-  return openRootFile(name,"RECREATE");
-}
-
 TFile * openOldRootFile(const String & path, const String & name)
 {
   return openRootFile(path,name,"OLD");
 }
 
+TFile * openNewRootFile(const String & name)
+{
+  return openRootFile(name,"NEW");
+}
+
 TFile * openNewRootFile(const String & path, const String & name)
 {
   return openRootFile(path,name,"NEW");
+}
+
+TFile * openRecreateRootFile(const String & name)
+{
+  return openRootFile(name,"RECREATE");
 }
 
 TFile * openRecreateRootFile(const String & path, const String & name)
@@ -136,6 +141,31 @@ std::vector<TFile*> openRootFiles(const String & path,
     }
   if (verbose)  std::cout << "openRootInputFiles(...) Completed successfully" << std::endl;
   return files;
+}
+
+std::vector<TString> listDirsIn(const TString & pathname,
+                                bool verbose)
+{
+  TString directoryName = pathname;
+  std::vector<TString>  subdirectories;
+  if (!directoryName.EndsWith("/")) directoryName += "/";
+  if (verbose) cout << "==================== Searching folders ==================== " << endl;
+  TSystemDirectory topDirectory(directoryName, directoryName);
+  TList *files = topDirectory.GetListOfFiles();
+  if (!files)
+    {
+    cout << " files is a null pointer" << endl;
+    return subdirectories;
+    }
+  TSystemFile *file;
+  TString fname;
+  TIter next(files);
+  while ((file=(TSystemFile*)next()) )
+    {
+    fname = file->GetName();
+    if (file->IsDirectory()   && !fname.BeginsWith(".")  ) subdirectories.push_back(fname);
+    }
+  return subdirectories;
 }
 
 
@@ -297,7 +327,12 @@ void exportParameter(TFile & outputFile, const String & parameterName, long valu
 
 long importParameter(TFile & inputFile, const String & parameterName)
 {
-  TParameter<Long64_t> *par = (TParameter<Long64_t> *) inputFile.Get(parameterName);
+  verbose = 1;
+  printString("--1--");
+  printValue("Seeking Property",parameterName);
+  TParameter<Long64_t> *par = (TParameter<Long64_t> *) inputFile.Get("taskExecuted");
+//  TParameter<Long64_t> *par = (TParameter<Long64_t> *) inputFile.Get(parameterName);
+  printString("--2--");
   if (!par)
     {
     if (verbose)
@@ -307,6 +342,8 @@ long importParameter(TFile & inputFile, const String & parameterName)
       }
     throw TaskException("Property not found",__FUNCTION__);
     }
+  printString("--3--");
+
   double value = par->GetVal();
   delete par;
   if (verbose)
@@ -314,6 +351,8 @@ long importParameter(TFile & inputFile, const String & parameterName)
     printCR();
     printValue(parameterName,value);
     }
+  printString("--4--");
+
   return value;
 }
 

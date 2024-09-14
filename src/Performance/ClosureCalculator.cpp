@@ -45,10 +45,10 @@ void ClosureCalculator::execute()
     printCR();
     printLine();
     printString("Starting closure test calculation");
-    printValue("HistoInputPath",histosImportPath);
+    printValue("HistoInputPath",histogramImportPath);
     printValue("HistoGeneratorFileName",histosGeneratorFileName);
     printValue("HistoDetectorFileName",histosDetectorFileName);
-    printValue("HistogramsExportPath",histosExportPath);
+    printValue("HistogramsExportPath",histogramExportPath);
     printValue("HistogramsClosureFileName",histosClosureFileName);
     switch (selectedMethod)
       {
@@ -58,7 +58,7 @@ void ClosureCalculator::execute()
       }
     }
   String option = "NEW";
-  if (histosForceRewrite) option = "RECREATE";
+  if (histogramForceRewrite) option = "RECREATE";
   TFile & generatorFile = *openRootFile("", histosGeneratorFileName, "READ");
   TFile & detectorFile  = *openRootFile("", histosDetectorFileName,  "READ");
   TFile & closureFile   = *openRootFile("", histosClosureFileName,option);

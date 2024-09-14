@@ -424,11 +424,11 @@ void BalanceFunctionCalculator::configure()
   printString("BalanceFunctionCalculator::configure()");
   exit(1);
 
-  histosImportPath    = getValueString("HistogramsImportPath");
-  histosImportFile    = getValueString("HistogramsImportFile");
-  histosExportPath    = getValueString("HistogramsExportPath");
-  histosExportFile    = getValueString("HistogramsExportFile");
-  histosForceRewrite  = getValueBool(  "HistogramsForceRewrite");
+  histogramImportPath    = getValueString("HistogramsImportPath");
+  histogramImportFile    = getValueString("HistogramsImportFile");
+  histogramExportPath    = getValueString("HistogramsExportPath");
+  histogramExportFile    = getValueString("HistogramsExportFile");
+  histogramForceRewrite  = getValueBool(  "HistogramsForceRewrite");
   appendedString      = getValueString("AppendedString");
   calculateCI         = getValueBool("calculateCI" );
   calculateCD         = getValueBool("calculateCD" );
@@ -439,11 +439,11 @@ void BalanceFunctionCalculator::configure()
     {
     printCR();
     printValue("Task name",             getName());
-    printValue("HistogramsImportPath",  histosImportPath);
-    printValue("HistogramsImportFile",  histosImportFile);
-    printValue("HistogramsExportPath",  histosExportPath);
-    printValue("HistogramsExportFile",  histosExportFile);
-    printValue("HistogramsForceRewrite",histosForceRewrite);
+    printValue("HistogramsImportPath",  histogramImportPath);
+    printValue("HistogramsImportFile",  histogramImportFile);
+    printValue("HistogramsExportPath",  histogramExportPath);
+    printValue("HistogramsExportFile",  histogramExportFile);
+    printValue("HistogramsForceRewrite",histogramForceRewrite);
     printValue("AppendedString",        appendedString);
     printValue("calculateCI",           calculateCI);
     printValue("calculateCD",           calculateCD);
@@ -465,11 +465,11 @@ void BalanceFunctionCalculator::initialize()
 void BalanceFunctionCalculator::execute()
 {
   if (reportStart(__FUNCTION__)) {/* no ops */}
-  if (histosImportFile.Contains("DEFAULT") ||
-      histosImportFile.Contains("none") ||
-      histosImportFile.Contains("null") ||
-      histosImportFile.Contains("nil") ||
-      histosImportFile.IsNull() )
+  if (histogramImportFile.Contains("DEFAULT") ||
+      histogramImportFile.Contains("none") ||
+      histogramImportFile.Contains("null") ||
+      histogramImportFile.Contains("nil") ||
+      histogramImportFile.IsNull() )
     {
     if (reportInfo(__FUNCTION__))
       {
@@ -484,7 +484,7 @@ void BalanceFunctionCalculator::execute()
     bool prependPath = true;
     bool verbose     = true;
     int  maximumDepth = 2;
-    allFilesToAnalyze = listFilesInDir(histosImportPath,includePatterns,excludePatterns,
+    allFilesToAnalyze = listFilesInDir(histogramImportPath,includePatterns,excludePatterns,
                                        prependPath, verbose, maximumDepth,0);
     }
   else
@@ -493,21 +493,21 @@ void BalanceFunctionCalculator::execute()
       {
       printLine();
       printString("Using a fixed file!");
-      printValue("HistogramsImportPath",histosImportPath);
-      printValue("HistogramsImportFile",histosImportFile);
+      printValue("HistogramsImportPath",histogramImportPath);
+      printValue("HistogramsImportFile",histogramImportFile);
       }
-    allFilesToAnalyze.push_back(histosImportPath+histosImportFile);
+    allFilesToAnalyze.push_back(histogramImportPath+histogramImportFile);
     }
   int nFilesToAnalyze = allFilesToAnalyze.size();
   if (reportInfo(__FUNCTION__))
     {
     printCR();
     printValue("Task name",             getName());
-    printValue("HistogramsImportPath",  histosImportPath);
-    printValue("HistogramsImportFile",  histosImportFile);
-    printValue("HistogramsExportPath",  histosExportPath);
-    printValue("HistogramsExportFile",  histosExportFile);
-    printValue("HistogramsForceRewrite",histosForceRewrite);
+    printValue("HistogramsImportPath",  histogramImportPath);
+    printValue("HistogramsImportFile",  histogramImportFile);
+    printValue("HistogramsExportPath",  histogramExportPath);
+    printValue("HistogramsExportFile",  histogramExportFile);
+    printValue("HistogramsForceRewrite",histogramForceRewrite);
     printValue("AppendedString",        appendedString);
     printValue("calculateCI",           calculateCI);
     printValue("calculateCD",           calculateCD);
@@ -516,24 +516,24 @@ void BalanceFunctionCalculator::execute()
     printValue("nFilesToAnalyze",       nFilesToAnalyze);
     printCR();
     }
-  if (nFilesToAnalyze<1) throw FileException(histosImportPath,"*","No files found",__FUNCTION__);
+  if (nFilesToAnalyze<1) throw FileException(histogramImportPath,"*","No files found",__FUNCTION__);
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
   std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
 
-  for (auto & histosImportFile : allFilesToAnalyze)
+  for (auto & histogramImportFile : allFilesToAnalyze)
     {
-    histosExportFile  = removeRootExtension(histosImportFile);
-    histosExportFile.ReplaceAll(String("Derived"),appendedString);
-    TFile & inputFile = *openRootFile("",histosImportFile,"OLD");
+    histogramExportFile  = removeRootExtension(histogramImportFile);
+    histogramExportFile.ReplaceAll(String("Derived"),appendedString);
+    TFile & inputFile = *openRootFile("",histogramImportFile,"OLD");
     String option = "NEW";
-    if (histosForceRewrite) option = "RECREATE";
-    TFile & outputFile = *openRootFile("",histosExportFile,option);
+    if (histogramForceRewrite) option = "RECREATE";
+    TFile & outputFile = *openRootFile("",histogramExportFile,option);
     if (reportInfo(__FUNCTION__))
       {
       printCR();
       printLine();
-      printValue("From",histosImportFile);
-      printValue("Saved to",histosExportFile);
+      printValue("From",histogramImportFile);
+      printValue("Saved to",histogramExportFile);
       }
     // Use hGroup  as helper to load and calculate histograms, etc.
     HistogramGroup * hGroup  = new HistogramGroup();

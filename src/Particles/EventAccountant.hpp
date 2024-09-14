@@ -50,10 +50,7 @@ public:
 
 protected:
   
-  long eventsAccepted;
   std::vector<long> filteredEventsAccepted;
-
-  long particlesAccepted;
   std::vector< std::vector<long> > filteredParticlesAccepted;
 
   ClassDef(EventAccountant,0)

@@ -25,7 +25,7 @@ class HistogramSet
 protected:
 
   String name;
-  vector<HistogramGroup*> groups;
+  std::vector<HistogramGroup*> groups;
 
 public:
 
@@ -40,17 +40,17 @@ public:
 
   void setParentTask(Task * parentTask);
   void setConfiguration(const Configuration & config);
-  vector<HistogramGroup*> & getGroups();
-  const vector<HistogramGroup*> & getGroups() const;
+  std::vector<HistogramGroup*> & getGroups();
+  const std::vector<HistogramGroup*> & getGroups() const;
 
   virtual void resetHistograms();
   virtual void clearHistograms();
   virtual void createHistograms();
   virtual void importHistograms(TFile & file);
   virtual void exportHistograms(TFile & file);
-  virtual void exportHistograms(ofstream & file);
+  virtual void exportHistograms(std::ofstream & file);
   virtual void scaleHistograms(double factor);
-  virtual void scaleHistograms(vector<double> &  factors);
+  virtual void scaleHistograms(std::vector<double> &  factors);
 
   ClassDef(HistogramSet,0)
 };

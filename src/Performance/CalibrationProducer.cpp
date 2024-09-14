@@ -49,7 +49,7 @@ void CalibrationProducer::initialize()
 void CalibrationProducer::execute()
 {
   incrementTaskExecuted();
-  bool   histosForceRewrite     = getValueBool(  "HistogramsForceRewrite");
+  bool   histogramForceRewrite     = getValueBool(  "HistogramsForceRewrite");
   int    efficiencyOpt          = getValueInt(   "EfficiencyOpt");
   String histoInputPath         = getValueString("HistogramsImportPath");
   String histoRatioFileName     = getValueString("HistoRatioFileName");

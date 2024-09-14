@@ -17,7 +17,7 @@ add_library(Base SHARED Aliases.cpp Exceptions.cpp PhysicsConstants.cpp Timer.cp
  G__Base.cxx)
 
 target_link_libraries(Base ${ROOT_LIBRARIES} ${EXTRA_LIBS} )
-target_include_directories(Base  PUBLIC Base Math ${EXTRA_INCLUDES} )
+target_include_directories(Base PUBLIC Base Math ${EXTRA_INCLUDES} )
 
 # optimization for big histogram access within the pair inner loop
 # WARNING: the sumw2 structure is not used -> estimate uncertainties using sub-samples

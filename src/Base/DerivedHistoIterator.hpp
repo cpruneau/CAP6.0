@@ -32,7 +32,7 @@ protected:
   int    maximumDepth;
   int    nEventFilters;
 
- // bool   histosForceRewrite;
+ // bool   histogramForceRewrite;
 
 
 public:
