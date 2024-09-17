@@ -3,4 +3,5 @@
 #pragma link off all classes;
 #pragma link off all functions;
 #pragma link C++ class CAP::SubSampleStatCalculator+;
+///#pragma link C++ class CAP::RunSubSampleSum+;
 #endif

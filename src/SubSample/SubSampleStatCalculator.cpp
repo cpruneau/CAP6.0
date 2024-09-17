@@ -63,34 +63,36 @@ void SubSampleStatCalculator::execute()
     CAP::printCR();
     CAP::printValue("directories.size()",nDirectories);
     }
-
   TFile * firstFile;
   TFile * otherFile;
   HistogramGroup * groupAverage  = new HistogramGroup();
   HistogramGroup * group;
   groupAverage->setName("Average");
   int iFile = 0;
+  double nExecuted = 0;
+  double nExecutedTotal = 0;
   for (auto & name : directories)
     {
-    printValue("HistogramImportPath",histogramImportPath+name);
+    String path = histogramImportPath; path += "/"; path += name;
+    printValue("HistogramImportPath",path);
     printValue("HistogramImportFile",histogramImportFile);
     printValue("File index",         iFile);
     if (iFile==0)
       {
-      firstFile = openOldRootFile(histogramImportPath+name, histogramImportFile);
+      firstFile = openOldRootFile(path, histogramImportFile);
       groupAverage->loadGroup(*firstFile);
+      nExecuted = TaskAccountant::importNEexecutedTask(*firstFile);
+      //EventAccountant::importEventsAccepted(*firstFile);
       }
     else
       {
-      otherFile = openRootFile(histogramImportPath+name, histogramImportFile);
+      otherFile = openOldRootFile(path, histogramImportFile);
       group = new HistogramGroup();
       group->loadGroup(*otherFile);
+      nExecuted = TaskAccountant::importNEexecutedTask(*otherFile);
+      //EventAccountant::importEventsAccepted(*otherFile);
       }
-
-    double nExecuted = TaskAccountant::importNEexecutedTask(*otherFile);
-    double nExecutedTotal = TaskAccountant::getNExecuted();
-    EventAccountant::importEventsAccepted(*otherFile);
-
+    nExecutedTotal = TaskAccountant::getNExecuted();
     printValue("nExecuted",          nExecuted);
     printValue("nExecutedTotal",     nExecutedTotal);
     if (iFile>0)
@@ -102,9 +104,9 @@ void SubSampleStatCalculator::execute()
     iFile++;
     }
 
-  TFile & rootOutputFile = *openRootFile(histogramExportPath, histogramExportFile, "RECREATE");
+  TFile & rootOutputFile = *openRecreateRootFile(histogramExportPath,histogramExportFile);
   TaskAccountant::exportNEexecutedTask(rootOutputFile);
-  EventAccountant::exportEventsAccepted(rootOutputFile);
+  //EventAccountant::exportEventsAccepted(rootOutputFile);
   groupAverage->exportHistograms(rootOutputFile);
   firstFile->Close();
   //groupAvg->setOwnership(0);

@@ -250,6 +250,9 @@ void EventAccountant::importEventsAccepted(TFile & inputFile)
   name = "nParticlesFilters";
   nParticleFilters = importParameter(inputFile,name);
 
+  printValue("nEventFilters",nEventFilters);
+  printValue("nParticleFilters",nParticleFilters);
+  exit(1);
   //
   // import event counts
   //

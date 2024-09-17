@@ -8,7 +8,7 @@
 
 if(APPLE)
     cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
-    set (CMAKE_OSX_DEPLOYMENT_TARGET "13.2" CACHE STRING "Minimum OS X deployment version" FORCE)
+    set (CMAKE_OSX_DEPLOYMENT_TARGET "15.0" CACHE STRING "Minimum OS X deployment version" FORCE)
     project(CAP VERSION 1.0 DESCRIPTION "Correlation Analysis Package" LANGUAGES CXX)
 #    set (CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures" FORCE)
 #    set (CMAKE_XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET[arch=arm64] "11.0" CACHE STRING "arm 64 minimum deployment target" FORCE)
@@ -25,9 +25,6 @@ set(CMAKE_CXX_STANDARD 14)
 ####set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CAP_ROOT_PATH "$ENV{CAP_ROOT_PATH}")
-#####set(CAP_PYTHIA_LIB_PATH "$ENV{PYTHIA8_LIB_PATH}")
-####set(CAP_PYTHIA_INCLUDE_PATH "$ENV{PYTHIA8_INCLUDE_PATH}")
-
 
 ################################################################################################
 # You need to tell CMake where to find the ROOT installation. This can be done in a number of ways:
@@ -46,7 +43,8 @@ find_library(PYTHIA8_LIB pythia8 PATHS $ENV{PYTHIA8_LIB_PATH})
 # Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
 ################################################################################################
 include(${ROOT_USE_FILE})
-include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS} "Base" "Math" "Xml" "ParticleDb" "Particles"  "SubSample"  "CAPPythia"  "Global"  "Spherocity" "ParticleSingle" "ParticlePair" "NuDyn" "PtPt"  "Plotting" "Therminator"  "Performance" "Exec" "$ENV{ROOTSYS}/include" "$ENV{PYTHIA8_INCLUDE_PATH}" "$ENV{PYTHIA8_INCLUDE_PATH}/Pythia8/" )
+include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS} "Base" "Math" "Xml" "ParticleDb" "Particles"  "SubSample"  "CAPPythia"  "Global"
+"Spherocity" "ParticleSingle" "ParticlePair" "NuDyn" "PtPt"  "Plotting" "Therminator"  "Performance" "Exec" "$ENV{ROOTSYS}/include" "$ENV{PYTHIA8_INCLUDE_PATH}" "$ENV{PYTHIA8_INCLUDE_PATH}/Pythia8/" )
 add_definitions(${ROOT_CXX_FLAGS})
 add_compile_options(-Wall -Wextra -pedantic)
 add_library(EG SHARED IMPORTED)

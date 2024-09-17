@@ -10,156 +10,153 @@
  *
  * *********************************************************************/
 #include <iostream>
-#include <fstream>
-#include <TStyle.h>
 #include <TROOT.h>
 
-void loadBase(const TString & includeBasePath);
-void loadParticles(const TString & includeBasePath);
-void loadPythia(const TString & includeBasePath);
-void loadPerformance(const TString & includeBasePath);
-void loadAmpt(const TString & includeBasePath);
-void loadEpos(const TString & includeBasePath);
-void loadHijing(const TString & includeBasePath);
-void loadHerwig(const TString & includeBasePath);
-void loadUrqmd(const TString & includeBasePath);
-void loadBasicGen(const TString & includeBasePath);
-void loadGlobal(const TString & includeBasePath);
-void loadSingle(const TString & includeBasePath);
-void loadPair(const TString & includeBasePath);
-void loadNuDyn(const TString & includeBasePath);
-void loadSubSample(const TString & includeBasePath);
-void loadExec(const TString & includeBasePath);
+void loadBase(const TString & includeSrcPath);
+void loadParticles(const TString & includeSrcPath);
+void loadPythia(const TString & includeSrcPath);
+void loadPerformance(const TString & includeSrcPath);
+void loadAmpt(const TString & includeSrcPath);
+void loadEpos(const TString & includeSrcPath);
+void loadHijing(const TString & includeSrcPath);
+void loadHerwig(const TString & includeSrcPath);
+void loadUrqmd(const TString & includeSrcPath);
+void loadGlobal(const TString & includeSrcPath);
+void loadSpherocity(const TString & includeSrcPath);
+void loadSingle(const TString & includeSrcPath);
+void loadPair(const TString & includeSrcPath);
+void loadNuDyn(const TString & includeSrcPath);
+void loadSubSample(const TString & includeSrcPath);
+void loadExec(const TString & includeSrcPath);
 
-
-int RunSum(TString configFile="AnalysisPythia_pp13TeV_CH_Y2_inclusive",
-           TString pathName="/Volumes/ClaudeDisc4/OutputFiles/PYTHIA/PiKP/Y2/",
-           int nBunches=20,
-           bool isGrid=true)
+std::vector<TString> listDirsInFolder(const TString & pathname,
+                                bool verbose=true)
 {
-  TString includeBasePath = getenv("CAP_SRC");
-  loadBase(includeBasePath);
-  loadParticles(includeBasePath);
-  loadPythia(includeBasePath);
-  loadPerformance(includeBasePath);
-  loadAmpt(includeBasePath);
-  //loadEpos(includeBasePath);
-  //loadHijing(includeBasePath);
-  //loadHerwig(includeBasePath);
-  //loadUrqmd(includeBasePath);
-  loadBasicGen(includeBasePath);
-  loadGlobal(includeBasePath);
-  loadSingle(includeBasePath);
-  loadPair(includeBasePath);
-  loadNuDyn(includeBasePath);
-  loadSubSample(includeBasePath);
-  loadExec(includeBasePath);
-
-  //outputPath = "/Volumes/ClaudeDisc4/OutputFiles/Reso/";
-
-  std::cout << "==================================================================================" << std::endl;
-  std::cout << "Executing RunSum" << endl;
-  std::cout << "configFile......: " << configFile << endl;
-  std::cout << "pathName........: " << pathName   << endl;
-  std::cout << "nBunches........: " << nBunches   << endl;
-  std::cout << "==================================================================================" << std::endl;
-  CAP::Configuration configuration;
-
-  try
-  {
-  configuration.readFromFile("",configFile);
-  }
-  catch (CAP::ConfigurationException ce)
-  {
-  ce.print();
-  }
-  catch (...)
-  {
-  cout << "Unknown exception while reading configuration file." << endl;
-  return 1;
-  }
-  configuration.addParameter("Run:nBunches",                  nBunches);
-  configuration.addParameter("Run:Analysis:nBunches",         nBunches);
-
-  configuration.addParameter("Run:HistogramsExportPath",      pathName);
-  configuration.addParameter("Run:HistogramsImportPath",      pathName);
-  configuration.addParameter("Run:HistogramsForceRewrite",    true);
-
-  configuration.addParameter("Run:RunParticleDbManager",      true);
-  configuration.addParameter("Run:RunFilterCreator",          true);
-  configuration.addParameter("Run:RunEventAnalysis",          false);
-  configuration.addParameter("Run:RunEventAnalysisGen",       false);
-  configuration.addParameter("Run:RunEventAnalysisReco",      false);
-  configuration.addParameter("Run:RunDerived",                false);
-  configuration.addParameter("Run:RunDerivedGen",             false);
-  configuration.addParameter("Run:RunDerivedReco",            false);
-  configuration.addParameter("Run:RunBalFct",                 false);
-  configuration.addParameter("Run:RunBalFctGen",              true);
-  configuration.addParameter("Run:RunBalFctReco",             false);
-
-  configuration.addParameter("Run:RunPartSingleAnalysisGen",  true);
-  configuration.addParameter("Run:RunPartSingleAnalysisReco", false);
-  configuration.addParameter("Run:RunPartPairAnalysisGen",    true);
-  configuration.addParameter("Run:RunPartPairAnalysisReco",   false);
-  configuration.addParameter("Run:RunGlobalAnalysisGen",      false);
-  configuration.addParameter("Run:RunGlobalAnalysisReco",     false);
-  configuration.addParameter("Run:RunSpherocityAnalysisGen",  false);
-  configuration.addParameter("Run:RunSpherocityAnalysisReco", false);
-  configuration.addParameter("Run:RunNuDynAnalysisGen",       false);
-  configuration.addParameter("Run:RunNuDynAnalysisReco",      false);
+  TString directoryName = pathname;
+  std::vector<TString>  subdirectories;
+  if (!directoryName.EndsWith("/")) directoryName += "/";
+  if (verbose) cout << "==================== Searching folders ==================== " << endl;
+  TSystemDirectory topDirectory(directoryName, directoryName);
+  TList *files = topDirectory.GetListOfFiles();
+  if (!files)
+    {
+    cout << " files is a null pointer" << endl;
+    return subdirectories;
+    }
+  TSystemFile *file;
+  TString fname;
+  TIter next(files);
+  while ((file=(TSystemFile*)next()) )
+    {
+    fname = file->GetName();
+    if (file->IsDirectory()   && !fname.BeginsWith(".")  ) subdirectories.push_back(fname);
+    }
+  return subdirectories;
+}
 
 
-  configuration.addParameter("Run:RunSubsample",              true);
-  configuration.addParameter("Run:RunSubsampleBase",          true);
-  configuration.addParameter("Run:RunSubsampleBaseGen",       true);
-  configuration.addParameter("Run:RunSubsampleBaseReco",      false);
-  configuration.addParameter("Run:RunSubsampleDerived",       false);
-  configuration.addParameter("Run:RunSubsampleDerivedeGen",   false);
-  configuration.addParameter("Run:RunSubsampleDerivedReco",   false);
-  configuration.addParameter("Run:RunSubsampleBalFct",        false);
-  configuration.addParameter("Run:RunSubsampleBalFctGen",     false);
-  configuration.addParameter("Run:RunSubsampleBalFctReco",    false);
 
-  CAP::RunAnalysis * analysis = new CAP::RunAnalysis("Run", configuration);
-  analysis->configure();
-  analysis->execute();
+int RunSumSubbunches(TString histogramImportPathName="/Volumes/ClaudeDisc4/OutputFiles/PYTHIA/PiKP/Y2//BUNCH01/",
+                     TString histogramImportFileName="SingleGen.root",
+                     TString histogramExportPathName="/Volumes/ClaudeDisc4/OutputFiles/PYTHIA/PiKP/Y2//BUNCH01/",
+                     TString histogramExportFileName="SingleGenSum.root",
+                     bool verbose=true)
+{
+  TString includeSrcPath = getenv("CAP_SRC_PATH");
+  cout << "includeSrcPath: " << includeSrcPath << endl;
+//  std::cout << "==================================================================================" << std::endl;
+//  std::cout << "Executing RunSumSubbunches" << endl;
+//  std::cout << "==================================================================================" << std::endl;
+  CAP::RunSubSampleSum * task = new CAP::RunSubSampleSum();
+  task->run(histogramImportPathName,histogramImportFileName,histogramExportPathName,histogramExportFileName,verbose);
   return 0;
 }
 
-void loadBase(const TString & includeBasePath)
+
+int RunSum(TString histogramImportPathName="/Volumes/ClaudeDisc4/OutputFiles/PYTHIA/PiKP/Y2/",
+           TString histogramImportFileName="SingleGen.root",
+           TString histogramExportPathName="/Volumes/ClaudeDisc4/OutputFiles/PYTHIA/PiKP/Y2/",
+           TString histogramExportFileName="SingleGenSum.root",
+           bool verbose=true)
 {
-  TString includePath = includeBasePath + "/Base/";
-  gSystem->Load(includePath+"Configuration.hpp");
-  gSystem->Load(includePath+"Timer.hpp");
-  gSystem->Load(includePath+"MessageLogger.hpp");
-  gSystem->Load(includePath+"Task.hpp");
-  gSystem->Load(includePath+"EventIterator.hpp");
-  gSystem->Load(includePath+"Collection.hpp");
-  gSystem->Load(includePath+"DerivedHistoIterator.hpp");
+  TString includeSrcPath = getenv("CAP_SRC_PATH");
+  cout << "includeSrcPath: " << includeSrcPath << endl;
+  loadBase(includeSrcPath);
+  loadParticles(includeSrcPath);
+  loadPythia(includeSrcPath);
+  //loadPerformance(includeSrcPath);
+  //loadAmpt(includeSrcPath);
+  //loadEpos(includeSrcPath);
+  //loadHijing(includeSrcPath);
+  //loadHerwig(includeSrcPath);
+  //loadUrqmd(includeSrcPath);
+  loadGlobal(includeSrcPath);
+  loadSpherocity(includeSrcPath);
+  loadSingle(includeSrcPath);
+  loadPair(includeSrcPath);
+  loadNuDyn(includeSrcPath);
+  loadSubSample(includeSrcPath);
+  loadExec(includeSrcPath);
+
+  std::cout << "==================================================================================" << std::endl;
+  std::cout << "Executing RunSumDev - All Jobs" << endl;
+  std::cout << "==================================================================================" << std::endl;
+
+  std::vector<TString> directories = listDirsInFolder(histogramImportPathName,true);
+  int nJobs = directories.size();
+  CAP::printValue("Number of folders found",nJobs);
+  if (nJobs<1)
+    {
+    CAP::printString("No folders founds");
+    return 1;
+    }
+  for (auto directory : directories)
+    {
+    TString path = histogramImportPathName; path += "/"; path += directory;
+    RunSumSubbunches(path,histogramImportFileName,path,histogramExportFileName,verbose);
+    }
+
+  // Final Sum
+  CAP::RunSubSampleSum * task = new CAP::RunSubSampleSum();
+  task->run(histogramImportPathName,histogramExportFileName,histogramExportPathName,histogramExportFileName,verbose);
+  delete task;
+
+  return 0;
+}
+
+
+
+
+
+void loadBase(const TString & includeSrcPath)
+{
+  TString includePath = includeSrcPath + "/Base/";
+//  gSystem->Load(includePath+"RootHelpers.hpp");
+//  gSystem->Load(includePath+"Configuration.hpp");
+//  gSystem->Load(includePath+"Timer.hpp");
+//  gSystem->Load(includePath+"MessageLogger.hpp");
+//  gSystem->Load(includePath+"Task.hpp");
   gSystem->Load("libBase.dylib");
 }
 
-void loadParticles(const TString & includeBasePath)
+void loadParticles(const TString & includeSrcPath)
 {
-  TString includePath = includeBasePath + "/Particles/";
-  gSystem->Load(includePath+"Particle.hpp");
-  gSystem->Load(includePath+"ParticleType.hpp");
-  gSystem->Load(includePath+"ParticleDecayMode.hpp");
+  TString includePath = includeSrcPath + "/Particles/";
   gSystem->Load("libParticles.dylib");
 }
 
-void loadSingle(const TString & includeBasePath)
+void loadSingle(const TString & includeSrcPath)
 {
-  TString includePath = includeBasePath + "/ParticleSingle/";
+  TString includePath = includeSrcPath + "/ParticleSingle/";
   gSystem->Load(includePath+"ParticleSingleHistos.hpp");
   gSystem->Load(includePath+"ParticleSingleDerivedHistos.hpp");
   gSystem->Load(includePath+"ParticleSingleAnalyzer.hpp");
   gSystem->Load("libParticleSingle.dylib");
 }
 
-void loadPair(const TString & includeBasePath)
+void loadPair(const TString & includeSrcPath)
 {
-  TString includePath = includeBasePath + "/ParticlePair/";
+  TString includePath = includeSrcPath + "/ParticlePair/";
   gSystem->Load(includePath+"ParticlePairAnalyzer.hpp");
   gSystem->Load(includePath+"ParticlePairHistos.hpp");
   gSystem->Load(includePath+"ParticlePairDerivedHistos.hpp");
@@ -167,17 +164,17 @@ void loadPair(const TString & includeBasePath)
   gSystem->Load("libParticlePair.dylib");
 }
 
-void loadPythia(const TString & includeBasePath)
+void loadPythia(const TString & includeSrcPath)
 {
-  TString includePath = includeBasePath + "/CAPPythia/";
+  TString includePath = includeSrcPath + "/CAPPythia/";
   gSystem->Load(includePath+"PythiaEventGenerator.hpp");
   gSystem->Load(includePath+"PythiaEventReader.hpp");
   gSystem->Load("libCAPPythia.dylib");
 }
 
-void loadPerformance(const TString & includeBasePath)
+void loadPerformance(const TString & includeSrcPath)
 {
-  TString includePath = includeBasePath + "/Performance/";
+  TString includePath = includeSrcPath + "/Performance/";
   gSystem->Load(includePath+"ClosureCalculator.hpp");
   gSystem->Load(includePath+"ClosureIterator.hpp");
   gSystem->Load(includePath+"MeasurementPerformanceSimulator.hpp");
@@ -187,85 +184,79 @@ void loadPerformance(const TString & includeBasePath)
   gSystem->Load("libPerformance.dylib");
 }
 
-void loadAmpt(const TString & includeBasePath)
+void loadAmpt(const TString & includeSrcPath)
 {
-  TString includePath = includeBasePath + "/Ampt/";
+  TString includePath = includeSrcPath + "/Ampt/";
   gSystem->Load(includePath+"AmptEventReader.hpp");
   gSystem->Load("libAmpt.dylib");
 }
 
-void loadEpos(const TString & includeBasePath)
+void loadEpos(const TString & includeSrcPath)
 {
-  TString includePath = includeBasePath + "/Epos/";
+  TString includePath = includeSrcPath + "/Epos/";
   gSystem->Load(includePath+"EposEventReader.hpp");
   gSystem->Load("libEpos.dylib");
 }
 
-void loadHijing(const TString & includeBasePath)
+void loadHijing(const TString & includeSrcPath)
 {
-  TString includePath = includeBasePath + "/Hijing/";
+  TString includePath = includeSrcPath + "/Hijing/";
   gSystem->Load(includePath+"HijingEventReader.hpp");
   gSystem->Load("libHijing.dylib");
 }
 
-void loadHerwig(const TString & includeBasePath)
+void loadHerwig(const TString & includeSrcPath)
 {
-  TString includePath = includeBasePath + "/Herwig/";
+  TString includePath = includeSrcPath + "/Herwig/";
   gSystem->Load(includePath+"HerwigEventReader.hpp");
   gSystem->Load("libHerwig.dylib");
 }
 
-void loadUrqmd(const TString & includeBasePath)
+void loadUrqmd(const TString & includeSrcPath)
 {
-  TString includePath = includeBasePath + "/Urqmd/";
+  TString includePath = includeSrcPath + "/Urqmd/";
   gSystem->Load(includePath+"UrqmdEventReader.hpp");
   gSystem->Load("libUrqmd.dylib");
 }
 
-
-void loadBasicGen(const TString & includeBasePath)
+void loadGlobal(const TString & includeSrcPath)
 {
-  TString includePath = includeBasePath + "/BasicGen/";
-  gSystem->Load(includePath+"GaussianGeneratorTask.hpp");
-  gSystem->Load(includePath+"RadialBoostHistos.hpp");
-  gSystem->Load(includePath+"RadialBoostTask.hpp");
-  gSystem->Load(includePath+"RapidityGenerator.hpp");
-  gSystem->Load("libBasicGen.dylib");
-}
-
-void loadGlobal(const TString & includeBasePath)
-{
-  TString includePath = includeBasePath + "/Global/";
+  TString includePath = includeSrcPath + "/Global/";
   gSystem->Load(includePath+"GlobalAnalyzer.hpp");
   gSystem->Load(includePath+"GlobalHistos.hpp");
-  gSystem->Load(includePath+"TransverseSpherocityHistos.hpp");
-  gSystem->Load(includePath+"TransverseSpherocityAnalyzer.hpp");
-  gSystem->Load("libBasicGen.dylib");
+  gSystem->Load("libGlobal.dylib");
+}
+
+void loadSpherocity(const TString & includeSrcPath)
+{
+  TString includePath = includeSrcPath + "/Spherocity/";
+  gSystem->Load(includePath+"SpherocityAnalyzer.hpp");
+  gSystem->Load(includePath+"SpherocityHistos.hpp");
+  gSystem->Load("libSpherocity.dylib");
 }
 
 
 
-void loadNuDyn(const TString & includeBasePath)
+void loadNuDyn(const TString & includeSrcPath)
 {
-  TString includePath = includeBasePath + "/NuDyn/";
+  TString includePath = includeSrcPath + "/NuDyn/";
   gSystem->Load(includePath+"NuDynAnalyzer.hpp");
   gSystem->Load(includePath+"NuDynDerivedHistos.hpp");
   gSystem->Load(includePath+"NuDynHistos.hpp");
   gSystem->Load("libNuDyn.dylib");
 }
 
-void loadSubSample(const TString & includeBasePath)
+void loadSubSample(const TString & includeSrcPath)
 {
-  TString includePath = includeBasePath + "/SubSample/";
+  TString includePath = includeSrcPath + "/SubSample/";
   gSystem->Load(includePath+"SubSampleStatCalculator.hpp");
   gSystem->Load("libSubSample.dylib");
 }
 
-void loadExec(const TString & includeBasePath)
+void loadExec(const TString & includeSrcPath)
 {
-  TString includePath = includeBasePath + "/Exec/";
-  //gSystem->Load(includePath+"RunAnalysis.hpp");
-  gSystem->Load(includePath+"RunSubsample.hpp");
+  TString includePath = includeSrcPath + "/Exec/";
+  gSystem->Load(includePath+"RunSubSampleSum.hpp");
   gSystem->Load("libExec.dylib");
 }
 

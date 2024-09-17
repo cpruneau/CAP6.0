@@ -328,11 +328,7 @@ void exportParameter(TFile & outputFile, const String & parameterName, long valu
 long importParameter(TFile & inputFile, const String & parameterName)
 {
   verbose = 1;
-  printString("--1--");
-  printValue("Seeking Property",parameterName);
-  TParameter<Long64_t> *par = (TParameter<Long64_t> *) inputFile.Get("taskExecuted");
-//  TParameter<Long64_t> *par = (TParameter<Long64_t> *) inputFile.Get(parameterName);
-  printString("--2--");
+  TParameter<Long64_t> *par = (TParameter<Long64_t> *) inputFile.Get(parameterName);
   if (!par)
     {
     if (verbose)
@@ -342,8 +338,6 @@ long importParameter(TFile & inputFile, const String & parameterName)
       }
     throw TaskException("Property not found",__FUNCTION__);
     }
-  printString("--3--");
-
   double value = par->GetVal();
   delete par;
   if (verbose)
@@ -351,8 +345,6 @@ long importParameter(TFile & inputFile, const String & parameterName)
     printCR();
     printValue(parameterName,value);
     }
-  printString("--4--");
-
   return value;
 }
 
@@ -565,13 +557,18 @@ TProfile2D * createNewProfile(const String & name,
 
 void squareDifferenceHistos(TH1 *h1, TH1 *h2, double sumWeights, double weight, int n)
 {
-
+//  if (n>0)
+//    {
+//    printCR();
+//    printLine();
+//    printValue("squareDifferenceHistos n",n);
+//    }
   double vAvg, evAvg, evSqAvg;
   double v,  dv;
   double sum = weight + sumWeights;
   double rwn = weight/sum;
   double rw  = sumWeights/sum;
-  double sqrtN = sqrt(double(n));
+  double sqrtN = sqrt(double(abs(n)));
   if (h1->IsA()==TH1::Class() || h1->IsA()==TH1F::Class() || h1->IsA()==TH1D::Class() || h1->IsA()==TH1I::Class() )
     {
     int nx = h1->GetNbinsX();

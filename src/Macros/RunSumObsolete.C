@@ -31,95 +31,111 @@ void loadNuDyn(const TString & includeBasePath);
 void loadSubSample(const TString & includeBasePath);
 void loadExec(const TString & includeBasePath);
 
-std::vector<TString> listDirsIn(const TString & pathname,
-                                  bool verbose=true)
-{
-  TString directoryName = pathname;
-  std::vector<TString>  subdirectories;
-  if (!directoryName.EndsWith("/")) directoryName += "/";
-  if (verbose) cout << "==================== Searching folders ==================== " << endl;
-  TSystemDirectory topDirectory(directoryName, directoryName);
-  TList *files = topDirectory.GetListOfFiles();
-  if (!files)
-    {
-    cout << " files is a null pointer" << endl;
-    return subdirectories;
-    }
-  TSystemFile *file;
-  TString fname;
-  TIter next(files);
-  while ((file=(TSystemFile*)next()) )
-    {
-    fname = file->GetName();
-    if (file->IsDirectory()   && !fname.BeginsWith(".")  ) subdirectories.push_back(fname);
-    }
-  return subdirectories;
-}
 
-
-int RunSumDev(TString histogramImportPath="/Volumes/ClaudeDisc4/OutputFiles/PYTHIA/PiKP/Y2//BUNCH01/",
-              TString histogramImportFile="SingleGen.root",
-              TString histogramExportPath="/Volumes/ClaudeDisc4/OutputFiles/PYTHIA/PiKP/Y2//BUNCH01/",
-              TString histogramExportFile="SingleGenSum.root")
+int RunSum(TString configFile="AnalysisPythia_pp13TeV_CH_Y2_inclusive",
+           TString pathName="/Volumes/ClaudeDisc4/OutputFiles/PYTHIA/PiKP/Y2/",
+           int nBunches=20,
+           bool isGrid=true)
 {
-  TString includeBasePath = getenv("CAP_SRC_PATH");
-  //cout << "includeBasePath: " << includeBasePath << endl;
+  TString includeBasePath = getenv("CAP_SRC");
   loadBase(includeBasePath);
+  loadParticles(includeBasePath);
+  loadPythia(includeBasePath);
+  loadPerformance(includeBasePath);
+  loadAmpt(includeBasePath);
+  //loadEpos(includeBasePath);
+  //loadHijing(includeBasePath);
+  //loadHerwig(includeBasePath);
+  //loadUrqmd(includeBasePath);
+  loadBasicGen(includeBasePath);
+  loadGlobal(includeBasePath);
+  loadSingle(includeBasePath);
+  loadPair(includeBasePath);
+  loadNuDyn(includeBasePath);
   loadSubSample(includeBasePath);
+  loadExec(includeBasePath);
+
+  //outputPath = "/Volumes/ClaudeDisc4/OutputFiles/Reso/";
+
   std::cout << "==================================================================================" << std::endl;
   std::cout << "Executing RunSum" << endl;
+  std::cout << "configFile......: " << configFile << endl;
+  std::cout << "pathName........: " << pathName   << endl;
+  std::cout << "nBunches........: " << nBunches   << endl;
   std::cout << "==================================================================================" << std::endl;
-  std::vector<TString> directories = listDirsIn(histogramImportPath,true);
-  cout << "  directories.size() : " << directories.size() << endl;
-  int k = 0;
-  for (auto name : directories)
-    {
-    cout << "  k= " << k++ << "    " << name << endl;
-    }
-
   CAP::Configuration configuration;
-//  TString configurationPath = getenv("CAP_PROJECTS_PATH");
-//  TString configurationFile = configFile;
-//  configuration.importProperties(configurationPath,configurationFile);
 
   try
   {
-  CAP::printCR();
-  CAP::printLine();
-  CAP::printString("RunSumDev()");
-  CAP::printLine();
-  //configuration.importProperties(configurationPath,configurationFile);
-  configuration.addProperty("SubSample:Severity",                   "DEBUG");
-  configuration.addProperty("SubSample:HistogramsImportPath",       histogramImportPath);
-  configuration.addProperty("SubSample:HistogramsImportFile",       histogramImportFile);
-  configuration.addProperty("SubSample:HistogramsExportPath",       histogramExportPath);
-  configuration.addProperty("SubSample:HistogramsExportFile",       histogramExportFile);
-  CAP::Task * task = new CAP::SubSampleStatCalculator();
-  task->setDefaultConfiguration();
-  task->setRequestedConfiguration(configuration);
-  task->configure();
-  task->execute();
+  configuration.readFromFile("",configFile);
   }
-  catch (CAP::PropertyException & pe)
+  catch (CAP::ConfigurationException ce)
   {
-  pe.print();
+  ce.print();
   }
-  catch (CAP::TaskException & te)
+  catch (...)
   {
-  te.print();
+  cout << "Unknown exception while reading configuration file." << endl;
+  return 1;
   }
+  configuration.addParameter("Run:nBunches",                  nBunches);
+  configuration.addParameter("Run:Analysis:nBunches",         nBunches);
 
+  configuration.addParameter("Run:HistogramsExportPath",      pathName);
+  configuration.addParameter("Run:HistogramsImportPath",      pathName);
+  configuration.addParameter("Run:HistogramsForceRewrite",    true);
+
+  configuration.addParameter("Run:RunParticleDbManager",      true);
+  configuration.addParameter("Run:RunFilterCreator",          true);
+  configuration.addParameter("Run:RunEventAnalysis",          false);
+  configuration.addParameter("Run:RunEventAnalysisGen",       false);
+  configuration.addParameter("Run:RunEventAnalysisReco",      false);
+  configuration.addParameter("Run:RunDerived",                false);
+  configuration.addParameter("Run:RunDerivedGen",             false);
+  configuration.addParameter("Run:RunDerivedReco",            false);
+  configuration.addParameter("Run:RunBalFct",                 false);
+  configuration.addParameter("Run:RunBalFctGen",              true);
+  configuration.addParameter("Run:RunBalFctReco",             false);
+
+  configuration.addParameter("Run:RunPartSingleAnalysisGen",  true);
+  configuration.addParameter("Run:RunPartSingleAnalysisReco", false);
+  configuration.addParameter("Run:RunPartPairAnalysisGen",    true);
+  configuration.addParameter("Run:RunPartPairAnalysisReco",   false);
+  configuration.addParameter("Run:RunGlobalAnalysisGen",      false);
+  configuration.addParameter("Run:RunGlobalAnalysisReco",     false);
+  configuration.addParameter("Run:RunSpherocityAnalysisGen",  false);
+  configuration.addParameter("Run:RunSpherocityAnalysisReco", false);
+  configuration.addParameter("Run:RunNuDynAnalysisGen",       false);
+  configuration.addParameter("Run:RunNuDynAnalysisReco",      false);
+
+
+  configuration.addParameter("Run:RunSubsample",              true);
+  configuration.addParameter("Run:RunSubsampleBase",          true);
+  configuration.addParameter("Run:RunSubsampleBaseGen",       true);
+  configuration.addParameter("Run:RunSubsampleBaseReco",      false);
+  configuration.addParameter("Run:RunSubsampleDerived",       false);
+  configuration.addParameter("Run:RunSubsampleDerivedeGen",   false);
+  configuration.addParameter("Run:RunSubsampleDerivedReco",   false);
+  configuration.addParameter("Run:RunSubsampleBalFct",        false);
+  configuration.addParameter("Run:RunSubsampleBalFctGen",     false);
+  configuration.addParameter("Run:RunSubsampleBalFctReco",    false);
+
+  CAP::RunAnalysis * analysis = new CAP::RunAnalysis("Run", configuration);
+  analysis->configure();
+  analysis->execute();
   return 0;
 }
 
 void loadBase(const TString & includeBasePath)
 {
   TString includePath = includeBasePath + "/Base/";
-  gSystem->Load(includePath+"RootHelpers.hpp");
   gSystem->Load(includePath+"Configuration.hpp");
   gSystem->Load(includePath+"Timer.hpp");
   gSystem->Load(includePath+"MessageLogger.hpp");
   gSystem->Load(includePath+"Task.hpp");
+  gSystem->Load(includePath+"EventIterator.hpp");
+  gSystem->Load(includePath+"Collection.hpp");
+  gSystem->Load(includePath+"DerivedHistoIterator.hpp");
   gSystem->Load("libBase.dylib");
 }
 

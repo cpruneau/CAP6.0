@@ -84,25 +84,17 @@ long TaskAccountant::importNEexecutedTask(TFile & inputFile)
   try
   {
   parameterName   = "taskExecuted";
-  printValue("Seeking",parameterName);
-  TObject * object = inputFile.Get("taskExecuted");
-  printValue("Seeking",parameterName);
-  std::cout << "object:" << object << std::endl;
-  TParameter<Long64_t> *par = (TParameter<Long64_t> *) object;
-  // TParameter<Long64_t> *par = (TParameter<Long64_t> *) inputFile.Get("taskExecuted");
-  nExec = par->GetVal();
-  //nExec   = importParameter(inputFile,parameterName);
-  printValue("taskExecuted",nExec);
-
+  //printValue("Seeking",parameterName);
+  nExec   = importParameter(inputFile,parameterName);
   }
   catch (...)
   {
   try
     {
-    printString("Seeking nTaskExecuted");
+    //printString("Seeking nTaskExecuted");
     parameterName   = "nTaskExecuted";
     nExec   = importParameter(inputFile,parameterName);
-    printValue("nTaskExecuted",nExec);
+    //printValue("nTaskExecuted",nExec);
     }
   catch (...)
     {
