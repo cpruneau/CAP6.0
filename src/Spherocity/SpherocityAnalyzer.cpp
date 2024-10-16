@@ -58,14 +58,15 @@ SpherocityAnalyzer & SpherocityAnalyzer::operator=(const SpherocityAnalyzer & an
 void SpherocityAnalyzer::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
-  addProperty("SetEvent",            true);
-  addProperty("FillS0", true);
-  addProperty("FillS1", false);
-  addProperty("FillS1VsS0", false);
-  addProperty("nSteps", 1000);
-  addProperty("nBins_spherocity", 100);
-  addProperty("Min_spherocity",   0.0);
-  addProperty("Max_spherocity",   1.0);
+  addProperty("HistogramBaseName", "Spherocity");
+  addProperty("SetEvent",          true);
+  addProperty("FillS0",            true);
+  addProperty("FillS1",            false);
+  addProperty("FillS1VsS0",        false);
+  addProperty("nSteps",            1000);
+  addProperty("nBins_spherocity",  100);
+  addProperty("Min_spherocity",    0.0);
+  addProperty("Max_spherocity",    1.0);
 }
 
 void SpherocityAnalyzer::configure()
@@ -123,7 +124,7 @@ void SpherocityAnalyzer::initialize()
 void SpherocityAnalyzer::createHistograms()
 {
   if (reportStart(__FUNCTION__)){ /* no ops */ };
-  String bn = getName(); bn += "_";
+  String bn = getValueString( "HistogramBaseName");
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
   std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
   for (auto & eventFilter : eventFilters)
@@ -133,7 +134,7 @@ void SpherocityAnalyzer::createHistograms()
     name += "_";
     name += efn;
     SpherocityHistos * histos = new SpherocityHistos();
-    histos->setName(getName());
+    histos->setName(createName(bn,efn));
     histos->setConfiguration(configuration);
     histos->setParentTask(this);
     histos->setParticleFilters(particleFilters);

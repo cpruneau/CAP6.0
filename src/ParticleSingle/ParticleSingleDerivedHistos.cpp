@@ -154,21 +154,21 @@ void ParticleSingleDerivedHistos::createHistograms()
   const String & bn  = getName();
   const String & ptn = getParentName();
   const String & ppn = getParentPathName();
-  fillEta   = configuration.getValueBool(ppn,"FillEta");
-  fillY     = configuration.getValueBool(ppn,"FillY");
-  fillP2    = configuration.getValueBool(ppn,"FillP2");
-  nBins_pt  = configuration.getValueInt(ppn,"nBins_pt");
-  min_pt    = configuration.getValueDouble(ppn,"Min_pt");
-  max_pt    = configuration.getValueDouble(ppn,"Max_pt");
-  nBins_phi = configuration.getValueInt(ppn,"nBins_phi");
-  min_phi   = configuration.getValueDouble(ppn,"Min_phi");
-  max_phi   = configuration.getValueDouble(ppn,"Max_phi");
-  nBins_eta = configuration.getValueInt(ppn,"nBins_eta");
-  min_eta   = configuration.getValueDouble(ppn,"Min_eta");
-  max_eta   = configuration.getValueDouble(ppn,"Max_eta");
-  nBins_y   = configuration.getValueInt(ppn,"nBins_y");
-  min_y     = configuration.getValueDouble(ppn,"Min_y");
-  max_y     = configuration.getValueDouble(ppn,"Max_y");
+  fillEta   = configuration.getValueBool(ptn,"FillEta");
+  fillY     = configuration.getValueBool(ptn,"FillY");
+  fillP2    = configuration.getValueBool(ptn,"FillP2");
+  nBins_pt  = configuration.getValueInt(ptn,"nBins_pt");
+  min_pt    = configuration.getValueDouble(ptn,"Min_pt");
+  max_pt    = configuration.getValueDouble(ptn,"Max_pt");
+  nBins_phi = configuration.getValueInt(ptn,"nBins_phi");
+  min_phi   = configuration.getValueDouble(ptn,"Min_phi");
+  max_phi   = configuration.getValueDouble(ptn,"Max_phi");
+  nBins_eta = configuration.getValueInt(ptn,"nBins_eta");
+  min_eta   = configuration.getValueDouble(ptn,"Min_eta");
+  max_eta   = configuration.getValueDouble(ptn,"Max_eta");
+  nBins_y   = configuration.getValueInt(ptn,"nBins_y");
+  min_y     = configuration.getValueDouble(ptn,"Min_y");
+  max_y     = configuration.getValueDouble(ptn,"Max_y");
 
   if (reportInfo(__FUNCTION__))
     {
@@ -231,9 +231,9 @@ void ParticleSingleDerivedHistos::importHistograms(TFile & inputFile)
   const String & bn  = getName();
   const String & ptn = getParentName();
   const String & ppn = getParentPathName();
-  fillEta  = configuration.getValueBool(ppn,"FillEta");
-  fillY    = configuration.getValueBool(ppn,"FillY");
-  fillP2   = configuration.getValueBool(ppn,"FillP2");
+  fillEta  = configuration.getValueBool(ptn,"FillEta");
+  fillY    = configuration.getValueBool(ptn,"FillY");
+  fillP2   = configuration.getValueBool(ptn,"FillP2");
   if (reportInfo(__FUNCTION__))
     {
     cout << endl;

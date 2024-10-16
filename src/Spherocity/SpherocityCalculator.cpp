@@ -62,14 +62,15 @@ SpherocityCalculator & SpherocityCalculator::operator=(const SpherocityCalculato
 void SpherocityCalculator::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
+  addProperty("HistogramBaseName",    "Spherocity");
   addProperty("FillCorrelationHistos",false);
-  addProperty("nSteps", 1000);
-  addProperty("FillS0", true);
-  addProperty("FillS1", false);
-  addProperty("FillS1VsS0", false);
-  addProperty("nBins_spherocity", 100);
-  addProperty("Min_spherocity",   0.0);
-  addProperty("Max_spherocity",   1.0);
+  addProperty("FillS0",              true);
+  addProperty("FillS1",              false);
+  addProperty("FillS1VsS0",          false);
+  addProperty("nSteps",              1000);
+  addProperty("nBins_spherocity",    100);
+  addProperty("Min_spherocity",      0.0);
+  addProperty("Max_spherocity",      1.0);
 }
 
 void SpherocityCalculator::configure()
@@ -105,7 +106,7 @@ void SpherocityCalculator::initialize()
 void SpherocityCalculator::createHistograms()
 {
   if (reportStart(__FUNCTION__)) { /* noops*/ };
-  String prefixName = getName(); prefixName += "_";
+  String bn = getValueString( "HistogramBaseName");
   //std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
   //std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
 //  for (auto & eventFilter : eventFilters)
@@ -125,26 +126,25 @@ void SpherocityCalculator::createHistograms()
 void SpherocityCalculator::importHistograms(TFile & inputFile)
 {
   if (reportStart(__FUNCTION__)) { /* noops*/ };
-  String prefixName = getName(); prefixName += "_";
+  String bn = getValueString( "HistogramBaseName");
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
   std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
   if (reportDebug(__FUNCTION__))
     {
     printCR();
-    printValue("HistogramGroup for ",prefixName);
-    printValue("Loading HistogramGroup for",prefixName);
+    printValue("HistogramGroup for ",bn);
+    printValue("Loading HistogramGroup for",bn);
     printValue("nEventFilters",eventFilters.size());
     printValue("nParticleFilters",particleFilters.size());
     printCR();
     }
   for (auto & eventFilter : eventFilters)
     {
-    String evtFilterName = eventFilter->getName();
+    String efn = eventFilter->getName();
     SpherocityHistos * histos = new SpherocityHistos();
-    histos->setName(prefixName+eventFilter->getName());
+    histos->setName(createName(bn,efn));
     histos->setConfiguration(configuration);
     histos->setParentTask(this);
-    //histos->setParticleFilters(particleFilters);
     histos->importHistograms(inputFile);
     addGroupInSet(0,histos);
     }
@@ -156,6 +156,11 @@ void SpherocityCalculator::execute()
   if (reportStart(__FUNCTION__)) { /* noops*/ };
   /* needs to be implemented */
   if (reportEnd(__FUNCTION__)) { /* noops*/ };
+}
+
+void SpherocityCalculator::scaleHistograms()
+{
+
 }
 
 }  // namespace CAP

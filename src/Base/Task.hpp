@@ -81,7 +81,7 @@ public:
   bool hasSubTasks()  const;
   unsigned int getNSubTasks() const;
   Task * getSubTaskAt(unsigned int index);
-  Task *  addSubTask(Task * task);
+  Task * addSubTask(Task * task);
 
   String getParentTaskName() const;
   bool hasParent() const;

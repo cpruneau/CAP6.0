@@ -76,6 +76,8 @@ export CAP_DATA_IMPORT_PATH="$DataInputPath"
 export CAP_DATA_EXPORT_PATH="$DataOutputPath"
 export CAP_HISTOS_IMPORT_PATH="$HistosInputPath"
 export CAP_HISTOS_EXPORT_PATH="$HistosOutputPath"
+export CAP_CALIB_IMPORT_PATH="$HistosInputPath"
+export CAP_CALIB_EXPORT_PATH="$HistosOutputPath"
 
 echo "========================================================================================"
 echo " CAP_ROOT_PATH..............................................: " $CAP_ROOT_PATH
@@ -93,6 +95,8 @@ echo " CAP_DATA_IMPORT_PATH.......................................: " $CAP_DATA_
 echo " CAP_DATA_EXPORT_PATH.......................................: " $CAP_DATA_EXPORT_PATH
 echo " CAP_HISTOS_IMPORT_PATH.....................................: " $CAP_HISTOS_IMPORT_PATH
 echo " CAP_HISTOS_EXPORT_PATH.....................................: " $CAP_HISTOS_EXPORT_PATH
+echo " CAP_CALIB_IMPORT_PATH......................................: " $CAP_CALIB_IMPORT_PATH
+echo " CAP_CALIB_EXPORT_PATH......................................: " $CAP_CALIB_EXPORT_PATH
 echo " PYTHIA8_INCLUDE_PATH.......................................: " $PYTHIA8_INCLUDE_PATH
 echo " PYTHIA8_LIB_PATH...........................................: " $PYTHIA8_LIB_PATH
 echo " "

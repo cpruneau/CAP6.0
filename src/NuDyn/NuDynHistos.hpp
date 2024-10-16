@@ -73,10 +73,10 @@ public:
 protected:
   void cloneAll(const NuDynHistos & group);
 
-  String multName;
-  TH1 * h_mult;
-  vector<TProfile*> h_f1_vsMult;
-  vector<TProfile*> h_f2_vsMult;
+  String evtClassName;
+  TH1 * h_evtClass;
+  vector<TProfile*> h_f1_evtClass;
+  vector<TProfile*> h_f2_evtClass;
   vector<ParticleFilter*> particleFilters;
 
   ClassDef(NuDynHistos,0)

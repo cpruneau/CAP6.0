@@ -65,7 +65,8 @@ public:
   virtual void execute();
   virtual void createHistograms();
   virtual void importHistograms(TFile & inputFile);
-  
+  virtual void scaleHistograms();
+
 protected:
   
   bool fillEta; //!< whether to fill pseudorapidity histograms (set from configuration at initialization)

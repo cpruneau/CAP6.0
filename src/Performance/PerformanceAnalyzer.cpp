@@ -32,6 +32,7 @@ fillY(false)
 void PerformanceAnalyzer::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
+  addProperty( "HistogramBaseName","Closure");
   addProperty("nBins_pt",100);
   addProperty("Min_pt", 0.0);
   addProperty("Max_pt", 5.0);
@@ -63,7 +64,7 @@ void PerformanceAnalyzer::setDefaultConfiguration()
 void PerformanceAnalyzer::createHistograms()
 {
   if (reportStart(__FUNCTION__)) {/* */};
-  String bn = getName(); //bn += "_";
+  String bn = getValueString( "HistogramBaseName");
   fillEta = getValueBool("FillEta");
   fillY   = getValueBool("FillY");
   if (reportInfo(__FUNCTION__))
@@ -101,7 +102,7 @@ void PerformanceAnalyzer::createHistograms()
 void PerformanceAnalyzer::importHistograms(TFile & inputFile)
 {
   if (reportStart(__FUNCTION__)) {/* */};
-  String bn = getName(); bn += "_";
+  String bn = getValueString( "HistogramBaseName");
   fillEta = getValueBool("FillEta");
   fillY   = getValueBool("FillY");
   addSet("Performance");

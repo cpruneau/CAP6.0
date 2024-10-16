@@ -33,9 +33,9 @@ void GlobalDerivedHistos::createHistograms()
   const String & bn  = getName();
   const String & ptn = getParentName( );
   const String & ppn = getParentPathName();
-  int nBins_n  = configuration.getValueInt(ppn,"nBins_n");
-  double min_n = configuration.getValueDouble(ppn,"Min_n");
-  double max_n = configuration.getValueDouble(ppn,"Max_n");
+  int nBins_n  = configuration.getValueInt(ptn,"nBins_n");
+  double min_n = configuration.getValueDouble(ptn,"Min_n");
+  double max_n = configuration.getValueDouble(ptn,"Max_n");
   if (reportInfo(__FUNCTION__))
     {
     printCR();

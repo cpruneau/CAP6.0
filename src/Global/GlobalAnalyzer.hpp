@@ -45,7 +45,6 @@ public:
 
 protected:
   
-  bool setEvent;   //!< bool controling whether this task instance sets the EventProperties record of events it analyzes.
   vector<double> n; //!< array of multiplicities corresponding in kinematic  different particle filters operated by this task.
   vector<double> e; //!< array of total energies corresponding to the different particle filters operated by this task.
   vector<double> q; //!< array of net charges corresponding to the different particle filters operated by this task.

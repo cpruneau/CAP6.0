@@ -31,8 +31,6 @@ subTasks                 ()
   setInstanceName("Task");
   setName("Task");
   setTitle("Task");
-  setVersion("1.0");
-  setConfigurationPath("Task");
 }
 
 Task::Task(const Task & task)
@@ -63,7 +61,8 @@ Task & Task::operator=(const Task & task)
 
 void Task::setDefaultConfiguration()
 {
-  setConfigurationPath(getFullTaskPath());
+  setConfigurationPath(getName());
+//  setConfigurationPath(getFullTaskPath());
 }
 
 void Task::configure()
@@ -121,12 +120,11 @@ void Task::print(std::ostream & output,  int style, int size) const
   printLine();
   NamedObject::print(output,style,size);
   ConfigurationManager::print(output,style,size);
+  EnvironmentVariables::print(output,style,size);
   TaskAccountant::print(output,style,size);
-  printValue("FullTaskPath", getFullTaskPath());
-  printSubTasks();
+  printSubTasks(output,style,size);
   printLine();
 }
-
 
 void Task::configureSubTasks()
 {
@@ -178,7 +176,7 @@ Task * Task::addSubTask(Task * task)
   if (task==this) throw TaskException("Given task pointer is self.", "Task::addSubTask(Task * task)");
   subTasks.push_back( task );
   if (task->parent == nullptr)  task->setParent(this);
-  if (reportDebug(__FUNCTION__)) std::cout << "Added task " << task->getName() << " to task " << getName() << std::endl;
+  if (reportDebug(__FUNCTION__)) std::cout << std::endl << "Added task " << task->getName() << " to task " << getName() << std::endl;
   return task;
 }
 
@@ -236,8 +234,6 @@ String Task::getParentName() const
   else
     return String("");
 }
-
-
 
 Task * Task::getTaskAt(int depth)
 {

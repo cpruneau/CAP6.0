@@ -44,8 +44,8 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
   int nPart = 4;
   int nGraphs = 0;
 
-  histograms[0] = nuDynHistos->h_eventStreams_vsMult;     histTitles[0] = new String("N_{eventStreams}");
-  plot(1, canvasNameBase+"eventStreams_vsMult",canvasConfiguration,graphConfigurations,
+  histograms[0] = nuDynHistos->h_eventStreams_evtClass;     histTitles[0] = new String("N_{eventStreams}");
+  plot(1, canvasNameBase+"eventStreams_evtClass",canvasConfiguration,graphConfigurations,
        "n", 0.0, 0.0,
        "Counts", 0.0, -1.2,
        histograms,histTitles,0.7, 0.5, 0.9, 0.9, 0.055);
@@ -58,10 +58,10 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
   histTitle += i1;
   histTitle += "}";
   cout << "Inserting: " << histTitle << endl;
-  histograms[i1] = nuDynHistos->h_f1_vsMult[i1]; histTitles[i1] = new String(histTitle);
+  histograms[i1] = nuDynHistos->h_f1_evtClass[i1]; histTitles[i1] = new String(histTitle);
   nGraphs++;
   }
-  plot(nGraphs, canvasNameBase+"f1_vsMult",canvasConfiguration,graphConfigurations,
+  plot(nGraphs, canvasNameBase+"f1_evtClass",canvasConfiguration,graphConfigurations,
        "Mult", 20.0, 400.0,
        "f_{1}", 0.0, -1.2,
        histograms,histTitles,0.75, 0.7, 0.85, 0.8, 0.055);
@@ -78,13 +78,13 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
       histTitle += i2;
       histTitle += "}";
       cout << "Inserting: " << histTitle << endl;
-      histograms[index12] = nuDynHistos->h_f2_vsMult[index12]; histTitles[index12] = new String(histTitle);
+      histograms[index12] = nuDynHistos->h_f2_evtClass[index12]; histTitles[index12] = new String(histTitle);
       nGraphs++;
       }
     }
-//  histograms[0] = nuDynHistos->h_f2_vsMult[2]; histTitles[0] = new String("f_{2}^{00}");
-//    plot(1, canvasNameBase+"f2_vsMult",canvasConfiguration,graphConfigurations,
-       plot(nGraphs, canvasNameBase+"f2_vsMult",canvasConfiguration,graphConfigurations,
+//  histograms[0] = nuDynHistos->h_f2_evtClass[2]; histTitles[0] = new String("f_{2}^{00}");
+//    plot(1, canvasNameBase+"f2_evtClass",canvasConfiguration,graphConfigurations,
+       plot(nGraphs, canvasNameBase+"f2_evtClass",canvasConfiguration,graphConfigurations,
        "Mult", 20.0, 400.0,
        "f_{2}", 0.0, -1.2,
        histograms,histTitles,0.75, 0.7, 0.85, 0.8, 0.055);
@@ -101,7 +101,7 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
       histTitle += i2;
       histTitle += "}";
       cout << "Inserting: " << histTitle << endl;
-      histograms[index12] = nuDynDerivedHistos->h_F2_vsMult[index12]; histTitles[index12] = new String(histTitle);
+      histograms[index12] = nuDynDerivedHistos->h_F2_evtClass[index12]; histTitles[index12] = new String(histTitle);
       if (!histograms[index12])
         {
         cout << "<F> HistogramGroup not loaded!!!! ABORT!!!" << endl;
@@ -110,8 +110,8 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
       nGraphs++;
       }
     }
-//  plot(1, canvasNameBase+"F2_vsMult",canvasConfiguration,graphConfigurations,
-       plot(nGraphs, canvasNameBase+"F2_vsMult",canvasConfiguration,graphConfigurations,
+//  plot(1, canvasNameBase+"F2_evtClass",canvasConfiguration,graphConfigurations,
+       plot(nGraphs, canvasNameBase+"F2_evtClass",canvasConfiguration,graphConfigurations,
        "Mult", 20.0, 400.0,
        "F_{2}", 1.2, -1.2,
        histograms,histTitles,0.75, 0.7, 0.85, 0.8, 0.055);
@@ -128,7 +128,7 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
        histTitle += i2;
        histTitle += "}";
        cout << "Inserting: " << histTitle << endl;
-       histograms[index12] = nuDynDerivedHistos->h_R2_vsMult[index12]; histTitles[index12] = new String(histTitle);
+       histograms[index12] = nuDynDerivedHistos->h_R2_evtClass[index12]; histTitles[index12] = new String(histTitle);
        if (!histograms[index12])
          {
          cout << "<F> HistogramGroup not loaded!!!! ABORT!!!" << endl;
@@ -137,8 +137,8 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
        nGraphs++;
        }
      }
-   plot(nGraphs, canvasNameBase+"R2_vsMult",canvasConfiguration,graphConfigurations,
-   //     plot(1, canvasNameBase+"R2_vsMult",canvasConfiguration,graphConfigurations,
+   plot(nGraphs, canvasNameBase+"R2_evtClass",canvasConfiguration,graphConfigurations,
+   //     plot(1, canvasNameBase+"R2_evtClass",canvasConfiguration,graphConfigurations,
         "Mult", 20.0, 400.0,
              "R_{2}", -0.15, 0.15,
         histograms,histTitles,0.75, 0.7, 0.85, 0.8, 0.055);
@@ -160,7 +160,7 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
 //        histTitle += i3;
 //        histTitle += "}";
 //        cout << "Inserting: " << histTitle << endl;
-//        histograms[index123] = nuDynHistos->h_f3_vsMult[index123]; histTitles[index123] = new String(histTitle);
+//        histograms[index123] = nuDynHistos->h_f3_evtClass[index123]; histTitles[index123] = new String(histTitle);
 //        if (!histograms[index123])
 //          {
 //          cout << "<F> HistogramGroup not loaded!!!! ABORT!!!" << endl;
@@ -170,9 +170,9 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
 //        }
 //      }
 //    }
-  histograms[0] = nuDynHistos->h_f3_vsMult[1]; histTitles[0] = new String("f_{3}^{000}");
+  histograms[0] = nuDynHistos->h_f3_evtClass[1]; histTitles[0] = new String("f_{3}^{000}");
 
-  plot(1, canvasNameBase+"f3_vsMult",canvasConfiguration,graphConfigurations,
+  plot(1, canvasNameBase+"f3_evtClass",canvasConfiguration,graphConfigurations,
        "Mult", 20.0, 400.0,
        "f_{3}", 0.0, -1.2,
        histograms,histTitles,0.75, 0.7, 0.85, 0.8, 0.055);
@@ -192,7 +192,7 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
          histTitle += i3;
          histTitle += "}";
          //cout << "Inserting: " << histTitle << endl;
-         histograms[index123] = nuDynDerivedHistos->h_F3_vsMult[index123]; histTitles[index123] = new String(histTitle);
+         histograms[index123] = nuDynDerivedHistos->h_F3_evtClass[index123]; histTitles[index123] = new String(histTitle);
          if (!histograms[index123])
            {
            cout << "<F> HistogramGroup not loaded!!!! ABORT!!!" << endl;
@@ -202,8 +202,8 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
          }
        }
      }
-   //plot(nGraphs, canvasNameBase+"F3_vsMult",canvasConfiguration,graphConfigurations,
-        plot(1, canvasNameBase+"F3_vsMult",canvasConfiguration,graphConfigurations,
+   //plot(nGraphs, canvasNameBase+"F3_evtClass",canvasConfiguration,graphConfigurations,
+        plot(1, canvasNameBase+"F3_evtClass",canvasConfiguration,graphConfigurations,
         "Mult", 20.0, 400.0,
         "F_{3}", 1.2, -1.2,
         histograms,histTitles,0.75, 0.7, 0.85, 0.8, 0.055);
@@ -223,7 +223,7 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
           histTitle += i3;
           histTitle += "}";
           cout << "Inserting: " << histTitle << endl;
-          histograms[index123] = nuDynDerivedHistos->h_R3_vsMult[index123]; histTitles[index123] = new String(histTitle);
+          histograms[index123] = nuDynDerivedHistos->h_R3_evtClass[index123]; histTitles[index123] = new String(histTitle);
           if (!histograms[index123])
             {
             cout << "<F> HistogramGroup not loaded!!!! ABORT!!!" << endl;
@@ -233,8 +233,8 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
           }
         }
       }
-    plot(nGraphs, canvasNameBase+"R3_vsMult",canvasConfiguration,graphConfigurations,
-    //     plot(1, canvasNameBase+"R3_vsMult",canvasConfiguration,graphConfigurations,
+    plot(nGraphs, canvasNameBase+"R3_evtClass",canvasConfiguration,graphConfigurations,
+    //     plot(1, canvasNameBase+"R3_evtClass",canvasConfiguration,graphConfigurations,
          "Mult", 20.0, 400.0,
               "R_{3}", -0.03, 0.03,
          histograms,histTitles,0.75, 0.7, 0.85, 0.8, 0.055);
@@ -258,7 +258,7 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
           histTitle += i4;
           histTitle += "}";
           cout << "Inserting: " << histTitle << endl;
-          histograms[index1234] = nuDynHistos->h_f4_vsMult[index1234]; histTitles[index1234] = new String(histTitle);
+          histograms[index1234] = nuDynHistos->h_f4_evtClass[index1234]; histTitles[index1234] = new String(histTitle);
           if (!histograms[index1234])
           {
           cout << "<F> HistogramGroup not loaded!!!! ABORT!!!" << endl;
@@ -269,8 +269,8 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
         }
       }
     }
-   //plot(nGraphs, canvasNameBase+"f4_vsMult",canvasConfiguration,graphConfigurations,
-        plot(1, canvasNameBase+"f4_vsMult",canvasConfiguration,graphConfigurations,
+   //plot(nGraphs, canvasNameBase+"f4_evtClass",canvasConfiguration,graphConfigurations,
+        plot(1, canvasNameBase+"f4_evtClass",canvasConfiguration,graphConfigurations,
         "Mult", 20.0, 400.0,
         "f_{4}", 0.0, -1.2,
         histograms,histTitles,0.75, 0.7, 0.85, 0.8, 0.055);
@@ -294,7 +294,7 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
           histTitle += i4;
           histTitle += "}";
           cout << "Inserting: " << histTitle << endl;
-          histograms[index1234] = nuDynDerivedHistos->h_F4_vsMult[index1234]; histTitles[index1234] = new String(histTitle);
+          histograms[index1234] = nuDynDerivedHistos->h_F4_evtClass[index1234]; histTitles[index1234] = new String(histTitle);
           if (!histograms[index1234])
           {
           cout << "<F> HistogramGroup not loaded!!!! ABORT!!!" << endl;
@@ -305,8 +305,8 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
         }
       }
     }
-   //plot(nGraphs, canvasNameBase+"F4_vsMult",canvasConfiguration,graphConfigurations,
-        plot(1, canvasNameBase+"F4_vsMult",canvasConfiguration,graphConfigurations,
+   //plot(nGraphs, canvasNameBase+"F4_evtClass",canvasConfiguration,graphConfigurations,
+        plot(1, canvasNameBase+"F4_evtClass",canvasConfiguration,graphConfigurations,
         "Mult", 20.0, 400.0,
         "F_{4}", 1.2, -1.2,
         histograms,histTitles,0.75, 0.7, 0.85, 0.8, 0.055);
@@ -330,7 +330,7 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
           histTitle += i4;
           histTitle += "}";
           cout << "Inserting: " << histTitle << endl;
-          histograms[index1234] = nuDynDerivedHistos->h_R4_vsMult[index1234]; histTitles[index1234] = new String(histTitle);
+          histograms[index1234] = nuDynDerivedHistos->h_R4_evtClass[index1234]; histTitles[index1234] = new String(histTitle);
           if (!histograms[index1234])
           {
           cout << "<F> HistogramGroup not loaded!!!! ABORT!!!" << endl;
@@ -341,8 +341,8 @@ void NuDynPlotter::makePlots(const String & canvasNameBase,
         }
       }
     }
-   plot(nGraphs, canvasNameBase+"R4_vsMult",canvasConfiguration,graphConfigurations,
-//          plot(1, canvasNameBase+"R4_vsMult",canvasConfiguration,graphConfigurations,
+   plot(nGraphs, canvasNameBase+"R4_evtClass",canvasConfiguration,graphConfigurations,
+//          plot(1, canvasNameBase+"R4_evtClass",canvasConfiguration,graphConfigurations,
           "Mult", 20.0, 400.0,
                "R_{4}", -0.02, 0.02,
         histograms,histTitles,0.75, 0.7, 0.85, 0.8, 0.055);
@@ -375,7 +375,7 @@ int index1234 = nuDynHistos[0]->index4(0,1,2,3);
     histTitle = histTitleBase;
     histTitle += *histLabels[i1];
     //cout << "Inserting: " << histTitle  << endl;
-    histograms[i1] = nuDynHistos[i1]->h_f4_vsMult[index1234];
+    histograms[i1] = nuDynHistos[i1]->h_f4_evtClass[index1234];
     if (!histograms[i1])
         {
         cout << "<F> HistogramGroup not loaded!!!! ABORT!!!" << endl;
@@ -385,7 +385,7 @@ int index1234 = nuDynHistos[0]->index4(0,1,2,3);
 
     }
 
-   plot(nGraphs, canvasNameBase+"f4_vsMult",canvasConfiguration,graphConfigurations,
+   plot(nGraphs, canvasNameBase+"f4_evtClass",canvasConfiguration,graphConfigurations,
         "Mult", 20.0, 400.0,
         "f_{4}", 0.0, -1.2,
         histograms,histTitles,0.25, 0.6, 0.45, 0.85, 0.055);
@@ -396,14 +396,14 @@ int index1234 = nuDynHistos[0]->index4(0,1,2,3);
      histTitle = histTitleBase;
      histTitle += *histLabels[i1];
      cout << "Inserting: " << histTitle  << endl;
-     histograms[i1] = nuDynDerivedHistos[i1]->h_F4_vsMult[index1234]; histTitles[i1] = new String(histTitle);
+     histograms[i1] = nuDynDerivedHistos[i1]->h_F4_evtClass[index1234]; histTitles[i1] = new String(histTitle);
      if (!histograms[i1])
        {
        cout << "<F> HistogramGroup not loaded!!!! ABORT!!!" << endl;
        return;
        }
      }
-    plot(nGraphs, canvasNameBase+"F4_vsMult",canvasConfiguration,graphConfigurations,
+    plot(nGraphs, canvasNameBase+"F4_evtClass",canvasConfiguration,graphConfigurations,
          "Mult", 20.0, 400.0,
          "F_{4}", -50000, 50000,
          histograms,histTitles,0.25, 0.6, 0.45, 0.85, 0.055);
@@ -414,14 +414,14 @@ int index1234 = nuDynHistos[0]->index4(0,1,2,3);
     histTitle = histTitleBase;
     histTitle += *histLabels[i1];
     cout << "Inserting: " << histTitle  << endl;
-    histograms[i1] = nuDynDerivedHistos[i1]->h_R4_vsMult[index1234]; histTitles[i1] = new String(histTitle);
+    histograms[i1] = nuDynDerivedHistos[i1]->h_R4_evtClass[index1234]; histTitles[i1] = new String(histTitle);
     if (!histograms[i1])
       {
       cout << "<F> HistogramGroup not loaded!!!! ABORT!!!" << endl;
       return;
       }
     }
-   plot(nGraphs, canvasNameBase+"R4_vsMult",canvasConfiguration,graphConfigurations,
+   plot(nGraphs, canvasNameBase+"R4_evtClass",canvasConfiguration,graphConfigurations,
         "Mult", 20.0, 400.0,
         "R_{4}", -0.3, 0.3,
         histograms,histTitles,0.65, 0.6, 0.85, 0.9, 0.055);
@@ -454,8 +454,8 @@ int index12= nuDynHistos[0]->index2(0,1);
     {
     histTitle = histTitleBase;
     histTitle += *histLabels[i1];
-    //cout << "Inserting: " << histTitle  << endl; // HMHMHMHM_nudyn_23_vsMult
-    histograms[i1] = nuDynDerivedHistos[i1]->h_nudyn_vsMult[index12];
+    //cout << "Inserting: " << histTitle  << endl; // HMHMHMHM_nudyn_23_evtClass
+    histograms[i1] = nuDynDerivedHistos[i1]->h_nudyn_evtClass[index12];
     if (!histograms[i1])
         {
         cout << "<F> HistogramGroup not loaded!!!! ABORT!!!" << endl;
@@ -465,7 +465,7 @@ int index12= nuDynHistos[0]->index2(0,1);
 
     }
 
-   plot(nGraphs, canvasNameBase+"nudyn_vsMult",canvasConfiguration,graphConfigurations,
+   plot(nGraphs, canvasNameBase+"nudyn_evtClass",canvasConfiguration,graphConfigurations,
         "Mult", 20.0, 400.0,
         "#nu_{Dyn}", 0.0, -1.2,
         histograms,histTitles,0.25, 0.6, 0.45, 0.85, 0.055);

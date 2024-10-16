@@ -18,9 +18,9 @@ namespace CAP
 //
 TFile * openRootFile(const String & path,
                      const String & name,
-                     const String & ioOption)
+                     const String & ioOption,
+                     bool verbose)
 {
-  verbose = true;
   String fileName;
   if (name.BeginsWith("/"))
     fileName = name;
@@ -41,14 +41,15 @@ TFile * openRootFile(const String & path,
     printValue("ioOption",ioOption);
     }
   TFile * file = new TFile(fileName,ioOption);
-  if (!file) throw  FileException(fileName,"File not found","openRootFile()");
-  if (!file->IsOpen())  throw  FileException(fileName,"File not found/opened","openRootFile()");
+  if (!file) throw  FileException(fileName,"File not found",__FUNCTION__);
+  if (!file->IsOpen())  throw  FileException(fileName,"File not found/opened",__FUNCTION__);
   if (verbose) std::cout << "openRootFile(...) File opened successfully." << std::endl;
   return file;
 }
 
 TFile * openRootFile(const String & name,
-                     const String & ioOption)
+                     const String & ioOption,
+                     bool verbose)
 {
   String fileName = name;
   if (!fileName.EndsWith(".root")) fileName += ".root";
@@ -60,7 +61,7 @@ TFile * openRootFile(const String & name,
     }
   TFile * file = new TFile(fileName,ioOption);
   if (!file) throw  FileException(fileName,"File not found","openRootFile()");
-  if (!file->IsOpen())  throw  FileException(fileName,"File not found/opened","openRootFile()");
+  if (!file->IsOpen())  throw  FileException(fileName,"File not found/opened",__FUNCTION__);
   if (verbose)
     {
     printCR();
@@ -69,41 +70,51 @@ TFile * openRootFile(const String & name,
   return file;
 }
 
-TFile * openOldRootFile(const String & name)
+TFile * openOldRootFile(const String & name,
+                        bool verbose)
 {
-  return openRootFile(name,"OLD");
+  return openRootFile(name,"OLD",verbose);
 }
 
-TFile * openOldRootFile(const String & path, const String & name)
+TFile * openOldRootFile(const String & path,
+                        const String & name,
+                        bool verbose)
 {
-  return openRootFile(path,name,"OLD");
+  return openRootFile(path,name,"OLD",verbose);
 }
 
-TFile * openNewRootFile(const String & name)
+TFile * openNewRootFile(const String & name,
+                        bool verbose)
 {
-  return openRootFile(name,"NEW");
+  return openRootFile(name,"NEW",verbose);
 }
 
-TFile * openNewRootFile(const String & path, const String & name)
+TFile * openNewRootFile(const String & path,
+                        const String & name,
+                        bool verbose)
 {
-  return openRootFile(path,name,"NEW");
+  return openRootFile(path,name,"NEW",verbose);
 }
 
-TFile * openRecreateRootFile(const String & name)
+TFile * openRecreateRootFile(const String & name,
+                             bool verbose)
 {
-  return openRootFile(name,"RECREATE");
+  return openRootFile(name,"RECREATE",verbose);
 }
 
-TFile * openRecreateRootFile(const String & path, const String & name)
+TFile * openRecreateRootFile(const String & path,
+                             const String & name,
+                             bool verbose)
 {
-  return openRootFile(path,name,"RECREATE");
+  return openRootFile(path,name,"RECREATE",verbose);
 }
 
 std::vector<TFile*> openRootFiles(std::vector<String> & names,
-                                  const String   & ioOption)
+                                  const String   & ioOption,
+                                  bool verbose)
 {
   int nFiles = names.size();
-  if (nFiles<1)  throw  Exception("No file names supplied","openRootInputFiles(...)");
+  if (nFiles<1)  throw FileException("Empty file list","File not found/opened",__FUNCTION__);
   if (verbose)
     {
     printCR();
@@ -112,7 +123,7 @@ std::vector<TFile*> openRootFiles(std::vector<String> & names,
   std::vector<TFile*> files;
   for (auto & name : names)
     {
-    files.push_back( openRootFile(name,ioOption));
+    files.push_back( openRootFile(name,ioOption,verbose));
     }
   if (verbose)
     {
@@ -124,10 +135,11 @@ std::vector<TFile*> openRootFiles(std::vector<String> & names,
 
 std::vector<TFile*> openRootFiles(const String & path,
                                   std::vector<String> & names,
-                                  const String   & ioOption)
+                                  const String   & ioOption,
+                                  bool verbose)
 {
   int nFiles = names.size();
-  if (nFiles<1)  throw  Exception("No file names supplied","openRootInputFiles(...)");
+  if (nFiles<1)  throw  FileException("Empty file list","File not found/opened",__FUNCTION__);
   if (verbose)
     {
     printCR();
@@ -137,7 +149,7 @@ std::vector<TFile*> openRootFiles(const String & path,
   std::vector<TFile*> files;
   for (auto & name : names)
     {
-    files.push_back( openRootFile(path,name,ioOption));
+    files.push_back( openRootFile(path,name,ioOption,verbose));
     }
   if (verbose)  std::cout << "openRootInputFiles(...) Completed successfully" << std::endl;
   return files;
@@ -149,18 +161,14 @@ std::vector<TString> listDirsIn(const TString & pathname,
   TString directoryName = pathname;
   std::vector<TString>  subdirectories;
   if (!directoryName.EndsWith("/")) directoryName += "/";
-  if (verbose) cout << "==================== Searching folders ==================== " << endl;
+  if (verbose) printValue("listDirsIn() Search path",pathname);
   TSystemDirectory topDirectory(directoryName, directoryName);
   TList *files = topDirectory.GetListOfFiles();
-  if (!files)
-    {
-    cout << " files is a null pointer" << endl;
-    return subdirectories;
-    }
+  if (!files) throw FileException("TList* is a nullpointer","File not found/opened",__FUNCTION__);
   TSystemFile *file;
   TString fname;
   TIter next(files);
-  while ((file=(TSystemFile*)next()) )
+  while ((file=(TSystemFile*) next()) )
     {
     fname = file->GetName();
     if (file->IsDirectory()   && !fname.BeginsWith(".")  ) subdirectories.push_back(fname);
@@ -182,15 +190,15 @@ std::vector<String> listFilesInDir(const String & pathname,
   if (verbose)
     {
     printCR();
-    printString("Searching files");
-    printValue("MaximumDepth:",maximumDepth);
-    printValue("currentDepth:",depth);
+    printString("listFilesInDir() Searching files");
+    printValue("listFilesInDir() MaximumDepth:",maximumDepth);
+    printValue("listFilesInDir() CurrentDepth:",depth);
     }
   TSystemDirectory dir(dirname, dirname);
   TList *files = dir.GetListOfFiles();
   std::vector<String>  fileNames;
   std::vector<String>  subdirs;
-  if (!files) throw TaskException("Null TList","listFilesInDir(...)");
+  if (!files) throw FileException("Null TList","No files found", __FUNCTION__);
   TSystemFile *file;
   String fname;
   TIter next(files);
@@ -232,7 +240,7 @@ std::vector<String> listFilesInDir(const String & pathname,
   if (verbose)
     {
     printCR();
-    printValue("Number of files  found",fileNames.size());
+    printValue("listFilesInDir() Number of files found",fileNames.size());
     for (Size_t k=0; k<fileNames.size();k++)
       {
       String s = "File "; s += k;
@@ -259,7 +267,7 @@ std::vector<String>  listFilesInDir(const String & pathName,
   unsigned int nNames = fileList.size();
   if (verbose)
     {
-    std::cout << std::endl;
+    printCR();
     printValue("nNames",nNames);
     printValue("nIncludes",includePatterns.size());
     printValue("nExcludes",excludePatterns.size());
@@ -319,31 +327,44 @@ String removeRootExtension(const String fileName)
   return name;
 }
 
-void exportParameter(TFile & outputFile, const String & parameterName, long value)
+void exportParameter(TFile & outputFile,
+                     const String & parameterName,
+                     long value,
+                     bool verbose)
 {
+  if (verbose)
+    {
+    printCR();
+    printValue("exportParameter() output file",outputFile.GetName());
+    printValue("exportParameter() parameterName",parameterName);
+    printValue("exportParameter() value",value);
+    }
   outputFile.cd();
   TParameter<Long64_t>(parameterName,value,'+').Write();
 }
 
-long importParameter(TFile & inputFile, const String & parameterName)
+long importParameter(TFile & inputFile,
+                     const String & parameterName,
+                     bool verbose)
 {
-  verbose = 1;
   TParameter<Long64_t> *par = (TParameter<Long64_t> *) inputFile.Get(parameterName);
   if (!par)
     {
     if (verbose)
       {
       printCR();
-      printValue("Property not found:",parameterName);
+      printValue("importParameter() input file",inputFile.GetName());
+      printValue("importParameter() Property not found:",parameterName);
       }
-    throw TaskException("Property not found",__FUNCTION__);
+    throw FileException(parameterName,"Property not found",__FUNCTION__);
     }
   double value = par->GetVal();
   delete par;
   if (verbose)
     {
     printCR();
-    printValue(parameterName,value);
+    printValue("importParameter() parameterName",parameterName);
+    printValue("importParameter() value",value);
     }
   return value;
 }
@@ -364,7 +385,8 @@ CAP::String makeFileName(const String & inputPath,
   return inputFileName;
 }
 
-void createDirectory(const String path)
+void createDirectory(const String path,
+                     bool verbose)
 {
   if (verbose)
     {
@@ -387,9 +409,10 @@ TH1 * createNewHistogram(const String & name,
                          int n_x, double min_x, double max_x,
                          const String & title_x,
                          const String & title_y,
-                         int storageOption)
+                         int storageOption,
+                         bool verbose)
 {
-  if (isVerbose())  printHistoInfo(__FUNCTION__,name,n_x,min_x,max_x);
+  if (verbose)  printHistoInfo(__FUNCTION__,name,n_x,min_x,max_x);
   TH1 * h;
   switch (storageOption)
     {
@@ -410,9 +433,10 @@ TH1 * createNewHistogram(const String & name,
                          int n_x, double * bins,
                          const String & title_x,
                          const String & title_y,
-                         int storageOption)
+                         int storageOption,
+                         bool verbose)
 {
-  if (isVerbose())  printHistoInfo(__FUNCTION__,name,n_x,bins[0],bins[1]);
+  if (verbose)  printHistoInfo(__FUNCTION__,name,n_x,bins[0],bins[1]);
   TH1 * h;
   switch (storageOption)
     {
@@ -435,9 +459,10 @@ TH2 * createNewHistogram(const String & name,
                          const String & title_x,
                          const String & title_y,
                          const String & title_z,
-                         int storageOption )
+                         int storageOption,
+                         bool verbose )
 {
-  if (isVerbose()) printHistoInfo(__FUNCTION__,name,n_x,min_x,max_x,n_y,min_y,max_y);
+  if (verbose) printHistoInfo(__FUNCTION__,name,n_x,min_x,max_x,n_y,min_y,max_y);
   TH2 * h;
   switch (storageOption)
     {
@@ -459,10 +484,11 @@ TH2 * createNewHistogram(const String & name,
                          const String & title_x,
                          const String & title_y,
                          const String & title_z,
-                         int storageOption)
+                         int storageOption,
+                         bool verbose)
 {
 
-  if (isVerbose()) printHistoInfo(__FUNCTION__,name,n_x,xbins[0],xbins[1],n_y,min_y,max_y);
+  if (verbose) printHistoInfo(__FUNCTION__,name,n_x,xbins[0],xbins[1],n_y,min_y,max_y);
   TH2 * h;
   switch (storageOption)
     {
@@ -487,11 +513,11 @@ TH3 * createNewHistogram(const String & name,
                          const String & title_x,
                          const String & title_y,
                          const String & title_z,
-                         int storageOption)
+                         int storageOption,
+                         bool verbose)
 {
 
-  if (isVerbose())
-    printHistoInfo(__FUNCTION__,name,n_x,min_x,max_x,n_y,min_y,max_y,n_z,min_z,max_z);
+  if (verbose) printHistoInfo(__FUNCTION__,name,n_x,min_x,max_x,n_y,min_y,max_y,n_z,min_z,max_z);
   TH3 * h;
   switch (storageOption)
     {
@@ -511,10 +537,11 @@ TH3 * createNewHistogram(const String & name,
 TProfile * createNewProfile(const String & name,
                             int n_x,double min_x,double max_x,
                             const String & title_x,
-                            const String & title_y)
+                            const String & title_y,
+                            bool verbose)
 {
 
-  if (isVerbose()) printHistoInfo(__FUNCTION__,name,n_x,min_x,max_x);
+  if (verbose) printHistoInfo(__FUNCTION__,name,n_x,min_x,max_x);
   TProfile * h = new TProfile(name,name,n_x,min_x,max_x);
   setTitles(h,title_x,title_y);
   return h;
@@ -526,9 +553,10 @@ TProfile * createNewProfile(const String & name,
 TProfile * createNewProfile(const String & name,
                             int n_x,  double* bins,
                             const String & title_x,
-                            const String & title_y)
+                            const String & title_y,
+                            bool verbose)
 {
-  if (isVerbose()) printHistoInfo(__FUNCTION__,name,n_x,bins[0],bins[1]);
+  if (verbose) printHistoInfo(__FUNCTION__,name,n_x,bins[0],bins[1]);
   TProfile * h = new TProfile(name,name,n_x,bins);
   setTitles(h,title_x,title_y);
   return h;
@@ -542,10 +570,11 @@ TProfile2D * createNewProfile(const String & name,
                               int n_y, double min_y, double max_y,
                               const String & title_x,
                               const String & title_y,
-                              const String & title_z)
+                              const String & title_z,
+                              bool verbose)
 {
 
-  if (isVerbose()) printHistoInfo(__FUNCTION__,name,n_x,min_x,max_x,n_y,min_y,max_y);
+  if (verbose) printHistoInfo(__FUNCTION__,name,n_x,min_x,max_x,n_y,min_y,max_y);
   TProfile2D * h = new TProfile2D(name,name,n_x,min_x,max_x,n_y,min_y,max_y);
   setTitles(h,title_x,title_y,title_z);
   return h;
@@ -1024,11 +1053,19 @@ int   getDimension(const TH1* h)
 {
   if (!ptrExist(__FUNCTION__,h)) throw NullPointerException(__FUNCTION__);
   int nDim = 0;
-  if (h->IsA()==TH1::Class() || h->IsA()==TH1F::Class() || h->IsA()==TH1D::Class() || h->IsA()==TH1I::Class() )
+  if (h->IsA()==TH1::Class() ||
+      h->IsA()==TH1F::Class() ||
+      h->IsA()==TH1D::Class() ||
+      h->IsA()==TH1I::Class() ||
+      h->IsA()==TProfile::Class() )
     {
     nDim = 1;
     }
-  else if (h->IsA()==TH2::Class() || h->IsA()==TH2F::Class() || h->IsA()==TH2D::Class() || h->IsA()==TH2I::Class() )
+  else if (h->IsA()==TH2::Class() ||
+           h->IsA()==TH2F::Class() ||
+           h->IsA()==TH2D::Class() ||
+           h->IsA()==TH2I::Class() ||
+           h->IsA()==TProfile2D::Class() )
     {
     nDim = 2;
     }

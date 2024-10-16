@@ -23,13 +23,16 @@ namespace CAP
 //!
 Event::Event()
 :
-Properties(),
 eventName(),
 eventIndex(0),
 eventNumber(0),
 projectileA(),
 projectileB(),
-particles()
+particles(),
+cl0(0.0), cl1(0.0), cl2(0.0), cl3(0.0), cl4(0.0),
+mult0(0.0), mult1(0.0), mult2(0.0), mult3(0.0), mult4(0.0),
+spherocity0(0.0), spherocity1(0.0), spherocity2(0.0), spherocity3(0.0), spherocity4(0.0),
+energy0(0.0), energy1(0.0), energy2(0.0), energy3(0.0), energy4(0.0)
 {  /* no ops */ }
 
 //!
@@ -48,7 +51,6 @@ void Event::clear()
   eventIndex      = 0;
   eventNumber     = 0;
   particles.clear();
-  Properties::clear();
 }
 
 //!
@@ -59,7 +61,10 @@ void Event::reset()
   eventIndex++;
   eventNumber   = 0;
   particles.clear();
-  Properties::reset();
+  cl0 = 0.0; cl1 = 0.0; cl2 = 0.0; cl3 = 0.0; cl4 = 0.0;
+  mult0 = 0.0; mult1 = 0.0; mult2 = 0.0; mult3 = 0.0; mult4 = 0.0;
+  spherocity0 = 0.0; spherocity1 = 0.0; spherocity2 = 0.0; spherocity3 = 0.0; spherocity4 = 0.0;
+  energy0 = 0.0; energy1 = 0.0; energy2 = 0.0; energy3 = 0.0; energy4 = 0.0;
 }
 
 
@@ -102,7 +107,27 @@ void Event::print(ostream & output, int style, int size)
   projectileA.print(output,style,size);
   printString("Projectile B",output,style,size);
   projectileB.print(output,style,size);
-  Properties::print(output,style,size);
+
+  printValue("Cl0",cl0);
+  printValue("Cl1",cl1);
+  printValue("Cl2",cl2);
+  printValue("Cl3",cl3);
+  printValue("Cl4",cl4);
+  printValue("Mult0",mult0);
+  printValue("Mult1",mult1);
+  printValue("Mult2",mult2);
+  printValue("Mult3",mult3);
+  printValue("Mult4",mult4);
+  printValue("Spherocity0",spherocity0);
+  printValue("Spherocity1",spherocity1);
+  printValue("Spherocity2",spherocity2);
+  printValue("Spherocity3",spherocity3);
+  printValue("Spherocity4",spherocity4);
+  printValue("Energy0",energy0);
+  printValue("Energy1",energy1);
+  printValue("Energy2",energy2);
+  printValue("Energy3",energy3);
+  printValue("Energy4",energy4);
   printParticles(output,style,size);
   printLine(output,style,100);
   printCR(output,2);

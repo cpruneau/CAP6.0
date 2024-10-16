@@ -10,8 +10,6 @@
  *
  * *********************************************************************/
 #include "ParticlePair3DDerivedHistos.hpp"
-
-
 ClassImp(ParticlePair3DDerivedHistos);
 
 ParticlePair3DDerivedHistos::ParticlePair3DDerivedHistos(Task * _parent,

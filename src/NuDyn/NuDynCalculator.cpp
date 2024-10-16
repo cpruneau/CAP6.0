@@ -23,28 +23,21 @@ namespace CAP
 
 NuDynCalculator::NuDynCalculator()
 :
-EventTask(),
-multiplicityType(0)
+EventTask()
 {
   appendClassName("NuDynCalculator");
-  setName("NuDyn");
-  setTitle("NuDyn");
-  setVersion("1.0");
+  setName("NuDynCalculator");
+  setTitle("NuDynCalculator");
 }
 
 NuDynCalculator::NuDynCalculator(const NuDynCalculator & task)
 :
-EventTask(task),
-multiplicityType(task.multiplicityType)
+EventTask(task)
 {   }
 
 NuDynCalculator & NuDynCalculator::operator=(const NuDynCalculator & task)
 {
-  if (this!=&task)
-    {
-    EventTask::operator=(task);
-    multiplicityType = task.multiplicityType;
-    }
+  if (this!=&task) EventTask::operator=(task);
   return *this;
 }
 
@@ -54,13 +47,10 @@ NuDynCalculator::~NuDynCalculator()
 void NuDynCalculator::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
-  //addProperty("InputType",         multiplicityType);
-  addProperty("nBins_mult",        200);
-  addProperty("Min_mult",          0.0);
-  addProperty("Max_mult",          200.0);
-  addProperty("nBins_rapidity",    99);
-  addProperty("Min_rapidity",      0.100);
-  addProperty("Max_rapidity",      10.00);
+  addProperty("HistogramBaseName",     "NuDyn");
+  addProperty("nBins_EvtClass",        200);
+  addProperty("Min_EvtClass",          0.0);
+  addProperty("Max_EvtClass",          200.0);
 }
 
 void NuDynCalculator::configure()
@@ -95,7 +85,7 @@ void NuDynCalculator::importHistograms(TFile & inputFile)
   if (reportStart(__FUNCTION__)) { /* no ops */ }
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
   std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
-  String bn = getName();
+  String bn = getValueString( "HistogramBaseName");
   for (auto & eventFilter : eventFilters)
     {
     String efn  = eventFilter->getName();
@@ -113,7 +103,7 @@ void NuDynCalculator::importHistograms(TFile & inputFile)
 void NuDynCalculator::createHistograms()
 {
   if (reportStart(__FUNCTION__))   { /* no ops */ }
-  String bn = getName(); bn += "_";
+  String bn = getValueString( "HistogramBaseName");
   String efn;
   String histoName;
   String pfn;
@@ -138,7 +128,6 @@ void NuDynCalculator::execute()
 {
   if (reportStart(__FUNCTION__))   { /* no ops */ }
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
-  //std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
   for (unsigned int iEventFilter=0; iEventFilter<eventFilters.size(); iEventFilter++ )
     {
       NuDynHistos & baseHistos    = (NuDynHistos &) getGroupAt(0,iEventFilter);
@@ -147,6 +136,12 @@ void NuDynCalculator::execute()
     }
   if (reportEnd(__FUNCTION__))   { /* no ops */ }
 }
+
+void NuDynCalculator::scaleHistograms()
+{
+
+}
+
 
 }  // namespace CAP
 

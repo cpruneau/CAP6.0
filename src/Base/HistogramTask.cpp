@@ -25,47 +25,27 @@ namespace CAP
 HistogramTask::HistogramTask()
 :
 Task(),
-histogramScale              (false),
-histogramForceRewrite       (false),
-histogramImportPath         ("DEFAULT"),
-histogramImportFile         ("DEFAULT"),
-histogramExportPath         ("DEFAULT"),
-histogramExportFile         ("DEFAULT"),
-histogramExportPartial      (false),
-histogramExportPartialCount (0),
-histogramExportMaxPerPartial(0),
-histogramSets()
+histogramSets(),
+rootInputFile(nullptr), // do we really need this
+rootOutputFile(nullptr) // do we really need this
 { /* no ops */ }
 
 HistogramTask::HistogramTask(const HistogramTask & task)
 :
 Task(task),
-histogramScale              (task.histogramScale),
-histogramForceRewrite       (task.histogramForceRewrite),
-histogramImportPath         (task.histogramImportPath),
-histogramImportFile         (task.histogramImportFile),
-histogramExportPath         (task.histogramExportPath),
-histogramExportFile         (task.histogramExportFile),
-histogramExportPartial      (task.histogramExportPartial),
-histogramExportPartialCount (task.histogramExportPartialCount),
-histogramExportMaxPerPartial(task.histogramExportMaxPerPartial),
-histogramSets            (task.histogramSets)
+histogramSets(task.histogramSets),
+rootInputFile(nullptr), // do we really need this
+rootOutputFile(nullptr) // do we really need this
 { /* no ops */ }
 
 HistogramTask HistogramTask::operator=(const HistogramTask & task)
 {
   if (this!=&task)
     {
-    histogramScale              = task.histogramScale;
-    histogramForceRewrite       = task.histogramForceRewrite;
-    histogramImportPath         = task.histogramImportPath;
-    histogramImportFile         = task.histogramImportFile;
-    histogramExportPath         = task.histogramExportPath;
-    histogramExportFile         = task.histogramExportFile;
-    histogramExportPartial      = task.histogramExportPartial;
-    histogramExportPartialCount = task.histogramExportPartialCount;
-    histogramExportMaxPerPartial= task.histogramExportMaxPerPartial;
-    histogramSets            = task.histogramSets;
+    Task::operator=(task);
+    histogramSets  = task.histogramSets;
+    rootInputFile  = nullptr;
+    rootOutputFile = nullptr;
     }
   return *this;
 }
@@ -74,40 +54,24 @@ void HistogramTask::setDefaultConfiguration()
 {
   if (reportStart(__FUNCTION__)) { /* no ops */ };
   Task::setDefaultConfiguration();
-  addProperty("HistogramsScale",histogramScale);
-  addProperty("HistogramsForceRewrite",histogramForceRewrite);
-  addProperty("HistogramsImportPath",histogramImportPath);
-  addProperty("HistogramsImportFile",histogramImportFile);
-  addProperty("HistogramsExportPath",histogramExportPath);
-  addProperty("HistogramsExportFile",histogramExportFile);
-  addProperty("HistogramsExportPartial",histogramExportPartial);
-  addProperty("HistogramsExportPartialCount",histogramExportPartialCount);
-  addProperty("HistogramsExportMaxPerPartial",histogramExportMaxPerPartial);
+  String defaultLocation = "Default";
+  addProperty("HistogramsScale",        true);
+  addProperty("HistogramsForceRewrite", true);
+  addProperty("HistogramsImportPath",   defaultLocation);
+  addProperty("HistogramsImportFile",   defaultLocation);
+  addProperty("HistogramsExportPath",   defaultLocation);
+  addProperty("HistogramsExportFile",   defaultLocation);
   if (reportEnd(__FUNCTION__)) { /* no ops */ };
 }
-
 
 void HistogramTask::configure()
 {
   Task::configure();
-  histogramScale               = getValueBool(  "HistogramsScale");
-  histogramForceRewrite        = getValueBool(  "HistogramsForceRewrite");
-  histogramImportPath          = getValueString("HistogramsImportPath");
-  histogramImportFile          = getValueString("HistogramsImportFile");
-  histogramExportPath          = getValueString("HistogramsExportPath");
-  histogramExportFile          = getValueString("HistogramsExportFile");
-  histogramExportPartial       = getValueBool(  "HistogramsExportPartial");
-  histogramExportPartialCount  = getValueInt(   "HistogramsExportPartialCount");
-  histogramExportMaxPerPartial = getValueInt(   "HistogramsExportMaxPerPartial");
 }
 
 void HistogramTask::initialize()
 {
-  if (reportStart(__FUNCTION__))  { /* */ };
-  EnvironmentVariables::initialize();
-  TaskAccountant::reset();
-  if (hasSubTasks())  initializeSubTasks();
-  if (reportEnd(__FUNCTION__)) { /* */ };
+  Task::initialize();
 }
 
 void HistogramTask::createHistograms()
@@ -173,12 +137,16 @@ void HistogramTask::addGroupInSet(unsigned int index, HistogramGroup * group)
 
 HistogramGroup & HistogramTask::getGroupAt(unsigned int iSet, unsigned int iGroup)
 {
-  printCR();
-  printString("HistogramTask::getGroupAt(unsigned int iSet, unsigned int iGroup)");
-  printValue("iSet",iSet);
-  printValue("iGroup",iGroup);
-  printValue("histogramSets.size()",histogramSets.size());
-  printValue("histogramSets[iSet].size()",histogramSets[iSet]->size());
+//  if (reportDebug(__FUNCTION__))
+//    {
+//    printCR();
+//    printString("HistogramTask::getGroupAt(unsigned int iSet, unsigned int iGroup)");
+//    printValue("iSet",iSet);
+//    printValue("iGroup",iGroup);
+//    printValue("histogramSets.size()",histogramSets.size());
+//    printValue("histogramSets[iSet].size()",histogramSets[iSet]->size());
+//    printCR();
+//    }
   return histogramSets[iSet]->getGroupAt(iGroup);
 }
 
@@ -200,12 +168,7 @@ void HistogramTask::resetHistograms()
 
 void HistogramTask::scaleHistograms()
 {
-  if (reportFatal(__FUNCTION__))
-    {
-    printCR();
-    printString("HistogramTask::scaleHistograms() improperly called");
-    }
-  throw TaskException("Function must be provided in derived class implementation",__FUNCTION__);
+  throw TaskException("scaleHistograms() function must be provided in derived class implementation",__FUNCTION__);
 }
 
 
@@ -235,49 +198,58 @@ void HistogramTask::printHistograms()
 
 String HistogramTask::getHistoImportPath()
 {
-  String CAP_HISTOS_IMPORT_PATH = getEnvVariable("CAP_HISTOS_IMPORT_PATH");
-  String histoPath;
-  if (histogramImportPath.EqualTo("DEFAULT"))
-    histoPath = CAP_HISTOS_IMPORT_PATH;
-  else if (histogramImportPath.BeginsWith("/"))
-    histoPath = histogramImportPath;
+  String path;
+  String histogramsImportPath = getValueString("HistogramsImportPath");
+  if (histogramsImportPath.EqualTo("DEFAULT") ||
+      histogramsImportPath.EqualTo("Default"))
+    path = getEnvVariable("CAP_HISTOS_IMPORT_PATH");
+  else if (histogramsImportPath.BeginsWith("/"))
+    path = histogramsImportPath;
   else
     {
-    histoPath = CAP_HISTOS_IMPORT_PATH;
-    histoPath += "/";
-    histoPath += histogramImportPath;
+    path = getEnvVariable("CAP_HISTOS_IMPORT_PATH");
+    path += "/";
+    path += histogramsImportPath;
     }
-  return histoPath;
+  return path;
 }
 
 
 String HistogramTask::getHistoExportPath()
 {
-  String CAP_HISTOS_EXPORT_PATH = getEnvVariable("CAP_HISTOS_EXPORT_PATH");
-  String histoPath;
-  if (histogramExportPath.EqualTo("DEFAULT"))
-    histoPath = CAP_HISTOS_EXPORT_PATH;
-  else if (histogramExportPath.BeginsWith("/"))
-    histoPath = histogramExportPath;
+  String path;
+  String histogramsExportPath = getValueString("HistogramsExportPath");
+  if (histogramsExportPath.EqualTo("DEFAULT") ||
+      histogramsExportPath.EqualTo("Default"))
+    path = getEnvVariable("CAP_HISTOS_EXPORT_PATH");
+  else if (histogramsExportPath.BeginsWith("/"))
+    path = histogramsExportPath;
   else
     {
-    histoPath = CAP_HISTOS_EXPORT_PATH;
-    histoPath += "/";
-    histoPath += histogramExportPath;
+    path = getEnvVariable("CAP_HISTOS_EXPORT_PATH");
+    path += "/";
+    path += histogramsExportPath;
     }
-  printCR();
-  printValue("CAP_HISTOS_EXPORT_PATH",CAP_HISTOS_EXPORT_PATH);
-  printValue("histogramExportPath",histogramExportPath);
-  printValue("histoPath",histoPath);
+  return path;
+}
 
-  return histoPath;
+String HistogramTask::getHistoImportFile()
+{
+  String name = getValueString("HistogramsImportFile");
+  return name;
+}
+
+String HistogramTask::getHistoExportFile()
+{
+  String name = getValueString("HistogramsExportFile");
+  return name;
 }
 
 void HistogramTask::importHistograms()
 {
   if (reportStart(__FUNCTION__)) { /* no ops */ };
   String importPath = getHistoImportPath();
-  String importFile = histogramImportFile;
+  String importFile = getHistoImportFile();
   if (reportInfo(__FUNCTION__))
     {
     printCR();
@@ -286,9 +258,7 @@ void HistogramTask::importHistograms()
     printValue("importFile",importFile);
     printLine();
     }
-  rootInputFile = openRootFile(importPath,importFile,"READ");
-//  loadNEventsAccepted(*rootInputFile);
-//  loadNEexecutedTask(*rootInputFile);
+  rootInputFile = openOldRootFile(importPath,importFile);
   importHistograms(*rootInputFile);
   if (reportEnd(__FUNCTION__)) { /* no ops */ };
 }
@@ -303,12 +273,14 @@ void HistogramTask::importHistograms(TFile & inputFile)
 
 void HistogramTask::exportHistograms()
 {
-  exportHistograms(histogramExportPath,histogramExportFile);
+  String path = getHistoExportPath();
+  String name = getHistoExportFile();
+  exportHistograms(path,name);
 }
 
 void HistogramTask::exportHistograms(const String & exportPath, const String & exportFile)
 {
-  if (reportInfo(__FUNCTION__)) { /* no ops */ };
+  if (reportInfo(__FUNCTION__))
     {
     printCR();
     printLine();
@@ -319,14 +291,21 @@ void HistogramTask::exportHistograms(const String & exportPath, const String & e
   if (exportPath.Length()>2) gSystem->mkdir(exportPath,1);
   if (exportFile.Length()<5)
     throw FileException(exportFile,"File name too short. Must have 5 character or more...",__FUNCTION__);
-  String option = "NEW";
-  if (histogramForceRewrite) option = "RECREATE";
-  TFile * rootOutputFile = openRootFile(exportPath,exportFile,option);
+  TFile * rootOutputFile;
+  if (histogramsForceRewrite())
+    rootOutputFile = openRecreateRootFile(exportPath,exportFile);
+  else
+    rootOutputFile = openNewRootFile(exportPath,exportFile);
   exportHistograms(*rootOutputFile);
   rootOutputFile->Close();
   rootOutputFile = nullptr;
 }
 
+
+bool HistogramTask::histogramsForceRewrite()
+{
+  return getValueBool("HistogramsForceRewrite");
+}
 
 //!
 //!Save histograms of all histogramSets and all groups they contain
@@ -335,6 +314,8 @@ void HistogramTask::exportHistograms(TFile & outputFile)
 {
   if (reportStart(__FUNCTION__)) { /* no ops */ };
   outputFile.cd();
+  if (reportInfo(__FUNCTION__))
+    printValue("histogramSets.size()",histogramSets.size());
   for (auto & set : histogramSets) set->exportHistograms(outputFile);
   if (reportEnd(__FUNCTION__)) { /* no ops */ };
 }

@@ -30,7 +30,7 @@ void loadSubSample(const TString & includeSrcPath);
 void loadExec(const TString & includeSrcPath);
 
 std::vector<TString> listDirsInFolder(const TString & pathname,
-                                bool verbose=true)
+                                      bool verbose=true)
 {
   TString directoryName = pathname;
   std::vector<TString>  subdirectories;
@@ -55,28 +55,87 @@ std::vector<TString> listDirsInFolder(const TString & pathname,
 }
 
 
-
-int RunSumSubbunches(TString histogramImportPathName="/Volumes/ClaudeDisc4/OutputFiles/PYTHIA/PiKP/Y2//BUNCH01/",
-                     TString histogramImportFileName="SingleGen.root",
-                     TString histogramExportPathName="/Volumes/ClaudeDisc4/OutputFiles/PYTHIA/PiKP/Y2//BUNCH01/",
-                     TString histogramExportFileName="SingleGenSum.root",
-                     bool verbose=true)
+int RunSumForFilesIn(TString histogramImportPathName,
+                  TString histogramImportFileName,
+                  TString histogramExportPathName,
+                  TString histogramExportFileName,
+                  bool verbose=true)
 {
-  TString includeSrcPath = getenv("CAP_SRC_PATH");
-  cout << "includeSrcPath: " << includeSrcPath << endl;
-//  std::cout << "==================================================================================" << std::endl;
-//  std::cout << "Executing RunSumSubbunches" << endl;
-//  std::cout << "==================================================================================" << std::endl;
-  CAP::RunSubSampleSum * task = new CAP::RunSubSampleSum();
-  task->run(histogramImportPathName,histogramImportFileName,histogramExportPathName,histogramExportFileName,verbose);
+  std::cout << "==================================================================================" << std::endl;
+  std::cout << "Executing RunSumForFile" << endl;
+  std::cout << "==================================================================================" << std::endl;
+  std::vector<TString> directories = listDirsInFolder(histogramImportPathName,true);
+  int nJobs = directories.size();
+  std::cout << "Number of folders found:" << nJobs << endl;
+  if (nJobs<1)
+    {
+    std::cout << "No folders founds" << endl;
+    return 1;
+    }
+  for (auto directory : directories)
+    {
+    TString path = histogramImportPathName; path += "/"; path += directory;
+    CAP::RunSubSampleSum * task = new CAP::RunSubSampleSum();
+    task->run(histogramImportPathName,histogramImportFileName,histogramExportPathName,histogramExportFileName,verbose);
+    delete task;
+    }
+
   return 0;
 }
 
 
-int RunSum(TString histogramImportPathName="/Volumes/ClaudeDisc4/OutputFiles/PYTHIA/PiKP/Y2/",
-           TString histogramImportFileName="SingleGen.root",
-           TString histogramExportPathName="/Volumes/ClaudeDisc4/OutputFiles/PYTHIA/PiKP/Y2/",
-           TString histogramExportFileName="SingleGenSum.root",
+
+
+int RunSumForFolders(TString histogramImportPathName,
+                  TString histogramImportFileName,
+                  TString histogramExportPathName,
+                  TString histogramExportFileName,
+                  bool verbose=true)
+{
+  std::cout << "==================================================================================" << std::endl;
+  std::cout << "Executing RunSumForFolders" << endl;
+  std::cout << "==================================================================================" << std::endl;
+  std::vector<TString> directories = listDirsInFolder(histogramImportPathName,true);
+  int nJobs = directories.size();
+  std::cout << "Number of folders found:" << nJobs << endl;
+  if (nJobs<1)
+    {
+    std::cout << "No folders founds" << endl;
+    return 1;
+    }
+  for (auto directory : directories)
+    {
+    TString path = histogramImportPathName; path += "/"; path += directory;
+    RunSumForFilesIn(path,histogramImportFileName,path,histogramExportFileName,verbose);
+    }
+  return 0;
+}
+
+//int RunSumForFile(TString histogramImportPathName="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest/",
+//                  TString histogramImportFileName="Single.root",
+//                  TString histogramExportPathName="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest/",
+//                  TString histogramExportFileName="SingleSum.root",
+//                  bool verbose=true)
+//{
+//    std::vector<TString> directories = listDirsInFolder(histogramImportPathName,true);
+//    int nJobs = directories.size();
+//    CAP::printValue("Number of folders found",nJobs);
+//    if (nJobs<1)
+//    {
+//        CAP::printString("No folders founds");
+//        return 1;
+//    }
+//    for (auto directory : directories)
+//    {
+//        TString path = histogramImportPathName; path += "/"; path += directory;
+//        CAP::RunSubSampleSum * task = new CAP::RunSubSampleSum();
+//        task->run(histogramImportPathName,histogramImportFileName,histogramExportPathName,histogramExportFileName,verbose);
+//        delete task;
+//    }
+//}
+
+int RunSum(TString histogramImportPathName="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest/",
+           TString histogramExportPathName="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest/",
            bool verbose=true)
 {
   TString includeSrcPath = getenv("CAP_SRC_PATH");
@@ -97,45 +156,39 @@ int RunSum(TString histogramImportPathName="/Volumes/ClaudeDisc4/OutputFiles/PYT
   loadNuDyn(includeSrcPath);
   loadSubSample(includeSrcPath);
   loadExec(includeSrcPath);
-
-  std::cout << "==================================================================================" << std::endl;
-  std::cout << "Executing RunSumDev - All Jobs" << endl;
-  std::cout << "==================================================================================" << std::endl;
-
-  std::vector<TString> directories = listDirsInFolder(histogramImportPathName,true);
-  int nJobs = directories.size();
-  CAP::printValue("Number of folders found",nJobs);
-  if (nJobs<1)
-    {
-    CAP::printString("No folders founds");
-    return 1;
-    }
-  for (auto directory : directories)
-    {
-    TString path = histogramImportPathName; path += "/"; path += directory;
-    RunSumSubbunches(path,histogramImportFileName,path,histogramExportFileName,verbose);
-    }
-
-  // Final Sum
-  CAP::RunSubSampleSum * task = new CAP::RunSubSampleSum();
-  task->run(histogramImportPathName,histogramExportFileName,histogramExportPathName,histogramExportFileName,verbose);
-  delete task;
-
+  try
+  {
+  RunSumForFolders(histogramImportPathName,"GlobalGen.root",histogramExportPathName,"GlobalGenSum.root",verbose);
+  RunSumForFolders(histogramImportPathName,"SingleGen.root",histogramExportPathName,"SingleGenSum.root",verbose);
+  RunSumForFolders(histogramImportPathName,"PairGen.root",histogramExportPathName,"PairGenSum.root",verbose);
+  RunSumForFolders(histogramImportPathName,"NuDynGen.root",histogramExportPathName,"NuDynGenSum.root",verbose);
+  }
+  catch (CAP::TaskException & exception)
+  {
+  exception.print();
+  }
+  catch (CAP::FileException  & exception)
+  {
+  exception.print();
+  }
+  catch (CAP::IncompatibleHistogramException   & exception)
+  {
+  exception.print();
+  }
   return 0;
 }
-
-
 
 
 
 void loadBase(const TString & includeSrcPath)
 {
   TString includePath = includeSrcPath + "/Base/";
-//  gSystem->Load(includePath+"RootHelpers.hpp");
-//  gSystem->Load(includePath+"Configuration.hpp");
-//  gSystem->Load(includePath+"Timer.hpp");
-//  gSystem->Load(includePath+"MessageLogger.hpp");
-//  gSystem->Load(includePath+"Task.hpp");
+  gSystem->Load(includePath+"PrintHelpers.hpp");
+  gSystem->Load(includePath+"RootHelpers.hpp");
+  gSystem->Load(includePath+"Configuration.hpp");
+  gSystem->Load(includePath+"Timer.hpp");
+  gSystem->Load(includePath+"MessageLogger.hpp");
+  gSystem->Load(includePath+"Task.hpp");
   gSystem->Load("libBase.dylib");
 }
 
@@ -256,7 +309,7 @@ void loadSubSample(const TString & includeSrcPath)
 void loadExec(const TString & includeSrcPath)
 {
   TString includePath = includeSrcPath + "/Exec/";
-  gSystem->Load(includePath+"RunSubSampleSum.hpp");
+  // gSystem->Load(includePath+"RunSubSampleSum.hpp");
   gSystem->Load("libExec.dylib");
 }
 

@@ -13,7 +13,7 @@ LINKDEF BaseLinkDef.h)
 # Create a shared library with geneated dictionary
 ################################################################################################
 add_compile_options(-Wall -Wextra -pedantic)
-add_library(Base SHARED Aliases.cpp Exceptions.cpp PhysicsConstants.cpp Timer.cpp Crc32.cpp Counter.cpp EnvironmentVariables.cpp  FileIterator.cpp  NamedObject.cpp Property.cpp  Properties.cpp PropertiesParser.cpp NameHelpers.cpp Configuration.cpp ConfigurationManager.cpp  Parser.cpp   Factory.cpp Filter.cpp   Task.cpp  HistogramGroup.cpp  HistogramSet.cpp HistogramTask.cpp   TaskAccountant.cpp   MessageLogger.cpp   SelectionGenerator.cpp     DerivedHistoIterator.cpp PrintHelpers.cpp  RootHelpers.cpp StreamHelpers.cpp Manager.cpp
+add_library(Base SHARED Aliases.cpp Exceptions.cpp PhysicsConstants.cpp Timer.cpp Crc32.cpp Counter.cpp EnvironmentVariables.cpp  FileIterator.cpp  NamedObject.cpp Condition.cpp  Property.cpp  Properties.cpp PropertiesParser.cpp NameHelpers.cpp Configuration.cpp ConfigurationManager.cpp  Parser.cpp   Factory.cpp Filter.cpp   Task.cpp  HistogramGroup.cpp  HistogramSet.cpp HistogramTask.cpp   TaskAccountant.cpp   MessageLogger.cpp   SelectionGenerator.cpp     DerivedHistoIterator.cpp PrintHelpers.cpp  RootHelpers.cpp StreamHelpers.cpp Manager.cpp
  G__Base.cxx)
 
 target_link_libraries(Base ${ROOT_LIBRARIES} ${EXTRA_LIBS} )

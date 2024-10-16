@@ -119,6 +119,5 @@ void ExistingFilterSetException::print()
 }
 
 
-
 } // namespace CAP
 

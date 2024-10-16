@@ -28,6 +28,8 @@ public:
   virtual void reset() {}
   virtual void clear() {}
 
+  enum EventFilterType      { kAll, kMB, kCl0, kCl1, kCl2,  kCl3, kCl4, kMult0, kMult1, kMult2, kMult3, kMult4, kSphero0,kSphero1,kSphero2,kSphero3,kSphero4,kEnergy0,kEnergy1,kEnergy2,kEnergy3,kEnergy4};
+
   ClassDef(EventFilter,0)
 };
 

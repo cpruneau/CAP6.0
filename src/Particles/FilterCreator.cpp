@@ -30,7 +30,6 @@ EventTask()
   setInstanceName("FilterCreator");
   setName("FilterCreator");
   setTitle("FilterCreator");
-  setVersion("1.0");
 }
 
 
@@ -219,7 +218,6 @@ void FilterCreator::initialize()
   String keyword;
   String name;
   String title;
-  String typeName;
   String conditionType;
   String conditionSubtype;
   double minimum;
@@ -239,7 +237,7 @@ void FilterCreator::initialize()
   if (nEventFilters<1) throw TaskException("nEventFilters<1",__FUNCTION__);
   int nParticleFilters = getValueInt("ParticleFilter:N");
   if (nParticleFilters<1) throw TaskException("nParticleFilters<1",__FUNCTION__);
-  if (reportInfo(__FUNCTION__))
+  if (reportDebug(__FUNCTION__))
     {
     printCR();
     printLine();
@@ -259,8 +257,6 @@ void FilterCreator::initialize()
     name = getValueString(keyword);
     keyword = createName("EventFilter:Filter",iEventFilter,":Title");
     title = getValueString(keyword);
-    keyword = createName("EventFilter:Filter",iEventFilter,":Type");
-    typeName = getValueString(keyword);
     keyword = createName("EventFilter:Filter",iEventFilter,":nConditions");
     nConditions = getValueInt(keyword);
     for (int iCondition=0; iCondition<nConditions; iCondition++)
@@ -280,7 +276,7 @@ void FilterCreator::initialize()
       conditionMinima2.push_back(0.0);
       conditionMaxima2.push_back(0.0);
       }
-    createEventFilter(name,title,typeName,
+    createEventFilter(name,title,
                       conditionTypes, conditionSubtypes,
                       conditionMinima, conditionMaxima,
                       conditionMinima2, conditionMaxima2);
@@ -303,8 +299,6 @@ void FilterCreator::initialize()
     name = getValueString(keyword);
     keyword = createName("ParticleFilter:Filter",iParticleFilter,":Title");
     title = getValueString(keyword);
-    keyword = createName("ParticleFilter:Filter",iParticleFilter,":Type");
-    typeName = getValueString(keyword);
     keyword = createName("ParticleFilter:Filter",iParticleFilter,":nConditions");
     nConditions = getValueInt(keyword);
     for (int iCondition=0; iCondition<nConditions; iCondition++)
@@ -322,7 +316,7 @@ void FilterCreator::initialize()
       maximum  = getValueDouble(keyword);
       conditionMaxima.push_back(maximum);
 
-      if (typeName.EqualTo("DoubleRange"))
+      if (conditionType.EqualTo("DoubleDualRange"))
         {
         keyword = createName("ParticleFilter:Filter",iParticleFilter,":Condition",iCondition,":Minimum2");
         minimum2  = getValueDouble(keyword);
@@ -336,7 +330,7 @@ void FilterCreator::initialize()
         conditionMinima2.push_back(0.0);
         conditionMaxima2.push_back(0.0);
         }
-      printValue("iCondition",iCondition);
+//      printValue("iCondition",iCondition);
 //      printValue("conditionType",conditionType);
 //      printValue("conditionSubtype",conditionSubtype);
 //      printValue("minimum",minimum);
@@ -345,7 +339,7 @@ void FilterCreator::initialize()
 //      printValue("maximum2",maximum2);
 
       }
-    createParticleFilter(name,title,typeName,
+    createParticleFilter(name,title,
                          conditionTypes, conditionSubtypes,
                          conditionMinima, conditionMaxima,
                          conditionMinima2, conditionMaxima2);
@@ -358,9 +352,14 @@ void FilterCreator::initialize()
     }
 }
 
+void FilterCreator::finalize()
+{
+// do nothing...
+}
+
+
 void FilterCreator::createEventFilter(const String & name,
                                       const String & title,
-                                      const String & typeName,
                                       const vector<String>  & conditionTypes,
                                       const vector<String>  & conditionSubtypes,
                                       const vector<double>  & conditionMinima,
@@ -368,47 +367,139 @@ void FilterCreator::createEventFilter(const String & name,
                                       const vector<double>  & conditionMinima2,
                                       const vector<double>  & conditionMaxima2)
 {
-  EventFilter * filter = Manager<EventFilter>::getStoreObjectNamed(name);
-
-  printCR();
-  printLine();
-  printValue("FilterCreator::createEventFilter() name",name);
-  printValue("FilterCreator::createEventFilter() title",title);
-  printValue("FilterCreator::createEventFilter() typeName",typeName);
-  for (unsigned int k=0; k<conditionTypes.size(); k++)
+  bool verbose = false;
+  if (verbose)
     {
-    printValue("FilterCreator::createEventFilter() condition index",k);
-    printValue("FilterCreator::createEventFilter() conditionTypes",conditionTypes[k]);
-    printValue("FilterCreator::createEventFilter() conditionSubtypes",conditionSubtypes[k]);
-    printValue("FilterCreator::createEventFilter() conditionMinima",  conditionMinima[k]);
-    printValue("FilterCreator::createEventFilter() conditionMaxima",  conditionMaxima[k]);
-    printValue("FilterCreator::createEventFilter() conditionMinima2", conditionMinima2[k]);
-    printValue("FilterCreator::createEventFilter() conditionMaxima2", conditionMaxima2[k]);
+    printCR();
+    printLine();
+    printValue("FilterCreator::createEventFilter() name",name);
+    printValue("FilterCreator::createEventFilter() title",title);
+    for (unsigned int k=0; k<conditionTypes.size(); k++)
+      {
+      printValue("FilterCreator::createEventFilter() condition index",  k);
+      printValue("FilterCreator::createEventFilter() conditionTypes",   conditionTypes[k]);
+      printValue("FilterCreator::createEventFilter() conditionSubtypes",conditionSubtypes[k]);
+      printValue("FilterCreator::createEventFilter() conditionMinima",  conditionMinima[k]);
+      printValue("FilterCreator::createEventFilter() conditionMaxima",  conditionMaxima[k]);
+      printValue("FilterCreator::createEventFilter() conditionMinima2", conditionMinima2[k]);
+      printValue("FilterCreator::createEventFilter() conditionMaxima2", conditionMaxima2[k]);
+      }
+    printLine();
     }
-  printLine();
-
-
-  filter->setName(name);
+  EventFilter * filter = Manager<EventFilter>::getStoreObjectNamed(name);
   filter->setTitle(title);
+  filter->setName(name);
+
   for (unsigned int k=0; k<conditionTypes.size();k++)
     {
-    if (typeName.EqualTo("TAG"))
-      filter->addCondition(conditionTypes[k],conditionSubtypes[k],conditionMinima[k],conditionMinima[k]);  // live particles only
-    else if (typeName.EqualTo("GLOBAL") ||
-             typeName.EqualTo("SPHEROCITY"))
-      filter->addCondition(conditionTypes[k],conditionSubtypes[k],
-                           conditionMinima[k],conditionMaxima[k]);  // live particles only
-    else if (typeName.EqualTo("GLOBAL2"))
-      filter->addCondition(conditionTypes[k],conditionSubtypes[k],
+    String conditionType    = conditionTypes[k];
+    String conditionSubtype = conditionSubtypes[k];
+    //int type;
+    int subtype;
+    if (conditionType.EqualTo("DoubleRange"))
+      {
+      //type = Condition::kConditionDoubleRange;
+      if (conditionSubtype.EqualTo("CL_0"))
+        subtype = EventFilter::kCl0;
+      else if (conditionSubtype.EqualTo("CL_1"))
+        subtype = EventFilter::kCl1;
+      else if (conditionSubtype.EqualTo("CL_2"))
+        subtype = EventFilter::kCl2;
+      else if (conditionSubtype.EqualTo("CL_3"))
+        subtype = EventFilter::kCl3;
+      else if (conditionSubtype.EqualTo("CL_4"))
+        subtype = EventFilter::kCl4;
+      else if (conditionSubtype.EqualTo("MULT_0"))
+        subtype = EventFilter::kMult0;
+      else if (conditionSubtype.EqualTo("MULT_1"))
+        subtype = EventFilter::kMult1;
+      else if (conditionSubtype.EqualTo("MULT_2"))
+        subtype = EventFilter::kMult2;
+      else if (conditionSubtype.EqualTo("MULT_3"))
+        subtype = EventFilter::kMult3;
+      else if (conditionSubtype.EqualTo("MULT_4"))
+        subtype = EventFilter::kMult4;
+      else if (conditionSubtype.EqualTo("SPHERO_0"))
+        subtype = EventFilter::kSphero0;
+      else if (conditionSubtype.EqualTo("SPHERO_1"))
+        subtype = EventFilter::kSphero1;
+      else if (conditionSubtype.EqualTo("SPHERO_2"))
+        subtype = EventFilter::kSphero2;
+      else if (conditionSubtype.EqualTo("SPHERO_3"))
+        subtype = EventFilter::kSphero3;
+      else if (conditionSubtype.EqualTo("SPHERO_4"))
+        subtype = EventFilter::kSphero4;
+      else if (conditionSubtype.EqualTo("ENERGY_0"))
+        subtype = EventFilter::kEnergy0;
+      else if (conditionSubtype.EqualTo("ENERGY_1"))
+        subtype = EventFilter::kEnergy1;
+      else if (conditionSubtype.EqualTo("ENERGY_2"))
+        subtype = EventFilter::kEnergy2;
+      else if (conditionSubtype.EqualTo("ENERGY_3"))
+        subtype = EventFilter::kEnergy3;
+      else if (conditionSubtype.EqualTo("ENERGY_4"))
+        subtype = EventFilter::kEnergy4;
+      else
+        throw FilterException(conditionSubtype,__FUNCTION__);
+      filter->addCondition(subtype,conditionMinima[k],conditionMaxima[k]);
+      }
+    else if (conditionType.EqualTo("DoubleDualRange"))
+      {
+      //type = type = Condition::kConditionDoubleDualRange;;
+      if (conditionSubtype.EqualTo("CL_0"))
+        subtype = EventFilter::kCl0;
+      else if (conditionSubtype.EqualTo("CL_1"))
+        subtype = EventFilter::kCl1;
+      else if (conditionSubtype.EqualTo("CL_2"))
+        subtype = EventFilter::kCl2;
+      else if (conditionSubtype.EqualTo("CL_3"))
+        subtype = EventFilter::kCl3;
+      else if (conditionSubtype.EqualTo("CL_4"))
+        subtype = EventFilter::kCl4;
+      else if (conditionSubtype.EqualTo("MULT_0"))
+        subtype = EventFilter::kMult0;
+      else if (conditionSubtype.EqualTo("MULT_1"))
+        subtype = EventFilter::kMult1;
+      else if (conditionSubtype.EqualTo("MULT_2"))
+        subtype = EventFilter::kMult2;
+      else if (conditionSubtype.EqualTo("MULT_3"))
+        subtype = EventFilter::kMult3;
+      else if (conditionSubtype.EqualTo("MULT_4"))
+        subtype = EventFilter::kMult4;
+      else if (conditionSubtype.EqualTo("SPHERO_0"))
+        subtype = EventFilter::kSphero0;
+      else if (conditionSubtype.EqualTo("SPHERO_1"))
+        subtype = EventFilter::kSphero1;
+      else if (conditionSubtype.EqualTo("SPHERO_2"))
+        subtype = EventFilter::kSphero2;
+      else if (conditionSubtype.EqualTo("SPHERO_3"))
+        subtype = EventFilter::kSphero3;
+      else if (conditionSubtype.EqualTo("SPHERO_4"))
+        subtype = EventFilter::kSphero4;
+      else if (conditionSubtype.EqualTo("ENERGY_0"))
+        subtype = EventFilter::kEnergy0;
+      else if (conditionSubtype.EqualTo("ENERGY_1"))
+        subtype = EventFilter::kEnergy1;
+      else if (conditionSubtype.EqualTo("ENERGY_2"))
+        subtype = EventFilter::kEnergy2;
+      else if (conditionSubtype.EqualTo("ENERGY_3"))
+        subtype = EventFilter::kEnergy3;
+      else if (conditionSubtype.EqualTo("ENERGY_4"))
+        subtype = EventFilter::kEnergy4;
+      else
+        throw FilterException(conditionSubtype,__FUNCTION__);
+      filter->addCondition(subtype,
                            conditionMinima[k],conditionMaxima[k],
                            conditionMinima2[k],conditionMaxima2[k]);
+      }
+    else
+      throw FilterException(conditionSubtypes[k],__FUNCTION__);
     }
 }
 
 
 void FilterCreator::createParticleFilter(const String & name,
                                          const String & title,
-                                         const String & typeName,
                                          const vector<String>  & conditionTypes,
                                          const vector<String>  & conditionSubtypes,
                                          const vector<double>  & conditionMinima,
@@ -416,57 +507,112 @@ void FilterCreator::createParticleFilter(const String & name,
                                          const vector<double>  & conditionMinima2,
                                          const vector<double>  & conditionMaxima2)
 {
-  ParticleFilter * filter = Manager<ParticleFilter>::getStoreObjectNamed(name);
-  filter->setName(name);
-  filter->setTitle(title);
-  printCR();
-  printLine();
-  printValue("FilterCreator::createParticleFilter() name",name);
-  printValue("FilterCreator::createParticleFilter() title",title);
-  printValue("FilterCreator::createParticleFilter() typeName",typeName);
-  for (unsigned int k=0; k<conditionTypes.size(); k++)
+  bool verbose = false;
+  if (verbose)
     {
-    printValue("FilterCreator::createParticleFilter() condition index",k);
-    printValue("FilterCreator::createParticleFilter() conditionTypes",conditionTypes[k]);
-    printValue("FilterCreator::createParticleFilter() conditionSubtypes",conditionSubtypes[k]);
-    printValue("FilterCreator::createParticleFilter() conditionMinima",  conditionMinima[k]);
-    printValue("FilterCreator::createParticleFilter() conditionMaxima",  conditionMaxima[k]);
-    printValue("FilterCreator::createParticleFilter() conditionMinima2", conditionMinima2[k]);
-    printValue("FilterCreator::createParticleFilter() conditionMaxima2", conditionMaxima2[k]);
+    printCR();
+    printLine();
+    printValue("FilterCreator::createParticleFilter() name",name);
+    printValue("FilterCreator::createParticleFilter() title",title);
+    for (unsigned int k=0; k<conditionTypes.size(); k++)
+      {
+      printValue("FilterCreator::createParticleFilter() condition index",k);
+      printValue("FilterCreator::createParticleFilter() conditionTypes",conditionTypes[k]);
+      printValue("FilterCreator::createParticleFilter() conditionSubtypes",conditionSubtypes[k]);
+      printValue("FilterCreator::createParticleFilter() conditionMinima",  conditionMinima[k]);
+      printValue("FilterCreator::createParticleFilter() conditionMaxima",  conditionMaxima[k]);
+      printValue("FilterCreator::createParticleFilter() conditionMinima2", conditionMinima2[k]);
+      printValue("FilterCreator::createParticleFilter() conditionMaxima2", conditionMaxima2[k]);
+      }
+    printLine();
     }
-  printLine();
+  ParticleFilter * filter = Manager<ParticleFilter>::getStoreObjectNamed(name);
+  filter->setTitle(title);
+  filter->setName(name);
 
   for (unsigned int k=0; k<conditionTypes.size();k++)
     {
     String conditionType    = conditionTypes[k];
     String conditionSubtype = conditionSubtypes[k];
-    if (conditionType.EqualTo("KINE"))
+    //int type;
+    int subtype;
+    if (conditionType.EqualTo("DoubleRange"))
       {
-      filter->addCondition(conditionType,conditionSubtype,
-                           conditionMinima[k],conditionMaxima[k]);
+      if (conditionSubtype.EqualTo("PT"))
+        subtype = ParticleFilter::kPt;
+      else if (conditionSubtype.EqualTo("PX"))
+        subtype = ParticleFilter::kPx;
+      else if (conditionSubtype.EqualTo("PY"))
+        subtype = ParticleFilter::kPy;
+      else if (conditionSubtype.EqualTo("PZ"))
+        subtype = ParticleFilter::kPz;
+      else if (conditionSubtype.EqualTo("ENERGY"))
+        subtype = ParticleFilter::kEnergy;
+      else if (conditionSubtype.EqualTo("ETA"))
+        subtype = ParticleFilter::kEta;
+      else if (conditionSubtype.EqualTo("RAPIDITY"))
+        subtype = ParticleFilter::kRapidity;
+      else if (conditionSubtype.EqualTo("PHI"))
+        subtype = ParticleFilter::kPhi;
+      else
+        throw FilterException(conditionSubtype,__FUNCTION__);
+      filter->addCondition(subtype,conditionMinima[k],conditionMaxima[k]);
       }
-    else if (conditionType.EqualTo("CHARGE") ||
-             conditionType.EqualTo("STRANGE") ||
-             conditionType.EqualTo("BARYON") ||
-             conditionType.EqualTo("CHARGE"))
+    else if (conditionType.EqualTo("DoubleDualRange"))
       {
-      filter->addCondition(conditionType,conditionSubtype,
-                           int(conditionMinima[k]),int(conditionMaxima[k]));
-      }
-    else if (conditionType.EqualTo("PDG") ||
-             conditionType.EqualTo("LIVE") ||
-             conditionType.EqualTo("ENABLED"))
+      if (conditionSubtype.EqualTo("PT"))
+        subtype = ParticleFilter::kPt;
+      else if (conditionSubtype.EqualTo("PX"))
+        subtype = ParticleFilter::kPx;
+      else if (conditionSubtype.EqualTo("PY"))
+        subtype = ParticleFilter::kPy;
+      else if (conditionSubtype.EqualTo("PZ"))
+        subtype = ParticleFilter::kPz;
+      else if (conditionSubtype.EqualTo("ENERGY"))
+        subtype = ParticleFilter::kEnergy;
+      else if (conditionSubtype.EqualTo("ETA"))
+        subtype = ParticleFilter::kEta;
+      else if (conditionSubtype.EqualTo("RAPIDITY"))
+        subtype = ParticleFilter::kRapidity;
+      else if (conditionSubtype.EqualTo("PHI"))
+        subtype = ParticleFilter::kPhi;
+      else
+        throw FilterException(conditionSubtype,__FUNCTION__);
+      filter->addCondition(subtype,
+                           conditionMinima[k],conditionMaxima[k],
+                           conditionMinima2[k],conditionMaxima2[k]);}
+    else if (conditionType.EqualTo("Integer"))
       {
-      filter->addCondition(conditionType,conditionSubtype,int(conditionMinima[k]));
+      if (conditionSubtype.EqualTo("PDG"))
+        subtype = ParticleFilter::kPdg;
+      else if (conditionSubtype.EqualTo("CHARGE"))
+        subtype = ParticleFilter::kCharge;
+      else if (conditionSubtype.EqualTo("BARYON"))
+        subtype = ParticleFilter::kBaryon;
+      else if (conditionSubtype.EqualTo("STRANGE"))
+        subtype = ParticleFilter::kStrange;
+      else if (conditionSubtype.EqualTo("CHARM"))
+        subtype = ParticleFilter::kCharm;
+      else if (conditionSubtype.EqualTo("CHARM"))
+        subtype = ParticleFilter::kCharm;
+//      else if (conditionSubtype.EqualTo("BEAUTY"))
+//        subtype = ParticleFilter::kBeauty;
+      else
+        throw FilterException(conditionSubtype,__FUNCTION__);
+      filter->addCondition(subtype,int(conditionMinima[k]));
       }
-    else if (conditionType.EqualTo("KINE2"))
-    {
-    filter->addCondition(conditionType,conditionSubtype,
-                         conditionMinima[k],conditionMaxima[k],
-                         conditionMinima2[k],conditionMaxima2[k]);}
-
+    else if (conditionType.EqualTo("Bool"))
+      {
+      if (conditionSubtype.EqualTo("LIVE"))
+        subtype = ParticleFilter::kLive;
+      else if (conditionSubtype.EqualTo("ENABLED"))
+        subtype = ParticleFilter::kEnabled;
+      else
+        throw FilterException(conditionSubtype,__FUNCTION__);
+      filter->addCondition(subtype,bool(conditionMinima[k]));
+    }
     else
-      throw TaskException("Invalid Option", __FUNCTION__);
+      throw FilterException(conditionType,__FUNCTION__);
     }
 }
 

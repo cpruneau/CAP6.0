@@ -12,7 +12,6 @@
 #include "ParticlePair3DAnalyzer.hpp"
 #include "ParticlePair3DDerivedHistogramCalculator.hpp"
 
-
 ClassImp(ParticlePair3DAnalyzer);
 
 ParticlePair3DAnalyzer::ParticlePair3DAnalyzer()
@@ -66,15 +65,15 @@ ParticlePair3DAnalyzer & ParticlePair3DAnalyzer::operator=(const ParticlePair3DA
 void ParticlePair3DAnalyzer::setDefaultConfiguration()
 {
   Task::setDefaultConfiguration();
-  addProperty("UseParticles",      true);
-  addProperty("HistogramsCreate",  true);
-  addProperty("HistogramsExport",    true);
-  addProperty("HistoAnalyzerName", String("Pair3D"));
-  addProperty("HistoBaseName",     String("Pair3D"));
-  addProperty("useAbsDelta",       false);
-  addProperty("nBins_DeltaP",      20);
-  addProperty("Min_DeltaP",        -2.0);
-  addProperty("Max_DeltaP",        2.0);
+  addParameter("UseParticles",      true);
+  addParameter("HistogramsCreate",  true);
+  addParameter("HistogramsExport",    true);
+  addParameter("HistoAnalyzerName", String("Pair3D"));
+  addParameter("HistoBaseName",     String("Pair3D"));
+  addParameter("useAbsDelta",       false);
+  addParameter("nBins_DeltaP",      20);
+  addParameter("Min_DeltaP",        -2.0);
+  addParameter("Max_DeltaP",        2.0);
 }
 
 void ParticlePair3DAnalyzer::HistogramsCreate()
@@ -311,10 +310,10 @@ Task * ParticlePair3DAnalyzer::getDerivedCalculator()
   if (reportDebug(__FUNCTION__)) cout << "Name of this task is:" << nameD  << endl;
   Configuration derivedCalcConfiguration;
   // copy the parameters of this task to the new task -- so all the histograms will automatically match
-  derivedCalcConfiguration.addPropertys(configuration);
-  derivedCalcaddProperty("HistogramsCreate",       true);
-  derivedCalcaddProperty("HistogramsImport",         true);
-  derivedCalcaddProperty("HistogramsExport",         true);
+  derivedCalcConfiguration.addParameters(configuration);
+  derivedCalcaddParameter("HistogramsCreate",       true);
+  derivedCalcaddParameter("HistogramsImport",         true);
+  derivedCalcaddParameter("HistogramsExport",         true);
   Task * calculator = new ParticlePair3DDerivedHistogramCalculator(nameD,derivedCalcConfiguration,eventFilters,particleFilters,getSeverityLevel());
   return calculator;
 }

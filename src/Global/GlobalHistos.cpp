@@ -115,35 +115,35 @@ void GlobalHistos::createHistograms()
   const String & bn  = getName();
   const String & ptn = getParentName();
   const String & ppn = getParentPathName();
-  fillCorrelationHistos = configuration.getValueBool(ppn,"FillCorrelationHistos");
-  fill2D                = configuration.getValueBool(ppn,"Fill2D");
-  int nBins_n           = configuration.getValueInt(ppn,"nBins_n");
-  int nBins_n2          = configuration.getValueInt(ppn,"nBins_n2");
-  double min_n          = configuration.getValueDouble(ppn,"Min_n");
-  double max_n          = configuration.getValueDouble(ppn,"Max_n");
-  int nBins_e           = configuration.getValueInt(ppn,"nBins_e");
-  int nBins_e2          = configuration.getValueInt(ppn,"nBins_e2");
-  double min_e          = configuration.getValueDouble(ppn,"Min_e");
-  double max_e          = configuration.getValueDouble(ppn,"Max_e");
-  int nBins_q           = configuration.getValueInt(ppn,"nBins_q");
-  int nBins_q2          = configuration.getValueInt(ppn,"nBins_q2");
-  double min_q          = configuration.getValueDouble(ppn,"Min_q");
-  double max_q          = configuration.getValueDouble(ppn,"Max_q");
-  int nBins_b           = configuration.getValueInt(ppn,"nBins_b");
-  int nBins_b2          = configuration.getValueInt(ppn,"nBins_b2");
-  double min_b          = configuration.getValueDouble(ppn,"Min_b");
-  double max_b          = configuration.getValueDouble(ppn,"Max_b");
-  int nBins_s           = configuration.getValueInt(ppn,"nBins_s");
-  double min_s          = configuration.getValueDouble(ppn,"Min_s");
-  double max_s          = configuration.getValueDouble(ppn,"Max_s");
-  int nBins_ptSum       = configuration.getValueInt(ppn,"nBins_ptSum");
-  int nBins_ptSum2      = configuration.getValueInt(ppn,"nBins_ptSum2");
-  double min_ptSum      = configuration.getValueDouble(ppn,"Min_ptSum");
-  double max_ptSum      = configuration.getValueDouble(ppn,"Max_ptSum");
-  int nBins_ptAvg       = configuration.getValueInt(ppn,"nBins_ptAvg");
-  int nBins_ptAvg2      = configuration.getValueInt(ppn,"nBins_ptAvg2");
-  double min_ptAvg      = configuration.getValueDouble(ppn,"Min_ptAvg");
-  double max_ptAvg      = configuration.getValueDouble(ppn,"Max_ptAvg");
+  fillCorrelationHistos = configuration.getValueBool(ptn,"FillCorrelationHistos");
+  fill2D                = configuration.getValueBool(ptn,"Fill2D");
+  int nBins_n           = configuration.getValueInt(ptn,"nBins_n");
+  int nBins_n2          = configuration.getValueInt(ptn,"nBins_n2");
+  double min_n          = configuration.getValueDouble(ptn,"Min_n");
+  double max_n          = configuration.getValueDouble(ptn,"Max_n");
+  int nBins_e           = configuration.getValueInt(ptn,"nBins_e");
+  int nBins_e2          = configuration.getValueInt(ptn,"nBins_e2");
+  double min_e          = configuration.getValueDouble(ptn,"Min_e");
+  double max_e          = configuration.getValueDouble(ptn,"Max_e");
+  int nBins_q           = configuration.getValueInt(ptn,"nBins_q");
+  int nBins_q2          = configuration.getValueInt(ptn,"nBins_q2");
+  double min_q          = configuration.getValueDouble(ptn,"Min_q");
+  double max_q          = configuration.getValueDouble(ptn,"Max_q");
+  int nBins_b           = configuration.getValueInt(ptn,"nBins_b");
+  int nBins_b2          = configuration.getValueInt(ptn,"nBins_b2");
+  double min_b          = configuration.getValueDouble(ptn,"Min_b");
+  double max_b          = configuration.getValueDouble(ptn,"Max_b");
+  int nBins_s           = configuration.getValueInt(ptn,"nBins_s");
+  double min_s          = configuration.getValueDouble(ptn,"Min_s");
+  double max_s          = configuration.getValueDouble(ptn,"Max_s");
+  int nBins_ptSum       = configuration.getValueInt(ptn,"nBins_ptSum");
+  int nBins_ptSum2      = configuration.getValueInt(ptn,"nBins_ptSum2");
+  double min_ptSum      = configuration.getValueDouble(ptn,"Min_ptSum");
+  double max_ptSum      = configuration.getValueDouble(ptn,"Max_ptSum");
+  int nBins_ptAvg       = configuration.getValueInt(ptn,"nBins_ptAvg");
+  int nBins_ptAvg2      = configuration.getValueInt(ptn,"nBins_ptAvg2");
+  double min_ptAvg      = configuration.getValueDouble(ptn,"Min_ptAvg");
+  double max_ptAvg      = configuration.getValueDouble(ptn,"Max_ptAvg");
 
   if (reportInfo(__FUNCTION__))
     {
@@ -239,8 +239,8 @@ void GlobalHistos::importHistograms(TFile & inputFile)
   const String & bn  = getName();
   const String & ptn = getParentName();
   const String & ppn = getParentPathName();
-  fillCorrelationHistos = configuration.getValueBool(ppn,"FillCorrelationHistos");
-  fill2D                = configuration.getValueBool(ppn,"Fill2D");
+  fillCorrelationHistos = configuration.getValueBool(ptn,"FillCorrelationHistos");
+  fill2D                = configuration.getValueBool(ptn,"Fill2D");
   unsigned int nParticleFilters = particleFilters.size();
   if (reportInfo(__FUNCTION__))
     {

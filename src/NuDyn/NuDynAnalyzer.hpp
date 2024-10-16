@@ -40,9 +40,10 @@ public:
   virtual void execute();
   virtual void createHistograms();
   virtual void scaleHistograms();
+  virtual double getEvtClassValue();
 
 protected:
-  String multName;
+  int evtClassType;
 
   ClassDef(NuDynAnalyzer,0)
 };

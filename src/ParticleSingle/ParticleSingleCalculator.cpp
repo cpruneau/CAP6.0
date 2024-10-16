@@ -26,7 +26,6 @@ EventTask()
   appendClassName("ParticleSingleCalculator");
   setName("Single");
   setTitle("Single");
-  setVersion("1.0");
 }
 
 ParticleSingleCalculator::ParticleSingleCalculator(const ParticleSingleCalculator & task)
@@ -46,6 +45,8 @@ ParticleSingleCalculator & ParticleSingleCalculator::operator=(const ParticleSin
 void ParticleSingleCalculator::setDefaultConfiguration()
 {
   HistogramTask::setDefaultConfiguration();
+  addProperty( "HistogramBaseName","Single");
+
   addProperty( "nBins_n1",  100);
   addProperty( "Min_n1",    0.0);
   addProperty( "Max_n1",  100.0);
@@ -81,8 +82,7 @@ void ParticleSingleCalculator::setDefaultConfiguration()
 
 void ParticleSingleCalculator::configure()
 {
-  HistogramTask::configure();
-
+  EventTask::configure();
 }
 
 void ParticleSingleCalculator::initialize()
@@ -112,7 +112,7 @@ void ParticleSingleCalculator::importHistograms(TFile & inputFile)
   if (reportStart(__FUNCTION__)) { /* */ }
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
   std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
-  String bn=getName();
+  String bn = getValueString( "HistogramBaseName");
   for (auto & eventFilter : eventFilters)
     {
     String efn = eventFilter->getName();
@@ -133,7 +133,7 @@ void ParticleSingleCalculator::importHistograms(TFile & inputFile)
 void ParticleSingleCalculator::createHistograms()
 {
   if (reportStart(__FUNCTION__)) { /* */ };
-  String bn  = getName();
+  String bn = getValueString( "HistogramBaseName");
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
   std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
   for (auto & eventFilter : eventFilters)
@@ -171,6 +171,11 @@ void ParticleSingleCalculator::execute()
       }
     }
     if (reportEnd(__FUNCTION__)){ /* */ };
+}
+
+void ParticleSingleCalculator::scaleHistograms()
+{
+
 }
 
 } // namespace CAP

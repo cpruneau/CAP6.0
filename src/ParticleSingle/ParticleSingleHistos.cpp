@@ -161,34 +161,34 @@ void ParticleSingleHistos::createHistograms()
 //  printValue("ptn",ptn);
 //  printValue("ppn",ppn);
 //  configuration.print();
-  nBins_n1 = configuration.getValueInt(ppn,"nBins_n1");
-  min_n1   = configuration.getValueDouble(ppn,"Min_n1");
-  max_n1   = configuration.getValueDouble(ppn,"Max_n1");
+  nBins_n1 = configuration.getValueInt(ptn,"nBins_n1");
+  min_n1   = configuration.getValueDouble(ptn,"Min_n1");
+  max_n1   = configuration.getValueDouble(ptn,"Max_n1");
 
-  nBins_pt = configuration.getValueInt(ppn,"nBins_pt");
-  min_pt   = configuration.getValueDouble(ppn,"Min_pt");
-  max_pt   = configuration.getValueDouble(ppn,"Max_pt");
+  nBins_pt = configuration.getValueInt(ptn,"nBins_pt");
+  min_pt   = configuration.getValueDouble(ptn,"Min_pt");
+  max_pt   = configuration.getValueDouble(ptn,"Max_pt");
   scale_pt = max_pt - min_pt;
   
-  nBins_phi = configuration.getValueInt(ppn,"nBins_phi");
-  min_phi   = configuration.getValueDouble(ppn,"Min_phi");
-  max_phi   = configuration.getValueDouble(ppn,"Max_phi");
+  nBins_phi = configuration.getValueInt(ptn,"nBins_phi");
+  min_phi   = configuration.getValueDouble(ptn,"Min_phi");
+  max_phi   = configuration.getValueDouble(ptn,"Max_phi");
   scale_phi = max_phi - min_phi;
   
-  nBins_eta = configuration.getValueInt(ppn,"nBins_eta");
-  min_eta   = configuration.getValueDouble(ppn,"Min_eta");
-  max_eta   = configuration.getValueDouble(ppn,"Max_eta");
+  nBins_eta = configuration.getValueInt(ptn,"nBins_eta");
+  min_eta   = configuration.getValueDouble(ptn,"Min_eta");
+  max_eta   = configuration.getValueDouble(ptn,"Max_eta");
   range_eta = max_eta - min_eta;
   
-  nBins_y = configuration.getValueInt(ppn,"nBins_y");
-  min_y   = configuration.getValueDouble(ppn,"Min_y");
-  max_y   = configuration.getValueDouble(ppn,"Max_y");
+  nBins_y = configuration.getValueInt(ptn,"nBins_y");
+  min_y   = configuration.getValueDouble(ptn,"Min_y");
+  max_y   = configuration.getValueDouble(ptn,"Max_y");
   range_y = max_y - min_y;
   
-  fillEta = configuration.getValueBool(ppn,"FillEta");
-  fillY   = configuration.getValueBool(ppn,"FillY");
-  fillP2  = configuration.getValueBool(ppn,"FillP2");
-  fillPid = configuration.getValueBool(ppn,"FillPid");
+  fillEta = configuration.getValueBool(ptn,"FillEta");
+  fillY   = configuration.getValueBool(ptn,"FillY");
+  fillP2  = configuration.getValueBool(ptn,"FillP2");
+  fillPid = configuration.getValueBool(ptn,"FillPid");
 
   if (reportDebug(__FUNCTION__))
     {
@@ -275,10 +275,10 @@ void ParticleSingleHistos::importHistograms(TFile & inputFile)
     printValue("Single:FillPid",            fillPid );
     }
 
-  fillEta      = configuration.getValueBool(ppn,"FillEta");
-  fillY        = configuration.getValueBool(ppn,"FillY");
-  fillP2       = configuration.getValueBool(ppn,"FillP2");
-  fillPid      = configuration.getValueBool(ppn,"FillPid");
+  fillEta      = configuration.getValueBool(ptn,"FillEta");
+  fillY        = configuration.getValueBool(ptn,"FillY");
+  fillP2       = configuration.getValueBool(ptn,"FillP2");
+  fillPid      = configuration.getValueBool(ptn,"FillPid");
   h_n1         = importH1(inputFile,  createName(bn,"n1"));
   h_n1_eTotal  = importH1(inputFile,  createName(bn,"n1_eTotal"));
   h_n1_pt      = importH1(inputFile,  createName(bn,"n1_pt"));
@@ -315,7 +315,7 @@ void ParticleSingleHistos::loadCalibration(TFile & inputFile)
   const String & ptn = getParentName();
   const String & ppn = getParentPathName();
   useEffCorrection = true;
-  efficiencyOpt    = configuration.getValueInt(ppn,"efficientOpt");
+  efficiencyOpt    = configuration.getValueInt(ptn,"efficientOpt");
   if (reportDebug(__FUNCTION__))
     {
     cout << endl;

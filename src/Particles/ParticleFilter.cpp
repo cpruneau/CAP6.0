@@ -41,87 +41,39 @@ ParticleFilter & ParticleFilter::operator=(const ParticleFilter & source)
 
 bool ParticleFilter::accept(const Particle & particle)
 {
-//  printCR();
-//  printValue("ParticleFilter::accept(const Particle & particle) Name",getName());
-//  printValue("ParticleFilter::accept(const Particle & particle) getNConditions()",getNConditions());
-
-
   if (getNConditions()<1) return true;
   bool   accepting = false;
   for (auto & condition : conditions)
     {
-    const String & filterType    = condition->conditionType;
-    if (filterType.EqualTo("KINE"))
+    int filterSubType = condition->conditionSubtype;
+    switch (filterSubType)
       {
-      const String & filterSubType   = condition->conditionSubtype;
-      const LorentzVector & momentum = particle.getMomentum();
-      if (filterSubType.EqualTo("PT"))
-        accepting = condition->accept(momentum.Pt());
-      else if (filterSubType.EqualTo("ETA"))
-        accepting = condition->accept(momentum.Eta());
-      else if (filterSubType.EqualTo("RAPIDITY"))
-        accepting = condition->accept(momentum.Rapidity());
-      else if (filterSubType.EqualTo("PHI"))
-        accepting = condition->accept(momentum.Phi());
-      else if (filterSubType.EqualTo("P"))
-        accepting = condition->accept(momentum.P());
-      else if (filterSubType.EqualTo("E"))
-        accepting = condition->accept(momentum.E());
-      else if (filterSubType.EqualTo("PX"))
-        accepting = condition->accept(momentum.Px());
-      else if (filterSubType.EqualTo("PY"))
-        accepting = condition->accept(momentum.Py());
-      else if (filterSubType.EqualTo("PZ"))
-        accepting = condition->accept(momentum.Pz());
-      }
-    else if (filterType.EqualTo("PDG"))
-      {
-      ParticleType & type = particle.getType();
-      //printValue("PDG",type.getPdgCode());
-      accepting = condition->accept(type.getPdgCode());
-      //printValue("accepting",accepting);
-      }
-    else if (filterType.EqualTo("CHARGE"))
-      {
-      ParticleType & type = particle.getType();
-      int charge = type.getCharge();
-      accepting = condition->accept(charge);;
-      }
-    else if (filterType.EqualTo("STRANGE"))
-      {
-      ParticleType & type = particle.getType();
-      int strangeness = type.getStrangeness();
-      accepting = condition->accept(strangeness);;
-      }
-    else if (filterType.EqualTo("BARYON"))
-      {
-      ParticleType & type = particle.getType();
-      int baryon = type.getBaryonNumber();
-      accepting = condition->accept(baryon);
-      }
-    else if (filterType.EqualTo("CHARM"))
-      {
-      ParticleType & type = particle.getType();
-      int charm = type.getCharm();
-      accepting = condition->accept(charm);
-      }
-//    else if (filterType.EqualTo("USER"))
-//      {
-//      ParticleType & type = particle.getType();
-//      accepting = condition->accept(type.getUserCode());
-//      }
-    else if (filterType.EqualTo("LIVE"))
-      {
-      accepting = condition->accept(particle.isLive());
-      }
-    else if (filterType.EqualTo("ENABLED"))
-      {
-      ParticleType & type = particle.getType();
-      accepting = condition->accept(type.isEnabled());
+        case kPt:       accepting = condition->accept(particle.getMomentum().Pt());  break;
+        case kPx:       accepting = condition->accept(particle.getMomentum().Px());  break;
+        case kPy:       accepting = condition->accept(particle.getMomentum().Py());  break;
+        case kPz:       accepting = condition->accept(particle.getMomentum().Pz());  break;
+        case kEnergy:   accepting = condition->accept(particle.getMomentum().E());   break;
+        case kEta:      accepting = condition->accept(particle.getMomentum().Eta()); break;
+        case kRapidity: accepting = condition->accept(particle.getMomentum().Rapidity()); break;
+        case kPhi:      accepting = condition->accept(particle.getMomentum().Phi()); break;
+        case kPdg:      accepting = condition->accept(particle.getType().getPdgCode()); break;
+        case kCharge:   accepting = condition->accept(particle.getType().getCharge()); break;
+        case kStrange:  accepting = condition->accept(particle.getType().getStrangeness()); break;
+        case kBaryon:   accepting = condition->accept(particle.getType().getBaryonNumber()); break;
+        case kCharm:    accepting = condition->accept(particle.getType().getCharm()); break;
+        //case kBeauty:   accepting = condition->accept(particle.getType().getBeauty()); break;
+        case kLive:     accepting = condition->accept(particle.isLive()); break;
+        case kEnabled:  accepting = condition->accept(particle.getType().isEnabled());
       }
     if (!accepting)  return false;
     }
   return true;
+}
+
+
+void ParticleFilter::reset()
+{
+
 }
 
 } // namespace CAP

@@ -26,6 +26,10 @@ public:
   ParticleFilter & operator=(const ParticleFilter & otherFilter);
   virtual ~ParticleFilter() {}
   virtual bool accept(const Particle & particle);
+  virtual void reset();
+
+  enum ParticleFilterType   { kNone, kPt, kPx, kPy, kPz, kEnergy, kEta, kRapidity, kPhi, kPdg,  kCharge, kStrange, kBaryon, kCharm, kBeauty, kLive, kEnabled};
+
   ClassDef(ParticleFilter,0)
 };
 

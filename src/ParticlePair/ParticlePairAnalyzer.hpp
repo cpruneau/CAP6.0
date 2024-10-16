@@ -12,7 +12,6 @@
 #ifndef CAP__ParticlePairAnalyzer
 #define CAP__ParticlePairAnalyzer
 #include "EventTask.hpp"
-//#include "ParticleDigit.hpp"
 #include "ParticlePairExceptions.hpp"
 
 namespace CAP

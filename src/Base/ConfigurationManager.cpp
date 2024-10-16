@@ -56,7 +56,7 @@ const Configuration & ConfigurationManager::getConfiguration() const
   return configuration;
 }
 
-const Configuration & ConfigurationManager::getConfiguration()
+Configuration & ConfigurationManager::getConfiguration()
 {
   return configuration;
 }
@@ -64,8 +64,7 @@ const Configuration & ConfigurationManager::getConfiguration()
 
 void ConfigurationManager::setDefaultConfiguration()
 {
-  //addProperty( "Severity","Info");
-  addProperty( "Severity","Debug");
+  addProperty( "Severity","Info");
 }
 
 void ConfigurationManager::setRequestedConfiguration(Configuration & _requestedConfiguration)
@@ -148,34 +147,26 @@ String ConfigurationManager::getValueString(const char * path, const char *  key
 
 void ConfigurationManager::addProperty(const char *  name, bool value)
 {
-//  std::cout << "Adding parameter " << name << " with value " << value << " for configurationPath " << configurationPath << std::endl;
   configuration.addProperty(configurationPath,name,value);
 }
 
 void ConfigurationManager::addProperty(const char *  name, int value)
 {
-  //std::cout << "Adding parameter " << name << " with value " << value << " for configurationPath " << configurationPath << std::endl;
   configuration.addProperty(configurationPath,name,value);
 }
-
 
 void ConfigurationManager::addProperty(const char *  name, long value)
 {
-  //std::cout << "Adding parameter " << name << " with value " << value << " for configurationPath " << configurationPath << std::endl;
   configuration.addProperty(configurationPath,name,value);
 }
-
 
 void ConfigurationManager::addProperty(const char *  name, double value)
 {
-  //std::cout << "Adding parameter " << name << " with value " << value << " for configurationPath " << configurationPath << std::endl;
   configuration.addProperty(configurationPath,name,value);
 }
 
-
 void ConfigurationManager::addProperty(const char *  name, const char *  value)
 {
-  //std::cout << "Adding parameter " << name << " with value " << value << " for configurationPath " << configurationPath << std::endl;
   configuration.addProperty(configurationPath,name,value);
 }
 

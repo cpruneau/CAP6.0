@@ -21,21 +21,21 @@ namespace CAP
 NuDynDerivedHistos::NuDynDerivedHistos()
 :
 HistogramGroup(),
-h_F2_vsMult(),
-h_R2_vsMult(),
-h_nudyn_vsMult()
+h_F2_evtClass(),
+h_R2_evtClass(),
+h_nudyn_evtClass()
 {
   appendClassName("NuDynDerivedHistos");
-  setInstanceName("NuDynDerived");
+  setInstanceName("NuDynDerivedHistos");
 }
 
 NuDynDerivedHistos::NuDynDerivedHistos(const NuDynDerivedHistos & group)
 :
 HistogramGroup(),
 particleFilters(),
-h_F2_vsMult(),
-h_R2_vsMult(),
-h_nudyn_vsMult()
+h_F2_evtClass(),
+h_R2_evtClass(),
+h_nudyn_evtClass()
 {
   cloneAll(group);
 }
@@ -67,17 +67,17 @@ void NuDynDerivedHistos::createHistograms()
   const String & bn  = getName();
   const String & ptn = getParentName();
   const String & ppn = getParentPathName();
-  String multName = configuration.getValueInt(ppn,"MultName");
-  int nBins_mult   = configuration.getValueInt(ppn,"nBins_mult");
-  double min_mult  = configuration.getValueInt(ppn,"Min_mult");
-  double max_mult  = configuration.getValueInt(ppn,"Max_mult");
+  String evtClassName  = configuration.getValueString(ptn,"EvtClassName");
+  int nBins_EvtClass   = configuration.getValueInt(ptn,"nBins_EvtClass");
+  double min_EvtClass  = configuration.getValueDouble(ptn,"Min_EvtClass");
+  double max_EvtClass  = configuration.getValueDouble(ptn,"Max_EvtClass");
   if (reportInfo(__FUNCTION__))
     {
     printCR();
     printValue("Parent Task Name",ptn);
     printValue("Parent Path Name",ppn);
-    printValue("Histo Base Name.",bn);
-    printValue("multName",multName);
+    printValue("Histo Base Name",bn);
+    printValue("EvtClassName",evtClassName);
     printCR();
     }
 
@@ -92,15 +92,15 @@ void NuDynDerivedHistos::createHistograms()
       {
       String pfn2 = particleFilter2->getName();
       String pft2 = particleFilter2->getTitle();
-      h_F2_vsMult.push_back(createHistogram(createName(bn,pfn1,pfn2,"F2"),
-                                            nBins_mult,min_mult,max_mult,
+      h_F2_evtClass.push_back(createHistogram(createName(bn,pfn1,pfn2,"F2"),
+                                            nBins_EvtClass,min_EvtClass,max_EvtClass,
                                             xTitle,createTitle("F_{2}",pft1,pft2) ) );
-      h_R2_vsMult.push_back(createHistogram(createName(bn,pfn1,pfn2,"R2"),
-                                            nBins_mult,min_mult,max_mult,
+      h_R2_evtClass.push_back(createHistogram(createName(bn,pfn1,pfn2,"R2"),
+                                            nBins_EvtClass,min_EvtClass,max_EvtClass,
                                             xTitle,createTitle("R_{2}",pft1,pft2) ) );
       if (particleFilter1 == particleFilter2) continue;
-      h_nudyn_vsMult.push_back(createHistogram(createName(bn,pfn1,pfn2,"NuDyn"),
-                                               nBins_mult,min_mult,max_mult,
+      h_nudyn_evtClass.push_back(createHistogram(createName(bn,pfn1,pfn2,"NuDyn"),
+                                               nBins_EvtClass,min_EvtClass,max_EvtClass,
                                                xTitle,createTitle("#nu_{Dyn}",pft1,pft2) ) );
       }
     }
@@ -113,19 +113,19 @@ void NuDynDerivedHistos::importHistograms(TFile & inputFile)
   const String & bn  = getName();
   const String & ptn = getParentName();
   const String & ppn = getParentPathName();
-  String multName  = configuration.getValueInt(ppn,"MultName");
+  String evtClassName  = configuration.getValueInt(ptn,"EvtClassName");
   if (reportInfo(__FUNCTION__))
     {
     printCR();
     printValue("Parent Task Name",ptn);
     printValue("Parent Path Name",ppn);
     printValue("Histo Base Name.",bn);
-    printValue("multName",multName);
+    printValue("EvtClassName",evtClassName);
     printCR();
     }
 
   String name;
-  String xTitle = "M";
+  String xTitle = "EvtClass";
   String title;
 
   for (auto & particleFilter1 : particleFilters)
@@ -136,9 +136,9 @@ void NuDynDerivedHistos::importHistograms(TFile & inputFile)
       {
       String pfn2 = particleFilter2->getName();
       String pft2 = particleFilter2->getTitle();
-      h_F2_vsMult.push_back(importH1(inputFile,createName(bn,pfn1,pfn2,"F2")));
-      h_R2_vsMult.push_back(importH1(inputFile,createName(bn,pfn1,pfn2,"R2")));
-      h_nudyn_vsMult.push_back(importH1(inputFile,createName(bn,pfn1,pfn2,"NuDyn")));
+      h_F2_evtClass.push_back(importH1(inputFile,createName(bn,pfn1,pfn2,"F2")));
+      h_R2_evtClass.push_back(importH1(inputFile,createName(bn,pfn1,pfn2,"R2")));
+      h_nudyn_evtClass.push_back(importH1(inputFile,createName(bn,pfn1,pfn2,"NuDyn")));
       }
     }
   if (reportEnd(__FUNCTION__))  { /* no ops */ }
@@ -159,24 +159,24 @@ void NuDynDerivedHistos::calculateDerivedHistograms(NuDynHistos* baseHistos)
       printValue("CalculateDerived() i1",i1);
       printValue("CalculateDerived() i2",i2);
       printValue("CalculateDerived() i12",i12);
-      printValue("CalculateDerived() h_f1_vsMult[i1]",source.h_f1_vsMult[i1]->GetYaxis()->GetTitle());
-      printValue("CalculateDerived() h_f1_vsMult[i2]",source.h_f1_vsMult[i2]->GetYaxis()->GetTitle());
-      printValue("CalculateDerived() h_f2_vsMult[i12]",source.h_f2_vsMult[i12]->GetYaxis()->GetTitle());
-      printValue("CalculateDerived() h_F2_vsMult[i12]",h_F2_vsMult[i12]->GetYaxis()->GetTitle());
-      printValue("CalculateDerived() h_R2_vsMult[i12]",h_R2_vsMult[i12]->GetYaxis()->GetTitle());
-      calculateF2R2(source.h_f1_vsMult[i1],
-                    source.h_f1_vsMult[i2],
-                    source.h_f2_vsMult[i12],
-                    h_F2_vsMult[i12],
-                    h_R2_vsMult[i12]);
+      printValue("CalculateDerived() h_f1_evtClass[i1]",source.h_f1_evtClass[i1]->GetYaxis()->GetTitle());
+      printValue("CalculateDerived() h_f1_evtClass[i2]",source.h_f1_evtClass[i2]->GetYaxis()->GetTitle());
+      printValue("CalculateDerived() h_f2_evtClass[i12]",source.h_f2_evtClass[i12]->GetYaxis()->GetTitle());
+      printValue("CalculateDerived() h_F2_evtClass[i12]",h_F2_evtClass[i12]->GetYaxis()->GetTitle());
+      printValue("CalculateDerived() h_R2_evtClass[i12]",h_R2_evtClass[i12]->GetYaxis()->GetTitle());
+      calculateF2R2(source.h_f1_evtClass[i1],
+                    source.h_f1_evtClass[i2],
+                    source.h_f2_evtClass[i12],
+                    h_F2_evtClass[i12],
+                    h_R2_evtClass[i12]);
       if (i1==i2) continue;
       printValue("CalculateDerived() nu12",nu12);
-      printValue("CalculateDerived() h_nudyn_vsMult[nu12]",h_nudyn_vsMult[nu12]->GetYaxis()->GetTitle());
-      calculateNudyn(h_R2_vsMult[i1*nFilters + i1],
-                     h_R2_vsMult[i1*nFilters + i2],
-                     h_R2_vsMult[i2*nFilters + i1],
-                     h_R2_vsMult[i2*nFilters + i2],
-                     h_nudyn_vsMult[nu12]);
+      printValue("CalculateDerived() h_nudyn_evtClass[nu12]",h_nudyn_evtClass[nu12]->GetYaxis()->GetTitle());
+      calculateNudyn(h_R2_evtClass[i1*nFilters + i1],
+                     h_R2_evtClass[i1*nFilters + i2],
+                     h_R2_evtClass[i2*nFilters + i1],
+                     h_R2_evtClass[i2*nFilters + i2],
+                     h_nudyn_evtClass[nu12]);
       nu12++;
       }
     }

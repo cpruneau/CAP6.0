@@ -28,7 +28,7 @@ public:
   virtual void execute();
 
 protected:
-  int selectedMethod;
+
   ClassDef(ClosureCalculator,0)
 };
 

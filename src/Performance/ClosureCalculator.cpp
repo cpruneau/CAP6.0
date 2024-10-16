@@ -22,8 +22,7 @@ namespace CAP
 
 ClosureCalculator::ClosureCalculator()
 :
-HistogramTask(),
-selectedMethod(0)
+HistogramTask()
 {
   appendClassName("ClosureCalculator");
 }
@@ -31,37 +30,24 @@ selectedMethod(0)
 void ClosureCalculator::setDefaultConfiguration()
 {
   HistogramTask::setDefaultConfiguration();
-  addProperty("SelectedMethod",selectedMethod);
+  addProperty("SelectedMethod",int(0));
 }
 
 void ClosureCalculator::execute()
 {
-  String histosGeneratorFileName = "";
-  String histosDetectorFileName  = "";
-  String histosClosureFileName   = "";
+  if (reportInfo (__FUNCTION__)) cout << "Closure Test Beginning." << endl;
+  // needs fix...
+  String histosGeneratorFileName;
+  String histosDetectorFileName;
+  String histosClosureFileName;
+  TFile & generatorFile = *openOldRootFile(histosGeneratorFileName);
+  TFile & detectorFile  = *openOldRootFile(histosDetectorFileName);
+  TFile * closureFile;
+  if (histogramsForceRewrite())
+    closureFile = openRecreateRootFile(histosClosureFileName);
+  else
+    closureFile = openNewRootFile(histosClosureFileName);
 
-  if (reportInfo(__FUNCTION__))
-    {
-    printCR();
-    printLine();
-    printString("Starting closure test calculation");
-    printValue("HistoInputPath",histogramImportPath);
-    printValue("HistoGeneratorFileName",histosGeneratorFileName);
-    printValue("HistoDetectorFileName",histosDetectorFileName);
-    printValue("HistogramsExportPath",histogramExportPath);
-    printValue("HistogramsClosureFileName",histosClosureFileName);
-    switch (selectedMethod)
-      {
-        default:
-        case 0: printValue("SelectedMethod","Difference"); break;
-        case 1: printValue("SelectedMethod","Ratio");      break;
-      }
-    }
-  String option = "NEW";
-  if (histogramForceRewrite) option = "RECREATE";
-  TFile & generatorFile = *openRootFile("", histosGeneratorFileName, "READ");
-  TFile & detectorFile  = *openRootFile("", histosDetectorFileName,  "READ");
-  TFile & closureFile   = *openRootFile("", histosClosureFileName,option);
   HistogramGroup * generator = new HistogramGroup();
   HistogramGroup * detector  = new HistogramGroup();
   HistogramGroup * closure   = new HistogramGroup();
@@ -76,15 +62,16 @@ void ClosureCalculator::execute()
   closure->setName("Closure");
   closure->setParentTask(this);
   closure->setOwnership(false);
+  int selectedMethod = getValueInt("SelectedMethod");
   switch (selectedMethod)
     {
       case 0: closure->differenceGroup(*detector,*generator,true); break;
       case 1: closure->ratioGroup(*detector,*generator,true); break;
     }
-  closure->exportHistograms(closureFile);
+  closure->exportHistograms(*closureFile);
   generatorFile.Close();
   detectorFile.Close();
-  closureFile.Close();
+  closureFile-> Close();
   delete generator;
   delete detector;
   delete closure;

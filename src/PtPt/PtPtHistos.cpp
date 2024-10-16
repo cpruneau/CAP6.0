@@ -21,49 +21,49 @@ namespace CAP
 PtPtHistos::PtPtHistos()
 :
 HistogramGroup(),
-multName("MULT"),
-h_mult(),
-h_f1_vsMult(),
-h_f2_vsMult(),
-h_f3_vsMult(),
-h_f4_vsMult(),
-h_Q1_vsMult(),
-h_Q1Q1_vsMult(),
-h_Q1Q1Q1_vsMult(),
-h_Q1Q1Q1Q1_vsMult(),
-h_Q2_vsMult(),
-h_Q2Q1_vsMult(),
-h_Q2Q1Q1_vsMult(),
-h_Q2Q2_vsMult(),
-h_Q3_vsMult(),
-h_Q3Q1_vsMult(),
-h_Q4_vsMult(),
+evtClassName("MULT"),
+h_evtClass(),
+h_f1_evtClass(),
+h_f2_evtClass(),
+h_f3_evtClass(),
+h_f4_evtClass(),
+h_Q1_evtClass(),
+h_Q1Q1_evtClass(),
+h_Q1Q1Q1_evtClass(),
+h_Q1Q1Q1Q1_evtClass(),
+h_Q2_evtClass(),
+h_Q2Q1_evtClass(),
+h_Q2Q1Q1_evtClass(),
+h_Q2Q2_evtClass(),
+h_Q3_evtClass(),
+h_Q3Q1_evtClass(),
+h_Q4_evtClass(),
 particleFilters()
 {
   appendClassName("PtPtHistos");
-  setInstanceName("PtPt");
+  setInstanceName("PtPtHistos");
 }
 
 PtPtHistos::PtPtHistos(const PtPtHistos & group)
 :
 HistogramGroup(group),
-multName(group.multName),
-h_mult(),
-h_f1_vsMult(),
-h_f2_vsMult(),
-h_f3_vsMult(),
-h_f4_vsMult(),
-h_Q1_vsMult(),
-h_Q1Q1_vsMult(),
-h_Q1Q1Q1_vsMult(),
-h_Q1Q1Q1Q1_vsMult(),
-h_Q2_vsMult(),
-h_Q2Q1_vsMult(),
-h_Q2Q1Q1_vsMult(),
-h_Q2Q2_vsMult(),
-h_Q3_vsMult(),
-h_Q3Q1_vsMult(),
-h_Q4_vsMult(),
+evtClassName(group.evtClassName),
+h_evtClass(),
+h_f1_evtClass(),
+h_f2_evtClass(),
+h_f3_evtClass(),
+h_f4_evtClass(),
+h_Q1_evtClass(),
+h_Q1Q1_evtClass(),
+h_Q1Q1Q1_evtClass(),
+h_Q1Q1Q1Q1_evtClass(),
+h_Q2_evtClass(),
+h_Q2Q1_evtClass(),
+h_Q2Q1Q1_evtClass(),
+h_Q2Q2_evtClass(),
+h_Q3_evtClass(),
+h_Q3Q1_evtClass(),
+h_Q4_evtClass(),
 particleFilters()
 {
   cloneAll(group);
@@ -93,10 +93,10 @@ void PtPtHistos::createHistograms()
   const String & bn  = getName();
   const String & ptn = getParentName();
   const String & ppn = getParentPathName();
-  multName = configuration.getValueInt(ppn,"MultName");
-  int nBins_mult   = configuration.getValueInt(ppn,"nBins_mult");
-  double min_mult  = configuration.getValueInt(ppn,"Min_mult");
-  double max_mult  = configuration.getValueInt(ppn,"Max_mult");
+  evtClassName = configuration.getValueString(ptn,"EvtClassName");
+  int nBins_EvtClass   = configuration.getValueInt(ptn,"nBins_EvtClass");
+  double min_EvtClass  = configuration.getValueDouble(ptn,"Min_EvtClass");
+  double max_EvtClass  = configuration.getValueDouble(ptn,"Max_EvtClass");
 
   if (reportInfo(__FUNCTION__))
     {
@@ -104,33 +104,33 @@ void PtPtHistos::createHistograms()
     printValue("Parent Task Name",ptn);
     printValue("Parent Path Name",ppn);
     printValue("Histo Base Name.",bn);
-    printValue("multName",multName);
-    printValue("nBins_mult",nBins_mult);
-    printValue("min_mult",min_mult);
-    printValue("max_mult",max_mult);
+    printValue("EvtClassName",evtClassName);
+    printValue("nBins_EvtClass",nBins_EvtClass);
+    printValue("Min_EvtClass",min_EvtClass);
+    printValue("Min_EvtClass",max_EvtClass);
     }
   String xTitle = "M";
-  h_mult = createHistogram(createName(bn,"mult"),nBins_mult,min_mult,max_mult,xTitle,"Counts");
+  h_evtClass = createHistogram(createName(bn,"mult"),nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"Counts");
   // use multiple filters -- but diagonnally only
   // no mixed species for now.
   for (auto & particleFilter1 : particleFilters)
     {
     String pfn = particleFilter1->getName();
-    h_f1_vsMult.push_back( createProfile(createName(bn,pfn,"n1"),nBins_mult,min_mult,max_mult,xTitle,"n_{1}") );
-    h_f2_vsMult.push_back( createProfile(createName(bn,pfn,"n2"),nBins_mult,min_mult,max_mult,xTitle,"n_{2}") );
-    h_f3_vsMult.push_back( createProfile(createName(bn,pfn,"n3"),nBins_mult,min_mult,max_mult,xTitle,"n_{3}") );
-    h_f4_vsMult.push_back( createProfile(createName(bn,pfn,"n4"),nBins_mult,min_mult,max_mult,xTitle,"n_{4}") );
-    h_Q1_vsMult.push_back(       createProfile(createName(bn,pfn,"Q1"),      nBins_mult,min_mult,max_mult,xTitle,"Q_{1}") );
-    h_Q1Q1_vsMult.push_back(     createProfile(createName(bn,pfn,"Q1Q1"),    nBins_mult,min_mult,max_mult,xTitle,"Q_{1}^{2}") );
-    h_Q1Q1Q1_vsMult.push_back(   createProfile(createName(bn,pfn,"Q1Q1Q1"),  nBins_mult,min_mult,max_mult,xTitle,"Q_{1}^{3}") );
-    h_Q1Q1Q1Q1_vsMult.push_back( createProfile(createName(bn,pfn,"Q1Q1Q1Q1"),nBins_mult,min_mult,max_mult,xTitle,"Q_{1}^{4}") );
-    h_Q2_vsMult.push_back(       createProfile(createName(bn,pfn,"Q2"),      nBins_mult,min_mult,max_mult,xTitle,"Q_{2}^{2}") );
-    h_Q2Q1_vsMult.push_back(     createProfile(createName(bn,pfn,"Q2Q1"),    nBins_mult,min_mult,max_mult,xTitle,"Q_{2}Q_{2}") );
-    h_Q2Q1Q1_vsMult.push_back(   createProfile(createName(bn,pfn,"Q2Q1Q1"),  nBins_mult,min_mult,max_mult,xTitle,"Q_{2}Q_{1}^2") );
-    h_Q2Q2_vsMult.push_back(     createProfile(createName(bn,pfn,"Q2Q2"),    nBins_mult,min_mult,max_mult,xTitle,"Q_{2}^2") );
-    h_Q3_vsMult.push_back(       createProfile(createName(bn,pfn,"Q3"),      nBins_mult,min_mult,max_mult,xTitle,"Q_{3}") );
-    h_Q3Q1_vsMult.push_back(     createProfile(createName(bn,pfn,"Q3Q1"),    nBins_mult,min_mult,max_mult,xTitle,"Q_{3}Q_{1}") );
-    h_Q4_vsMult.push_back(       createProfile(createName(bn,pfn,"Q4"),      nBins_mult,min_mult,max_mult,xTitle,"Q_{4}") );
+    h_f1_evtClass.push_back( createProfile(createName(bn,pfn,"n1"),nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"n_{1}") );
+    h_f2_evtClass.push_back( createProfile(createName(bn,pfn,"n2"),nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"n_{2}") );
+    h_f3_evtClass.push_back( createProfile(createName(bn,pfn,"n3"),nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"n_{3}") );
+    h_f4_evtClass.push_back( createProfile(createName(bn,pfn,"n4"),nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"n_{4}") );
+    h_Q1_evtClass.push_back(       createProfile(createName(bn,pfn,"Q1"),      nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"Q_{1}") );
+    h_Q1Q1_evtClass.push_back(     createProfile(createName(bn,pfn,"Q1Q1"),    nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"Q_{1}^{2}") );
+    h_Q1Q1Q1_evtClass.push_back(   createProfile(createName(bn,pfn,"Q1Q1Q1"),  nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"Q_{1}^{3}") );
+    h_Q1Q1Q1Q1_evtClass.push_back( createProfile(createName(bn,pfn,"Q1Q1Q1Q1"),nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"Q_{1}^{4}") );
+    h_Q2_evtClass.push_back(       createProfile(createName(bn,pfn,"Q2"),      nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"Q_{2}^{2}") );
+    h_Q2Q1_evtClass.push_back(     createProfile(createName(bn,pfn,"Q2Q1"),    nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"Q_{2}Q_{2}") );
+    h_Q2Q1Q1_evtClass.push_back(   createProfile(createName(bn,pfn,"Q2Q1Q1"),  nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"Q_{2}Q_{1}^2") );
+    h_Q2Q2_evtClass.push_back(     createProfile(createName(bn,pfn,"Q2Q2"),    nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"Q_{2}^2") );
+    h_Q3_evtClass.push_back(       createProfile(createName(bn,pfn,"Q3"),      nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"Q_{3}") );
+    h_Q3Q1_evtClass.push_back(     createProfile(createName(bn,pfn,"Q3Q1"),    nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"Q_{3}Q_{1}") );
+    h_Q4_evtClass.push_back(       createProfile(createName(bn,pfn,"Q4"),      nBins_EvtClass,min_EvtClass,max_EvtClass,xTitle,"Q_{4}") );
 
 
     }
@@ -144,34 +144,34 @@ void PtPtHistos::importHistograms(TFile & inputFile)
   const String & bn  = getName();
   const String & ptn = getParentName();
   const String & ppn = getParentPathName();
-  multName = configuration.getValueInt(ppn,"MultName");
+  evtClassName = configuration.getValueInt(ptn,"EvtClassName");
   if (reportInfo(__FUNCTION__))
     {
     printCR();
     printValue("Parent Task Name",ptn);
     printValue("Parent Path Name",ppn);
     printValue("Histo Base Name.",bn);
-    printValue("MultName",multName);
+    printValue("EvtClassName",evtClassName);
     }
 
   for (auto & particleFilter1 : particleFilters)
     {
     String pfn = particleFilter1->getName();
-    h_f1_vsMult.push_back( loadProfile(inputFile,createName(bn,pfn,"n1") ));
-    h_f2_vsMult.push_back( loadProfile(inputFile,createName(bn,pfn,"n2") ));
-    h_f3_vsMult.push_back( loadProfile(inputFile,createName(bn,pfn,"n3") ));
-    h_f4_vsMult.push_back( loadProfile(inputFile,createName(bn,pfn,"n4") ));
-    h_Q1_vsMult.push_back(       loadProfile(inputFile,createName(bn,pfn,"Q1") ));
-    h_Q1Q1_vsMult.push_back(     loadProfile(inputFile,createName(bn,pfn,"Q1Q1") ));
-    h_Q1Q1Q1_vsMult.push_back(   loadProfile(inputFile,createName(bn,pfn,"Q1Q1Q1") ));
-    h_Q1Q1Q1Q1_vsMult.push_back( loadProfile(inputFile,createName(bn,pfn,"Q1Q1Q1Q1") ));
-    h_Q2_vsMult.push_back(       loadProfile(inputFile,createName(bn,pfn,"Q2") ));
-    h_Q2Q1_vsMult.push_back(     loadProfile(inputFile,createName(bn,pfn,"Q2Q1") ));
-    h_Q2Q1Q1_vsMult.push_back(   loadProfile(inputFile,createName(bn,pfn,"Q2Q1Q1") ));
-    h_Q2Q2_vsMult.push_back(     loadProfile(inputFile,createName(bn,pfn,"Q2Q2") ));
-    h_Q3_vsMult.push_back(       loadProfile(inputFile,createName(bn,pfn,"Q3") ));
-    h_Q3Q1_vsMult.push_back(     loadProfile(inputFile,createName(bn,pfn,"Q3Q1") ));
-    h_Q4_vsMult.push_back(       loadProfile(inputFile,createName(bn,pfn,"Q4") ));
+    h_f1_evtClass.push_back( loadProfile(inputFile,createName(bn,pfn,"n1") ));
+    h_f2_evtClass.push_back( loadProfile(inputFile,createName(bn,pfn,"n2") ));
+    h_f3_evtClass.push_back( loadProfile(inputFile,createName(bn,pfn,"n3") ));
+    h_f4_evtClass.push_back( loadProfile(inputFile,createName(bn,pfn,"n4") ));
+    h_Q1_evtClass.push_back(       loadProfile(inputFile,createName(bn,pfn,"Q1") ));
+    h_Q1Q1_evtClass.push_back(     loadProfile(inputFile,createName(bn,pfn,"Q1Q1") ));
+    h_Q1Q1Q1_evtClass.push_back(   loadProfile(inputFile,createName(bn,pfn,"Q1Q1Q1") ));
+    h_Q1Q1Q1Q1_evtClass.push_back( loadProfile(inputFile,createName(bn,pfn,"Q1Q1Q1Q1") ));
+    h_Q2_evtClass.push_back(       loadProfile(inputFile,createName(bn,pfn,"Q2") ));
+    h_Q2Q1_evtClass.push_back(     loadProfile(inputFile,createName(bn,pfn,"Q2Q1") ));
+    h_Q2Q1Q1_evtClass.push_back(   loadProfile(inputFile,createName(bn,pfn,"Q2Q1Q1") ));
+    h_Q2Q2_evtClass.push_back(     loadProfile(inputFile,createName(bn,pfn,"Q2Q2") ));
+    h_Q3_evtClass.push_back(       loadProfile(inputFile,createName(bn,pfn,"Q3") ));
+    h_Q3Q1_evtClass.push_back(     loadProfile(inputFile,createName(bn,pfn,"Q3Q1") ));
+    h_Q4_evtClass.push_back(       loadProfile(inputFile,createName(bn,pfn,"Q4") ));
    }
   if (reportEnd(__FUNCTION__))  { /* no ops */ }
 }
@@ -193,10 +193,10 @@ void PtPtHistos::fill(double mult,
     double n2 = n1*(n1-1);
     double n3 = n2*(n1-2);
     double n4 = n3*(n1-3);
-    h_f1_vsMult[i1]->Fill(mult,n1);
-    h_f2_vsMult[i1]->Fill(mult,n2);
-    h_f3_vsMult[i1]->Fill(mult,n3);
-    h_f4_vsMult[i1]->Fill(mult,n4);
+    h_f1_evtClass[i1]->Fill(mult,n1);
+    h_f2_evtClass[i1]->Fill(mult,n2);
+    h_f3_evtClass[i1]->Fill(mult,n3);
+    h_f4_evtClass[i1]->Fill(mult,n4);
 
     double Q1 = q1Sum[i1];
     double Q2 = q2Sum[i1];
@@ -210,17 +210,17 @@ void PtPtHistos::fill(double mult,
     double Q2Q1Q1 = Q2Q1*Q1;
     double Q3Q1   = Q3*Q1;
 
-    h_Q1_vsMult[i1]->Fill(mult,Q1);
-    h_Q1Q1_vsMult[i1]->Fill(mult,Q1Q1);
-    h_Q1Q1Q1_vsMult[i1]->Fill(mult,Q1Q1Q1);
-    h_Q1Q1Q1Q1_vsMult[i1]->Fill(mult,Q1Q1Q1Q1);
-    h_Q2_vsMult[i1]->Fill(mult,Q2);
-    h_Q2Q1_vsMult[i1]->Fill(mult,Q2Q1);
-    h_Q2Q1Q1_vsMult[i1]->Fill(mult,Q2Q1Q1);
-    h_Q2Q2_vsMult[i1]->Fill(mult,Q2Q2);
-    h_Q3_vsMult[i1]->Fill(mult,Q3);
-    h_Q3Q1_vsMult[i1]->Fill(mult,Q3Q1);
-    h_Q4_vsMult[i1]->Fill(mult,Q4);
+    h_Q1_evtClass[i1]->Fill(mult,Q1);
+    h_Q1Q1_evtClass[i1]->Fill(mult,Q1Q1);
+    h_Q1Q1Q1_evtClass[i1]->Fill(mult,Q1Q1Q1);
+    h_Q1Q1Q1Q1_evtClass[i1]->Fill(mult,Q1Q1Q1Q1);
+    h_Q2_evtClass[i1]->Fill(mult,Q2);
+    h_Q2Q1_evtClass[i1]->Fill(mult,Q2Q1);
+    h_Q2Q1Q1_evtClass[i1]->Fill(mult,Q2Q1Q1);
+    h_Q2Q2_evtClass[i1]->Fill(mult,Q2Q2);
+    h_Q3_evtClass[i1]->Fill(mult,Q3);
+    h_Q3Q1_evtClass[i1]->Fill(mult,Q3Q1);
+    h_Q4_evtClass[i1]->Fill(mult,Q4);
     }
 }
 

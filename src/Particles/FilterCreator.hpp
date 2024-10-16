@@ -35,12 +35,12 @@ public:
   virtual void setDefaultConfiguration();
   virtual void configure();
   virtual void initialize();
+  virtual void finalize();
 
 protected:
 
   void createEventFilter(const String & name,
                          const String & title,
-                         const String & typeName,
                          const vector<String>  & conditionTypes,
                          const vector<String>  & conditionSubypes,
                          const vector<double>  & conditionMinima,
@@ -50,7 +50,6 @@ protected:
 
   void createParticleFilter(const String & name,
                             const String & title,
-                            const String & typeName,
                             const vector<String>  & conditionTypes,
                             const vector<String>  & conditionSubypes,
                             const vector<double>  & conditionMinima,

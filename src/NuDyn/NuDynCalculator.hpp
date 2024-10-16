@@ -29,11 +29,9 @@ public:
   virtual void execute();
   virtual void createHistograms();
   virtual void importHistograms(TFile & inputFile);
+  virtual void scaleHistograms();
 
  protected:
-  int    multiplicityType; //!< variable used to select which event property is used to differential studies of the moments. This variable is set the class parameter "inputType".
-  vector<double> deltaRapidtyBin;
-
   ClassDef(NuDynCalculator,0)
 };
 

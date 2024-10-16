@@ -33,23 +33,14 @@ public:
   virtual ~EventIterator() {}
   virtual void setDefaultConfiguration();
   virtual void configure();
-  virtual void partial();
+  virtual void initialize();
   virtual void execute();
   virtual void finalize();
 
 protected:
 
-  bool    isGrid;
-  long    nEventsPerSubbunch;
-  int     nSubbunchesPerBunch;
-  int     nBunches;
   long    nEventsRequested;
   long    nEventsReport;
-  String  bunchLabel;
-  String  subbunchLabel;
-  long    iEvent;
-  int     iSubBunch;
-  int     iBunch;
 
   ClassDef(EventIterator,0)
 };

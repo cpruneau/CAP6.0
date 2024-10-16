@@ -29,7 +29,9 @@ public:
   virtual ~FileIterator() {}
   virtual void setDefaultConfiguration();
   virtual void configure();
+  virtual void initialize();
   virtual void execute();
+  virtual void finalize();
 
 //  void addFileName(const String &  name);
 //  void addFileNames(const vector<String> &  names);

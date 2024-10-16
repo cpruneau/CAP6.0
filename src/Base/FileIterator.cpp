@@ -21,12 +21,7 @@ namespace CAP
 
 FileIterator::FileIterator()
 :
-HistogramTask(),
-isGrid(0),
-nBunches(0),
-nSubBunches(0),
-bunchLabel("BUNCH"),
-subBunchLabel("SUBBUNCH")
+HistogramTask()
 {
   appendClassName("FileIterator");
   setName("FileIterator");
@@ -35,103 +30,83 @@ subBunchLabel("SUBBUNCH")
 
 FileIterator::FileIterator(const FileIterator & task)
 :
-HistogramTask(task),
-isGrid(task.isGrid),
-nBunches(task.nBunches),
-nSubBunches(task.nSubBunches),
-bunchLabel(task.bunchLabel),
-subBunchLabel(task.subBunchLabel)
+HistogramTask(task)
 {    }
 
 FileIterator FileIterator::operator=(const FileIterator & task)
 {
-  if (this!=&task)
-    {
-    HistogramTask::operator=(task),
-    isGrid            = task.isGrid;
-    nBunches          = task.nBunches;
-    nSubBunches       = task.nSubBunches;
-    bunchLabel        = task.bunchLabel;
-    subBunchLabel     = task.subBunchLabel;
-    }
+  if (this!=&task) HistogramTask::operator=(task);
   return *this;
 }
 
 void FileIterator::setDefaultConfiguration()
 {
+  String path = "Default";
   HistogramTask::setDefaultConfiguration();
-  addProperty("isGrid",isGrid);
-  addProperty("nBunches",nBunches);
-  addProperty("nSubBunches",nSubBunches);
-  addProperty("bunchLabel",bunchLabel);
-  addProperty("subBunchLabel",subBunchLabel);
+  configuration.addProperty("FileIterator:nLevels",0);
 }
 
 void FileIterator::configure()
 {
   HistogramTask::configure();
-  isGrid        = getValueBool("isGrid");
-  nBunches      = getValueInt("nBunches");
-  nSubBunches   = getValueInt("nSubBunches");
-  bunchLabel    = getValueString("BunchLabel");
-  subBunchLabel = getValueString("SubBunchLabel");
 }
+
+void FileIterator::initialize()
+{
+// initialization is done within the execute command...
+}
+
+void FileIterator::finalize()
+{
+  // finalize is done within the execute command...
+}
+
 
 void FileIterator::execute()
 {
   if (reportStart(__FUNCTION__)) {  /* no ops */ };
   start();
   TaskAccountant::increment();
-  VectorString  importPathNames;
-  VectorString  exportPathNames;
+  std::vector<String> importPathNames;
+  std::vector<String> exportPathNames;
   String importPath = getHistoImportPath();
   String exportPath = getHistoExportPath();
-  if (isGrid)
+  printValue("FileIterator::execute()   importPath",importPath);
+  int nLevels = configuration.getValueInt("FileIterator:nLevels");
+  switch (nLevels)
     {
-    for (int iBunch=0;iBunch<nBunches;iBunch++)
+      case 0:
       {
-      for (int iSubBunch=0;iSubBunch<nSubBunches;iSubBunch++)
-        {
-        String name = importPath;
-        name += "/";
-        name += bunchLabel;
-        name += iBunch;
-        name += "/";
-        name += subBunchLabel;
-        name += iSubBunch;
-        name += "/";
-        importPathNames.push_back(name);
-        name = exportPath;
-        name += "/";
-        name += bunchLabel;
-        name += "/";
-        name += subBunchLabel;
-        name += "/";
-        exportPathNames.push_back(name);
-        }
+      String name = importPath; name += "/";
+      importPathNames.push_back(name);
+      name = exportPath;  name += "/";
+      exportPathNames.push_back(name);
+      break;
       }
-    }
-  else
-    {
-    String name = importPath;
-    name += "/";
-    importPathNames.push_back(name);
-    name = exportPath;
-    name += "/";
-    exportPathNames.push_back(name);
+
+      case 1: // one folder with many subfolders
+      {
+      importPathNames = listDirsIn(importPath,true);
+      exportPathNames = importPathNames;
+      break;
+      }
     }
   if (importPathNames.size()<1 )
     throw TaskException("Attempting to execute file iterator with no selected files",__FUNCTION__);
-
-    unsigned int nPaths = importPathNames.size();
+  unsigned int nPaths = importPathNames.size();
+  printValue("FileIterator::execute() nPaths", nPaths);
+  for (auto & subtask : subTasks)
+    {
+    String calculatorName = subtask->getName();
+    calculatorName += ":";
     for (unsigned int iPath=0; iPath<nPaths; iPath++)
       {
-      configuration.addProperty("HistogramsImportPath",importPathNames[iPath]);
-      configuration.addProperty("HistogramsExportPath",exportPathNames[iPath]);
-      for (auto & subtask : subTasks)
-        {
-      subtask->setRequestedConfiguration(configuration);
-      subtask->configure();
+      cout << "CalculatorName:" << calculatorName << endl;
+      Configuration & conf = subtask->getConfiguration();
+      conf.addProperty(calculatorName+"HistogramsImportPath",importPathNames[iPath]);
+      conf.addProperty(calculatorName+"HistogramsExportPath",exportPathNames[iPath]);
+      cout << "FileIterator finds HistogramsImportFile: " << conf.getValueString(calculatorName+"HistogramsImportFile") << endl;;
+      cout << "FileIterator finds HistogramsExportFile: " << conf.getValueString(calculatorName+"HistogramsExportFile") << endl;;
       subtask->initialize();
       subtask->execute();
       subtask->finalize();
@@ -147,97 +122,5 @@ void FileIterator::execute()
     printLine();
     }
 }
-//
-//void FileIterator::addFileName(const String &  name)
-//{
-//  if (name.Length()<5) throw TaskException("Invalid file name", __FUNCTION__);
-//  selectedFileNames.push_back(name);
-//}
-//
-////!
-////! Add several  file  templates for use by this task iterator
-////!
-//void FileIterator::addFileNames(const vector<String> &  names)
-//{
-//  if (reportStart(__FUNCTION__)) {  /* no ops */ };
-//  if (names.size()<1) throw TaskException("Given Vector<String> is empty", __FUNCTION__);
-//  for (auto & name : names)
-//    {
-//    if (reportInfo(__FUNCTION__))
-//      {
-//      printCR();
-//      printValue("Adding file",name);
-//      }
-//    if (name.Length()<5) throw TaskException("Invalid file name", __FUNCTION__);
-//    selectedFileNames.push_back(name);
-//    }
-//  if (reportEnd(__FUNCTION__)){  /* no ops */ };
-//}
-//
-////!
-////! Add several  file  templates for use by this task iterator
-////!
-//void FileIterator::addFileNames(const String pathName,
-//                                std::vector<String>   includePatterns,
-//                                std::vector<String>   excludePatterns)
-//{
-//  if (reportStart(__FUNCTION__)) {  /* no ops */ };
-//  std::vector<String>   fileList = listFilesInDir(pathName,".root");
-//  unsigned int nNames = fileList.size();
-//  if (reportDebug(__FUNCTION__))
-//    {
-//    CAP::printCR();
-//    CAP::printValue("fileList.size()",nNames);
-//    CAP::printValue("includePatterns.size()",includePatterns.size());
-//    CAP::printValue("excludePatterns.size()",excludePatterns.size());
-//    }
-//  for (auto & name : fileList)
-//    {
-//    bool include = true;
-//    for (unsigned int kInclude=0; kInclude<includePatterns.size(); kInclude++)
-//      {
-//      String pattern = includePatterns[kInclude];
-//      if (!name.Contains(pattern)) { include = false; break;}
-//      }
-//    if (!include) continue;
-//    for (unsigned int kExclude=0; kExclude<excludePatterns.size(); kExclude++)
-//      {
-//      String pattern = excludePatterns[kExclude];
-//      if (name.Contains(pattern))
-//        {
-//        include = false;
-//        break;
-//        }
-//      }
-//    if (include)
-//      {
-//      String name2  = removeRootExtension(name);
-//      String check = pathName+name2;
-//      selectedFileNames.push_back(pathName+name2);
-//      }
-//    }
-//  if (reportEnd(__FUNCTION__)) {  /* no ops */ };
-//}
-//
-//unsigned int FileIterator::getNSelectedFileNames() const
-//{
-//  return selectedFileNames.size();
-//}
-//
-//unsigned int FileIterator::getCurrentFileIndex() const
-//{
-//  return currentFileIndex;
-//}
-//
-//VectorString  & FileIterator::getSelectedFileNames()
-//{
-//  return selectedFileNames;
-//}
-//
-//const VectorString  & FileIterator::getSelectedFileNames() const
-//{
-//  return selectedFileNames;
-//}
-
 
 } // namespace CAP

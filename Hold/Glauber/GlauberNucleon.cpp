@@ -40,7 +40,6 @@ GlauberNucleon operator=(const GlauberNucleon & nucleon)
 void GlauberNucleon::rotateXYZ(Double_t phi, Double_t theta)
 {
   position.rotate(phi,theta);
-
 }
 
 void GlauberNucleon::rotateXYZ_3D(Double_t psiX, Double_t psiY, Double_t psiZ)

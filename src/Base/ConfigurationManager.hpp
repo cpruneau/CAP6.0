@@ -33,7 +33,7 @@ public:
   //! @return pointer to the Configuration instance controlling this task instance.
   //!
   const Configuration & getConfiguration() const;
-  const Configuration & getConfiguration();
+  Configuration & getConfiguration();
   virtual void setDefaultConfiguration();
   virtual void setRequestedConfiguration(Configuration & config);
   virtual void loadRequestedConfiguration();

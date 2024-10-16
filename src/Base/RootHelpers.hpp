@@ -10,19 +10,19 @@
 
 namespace CAP
 {
-TFile * openRootFile(const String & path, const String & name,const String & ioOption);
-TFile * openRootFile(const String & name, const String & ioOption);
-TFile * openOldRootFile(const String & path, const String & name);
-TFile * openOldRootFile(const String & name);
-TFile * openNewRootFile(const String & path, const String & name);
-TFile * openNewRootFile(const String & name);
-TFile * openRecreateRootFile(const String & path, const String & name);
-TFile * openRecreateRootFile(const String & name);
-std::vector<TFile*> openRootFiles(std::vector<String> & names, const String   & ioOption);
-std::vector<TFile*> openRootFiles(const String & path,std::vector<String> & names,const String   & ioOption);
+TFile * openRootFile(const String & path, const String & name,const String & ioOption,bool verbose=0);
+TFile * openRootFile(const String & name, const String & ioOption,bool verbose=0);
+TFile * openOldRootFile(const String & path, const String & name,bool verbose=0);
+TFile * openOldRootFile(const String & name,bool verbose=0);
+TFile * openNewRootFile(const String & path, const String & name,bool verbose=0);
+TFile * openNewRootFile(const String & name,bool verbose=0);
+TFile * openRecreateRootFile(const String & path, const String & name,bool verbose=0);
+TFile * openRecreateRootFile(const String & name,bool verbose=0);
+std::vector<TFile*> openRootFiles(std::vector<String> & names, const String   & ioOption,bool verbose=0);
+std::vector<TFile*> openRootFiles(const String & path,std::vector<String> & names,const String   & ioOption,bool verbose=0);
 
 std::vector<String> listDirsIn(const String & pathname,
-                                  bool verbose=true);
+                                  bool verbose=false);
 
 
 std::vector<String> listFilesInDir(const String & pathname,
@@ -66,12 +66,17 @@ std::vector<String>  listFilesInDir(const String & pathName,
 
 
 String removeRootExtension(const String fileName);
-long importParameter(TFile & inputFile, const String & parameterName);
-void exportParameter(TFile & outputFile, const String & parameterName, long value);
+long importParameter(TFile & inputFile,
+                     const String & parameterName,
+                     bool verbose=0);
+void exportParameter(TFile & outputFile,
+                     const String & parameterName,
+                     long value,
+                     bool verbose=0);
 String makeFileName(const String & inputPath,
                     const String & fileName,
                     const String & extension);
-void createDirectory(const String path);
+void createDirectory(const String path, bool verbose=false);
 
 String  substitute(const String & inputString, const String & subString, const String & newSubString);
 
@@ -80,25 +85,29 @@ TH1 * createNewHistogram(const String & name,
                          int n, double min_x, double max_x,
                          const String & title_x="",
                          const String & title_y="",
-                         int storageOption=1);
+                         int storageOption=1,
+                         bool verbose=false);
 TH1 * createNewHistogram(const String & name,
                          int n, double * bins,
                          const String & title_x="",
                          const String & title_y="",
-                         int storageOption=1);
+                         int storageOption=1,
+                         bool verbose=false);
 TH2 * createNewHistogram(const String & name,
                          int n_x, double min_x, double max_x,
                          int n_y, double min_y, double max_y,
                          const String & title_x="",
                          const String & title_y="",
                          const String & title_z="",
-                         int storageOption=1);
+                         int storageOption=1,
+                         bool verbose=false);
 TH2 * createNewHistogram(const String & name,
                          int n_x, double* xbins, int n_y, double min_y, double max_y,
                          const String & title_x="",
                          const String & title_y="",
                          const String & title_z="",
-                         int storageOption=1);
+                         int storageOption=1,
+                         bool verbose=false);
 TH3 * createNewHistogram(const String & name,
                          int n_x, double min_x, double max_x,
                          int n_y, double min_y, double max_y,
@@ -106,23 +115,27 @@ TH3 * createNewHistogram(const String & name,
                          const String & title_x="",
                          const String & title_y="",
                          const String & title_z="",
-                         int storageOption=1);
+                         int storageOption=1,
+                         bool verbose=false);
 TProfile * createNewProfile(const String & _name,
                             int n_x,double min_x,double max_x,
                             const String & title_x,
-                            const String & title_y);
+                            const String & title_y,
+                            bool verbose=false);
 
 TProfile * createNewProfile(const String & name,
                             int n_x,  double* bins,
                             const String & title_x,
-                            const String & title_y);
+                            const String & title_y,
+                            bool verbose=false);
 
 TProfile2D * createNewProfile(const String & title,
                               int n_x, double min_x, double max_x,
                               int n_y, double min_y, double max_y,
                               const String & title_x,
                               const String & title_y,
-                              const String & title_z);
+                              const String & title_z,
+                              bool verbose=false);
 
 double calculateN1N1(const TH1 * h_1, const TH1 * h_2, TH1 * h_12, double a1, double a2);
 double calculateN1N1_H1H1H2(const TH1 * h_1, const TH1 * h_2, TH2 * h_12, double a1, double a2);

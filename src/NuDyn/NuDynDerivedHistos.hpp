@@ -36,9 +36,9 @@ public:
 protected:
   void cloneAll(const NuDynDerivedHistos & group);
   vector<ParticleFilter*> particleFilters;
-  vector<TH1 *> h_F2_vsMult;
-  vector<TH1 *> h_R2_vsMult;
-  vector<TH1 *> h_nudyn_vsMult;
+  vector<TH1 *> h_F2_evtClass;
+  vector<TH1 *> h_R2_evtClass;
+  vector<TH1 *> h_nudyn_evtClass;
 
   ClassDef(NuDynDerivedHistos,0)
 };

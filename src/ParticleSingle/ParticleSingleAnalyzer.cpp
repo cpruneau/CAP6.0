@@ -26,7 +26,6 @@ EventTask()
   setInstanceName("Single");
   setName("Single");
   setTitle("Single");
-  setVersion("1.0");
 }
 
 ParticleSingleAnalyzer::ParticleSingleAnalyzer(const ParticleSingleAnalyzer & analyzer)
@@ -45,11 +44,8 @@ ParticleSingleAnalyzer  & ParticleSingleAnalyzer::operator=(const ParticleSingle
 
 void ParticleSingleAnalyzer::setDefaultConfiguration()
 {
-  printString("ParticleSingleAnalyzer::initialize() -1-");
   EventTask::setDefaultConfiguration();
-  printString("ParticleSingleAnalyzer::initialize() -2-");
-
-  addProperty( "Stream0Index",  true);
+  addProperty( "HistogramBaseName","Single");
   addProperty( "nBins_n1",  100);
   addProperty( "Min_n1",    0.0);
   addProperty( "Max_n1",  100.0);
@@ -87,48 +83,6 @@ void ParticleSingleAnalyzer::setDefaultConfiguration()
 void ParticleSingleAnalyzer::configure()
 {
   EventTask::configure();
-  //  fillEta = getValueBool("FillEta");
-//  fillY   = getValueBool("FillY");
-//  fillP2  = getValueBool("FillP2");
-//
-//  if (reportInfo(__FUNCTION__))
-//    {
-//    printCR();
-//    printValue("EventsAnalyze");
-//    printValue("StreamIndex0");
-//    printValue("StreamIndex1");
-//    printValue("StreamIndex2");
-//    printValue("StreamIndex3");
-//    printValue("HistogramsCreate");
-//    printValue("HistogramsImport");
-//    printValue("HistogramsImportPath");
-//    printValue("HistogramsExport");
-//    printValue("HistogramsExportPath");
-//    printValue("StreamIndex0");
-//    printValue("StreamIndex1");
-//    printValue("nBins_n1");
-//    printValue("Min_n1");
-//    printValue("Max_n1");
-//    printValue("nBins_eTot");
-//    printValue("Min_eTot");
-//    printValue("Max_eTot");
-//    printValue("nBins_pt");
-//    printValue("Min_pt");
-//    printValue("Max_pt");
-//    printValue("nBins_eta");
-//    printValue("Min_eta");
-//    printValue("Max_eta");
-//    printValue("nBins_y");
-//    printValue("Min_y");
-//    printValue("Max_y");
-//    printValue("nBins_phi");
-//    printValue("Min_phi");
-//    printValue("Max_phi");
-//    printValue("FillEta");
-//    printValue("FillY");
-//    printValue("FillP2");
-//    cout << endl;
-//    }
 }
 
 void ParticleSingleAnalyzer::initialize()
@@ -145,7 +99,7 @@ void ParticleSingleAnalyzer::initialize()
 void ParticleSingleAnalyzer::createHistograms()
 {
   if (reportStart(__FUNCTION__)) {  /* no ops */ };
-  String bn = getName();
+  String bn = getValueString( "HistogramBaseName");
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
   std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
   for (auto & eventFilter : eventFilters)

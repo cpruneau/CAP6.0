@@ -79,13 +79,13 @@ void SpherocityHistos::createHistograms()
   const String & bn  = getName();
   const String & ptn = getParentName();
   const String & ppn = getParentPathName();
-  fillS0     = configuration.getValueBool(ppn,"FillS0");
-  fillS1     = configuration.getValueBool(ppn,"FillS1");
-  fillS1VsS0 = configuration.getValueBool(ppn,"FillS1VsS0");
-  fillCorrelationHistos   = configuration.getValueBool(ppn,"FillCorrelationHistos");
-  int nBins_spherocity    = configuration.getValueInt(ppn,"nBins_spherocity");
-  double min_spherocity   = configuration.getValueDouble(ppn,"Min_spherocity");
-  double max_spherocity   = configuration.getValueDouble(ppn,"Max_spherocity");
+  fillS0     = configuration.getValueBool(ptn,"FillS0");
+  fillS1     = configuration.getValueBool(ptn,"FillS1");
+  fillS1VsS0 = configuration.getValueBool(ptn,"FillS1VsS0");
+  fillCorrelationHistos   = configuration.getValueBool(ptn,"FillCorrelationHistos");
+  int nBins_spherocity    = configuration.getValueInt(ptn,"nBins_spherocity");
+  double min_spherocity   = configuration.getValueDouble(ptn,"Min_spherocity");
+  double max_spherocity   = configuration.getValueDouble(ptn,"Max_spherocity");
   int nParticleFilters = particleFilters.size();
 
   if (reportInfo(__FUNCTION__))
@@ -139,10 +139,10 @@ void SpherocityHistos::importHistograms(TFile & inputFile)
   const String & bn  = getName();
   const String & ptn = getParentName();
   const String & ppn = getParentPathName();
-  fillS0     = configuration.getValueBool(ppn,"FillS0");
-  fillS1     = configuration.getValueBool(ppn,"FillS1");
-  fillS1VsS0 = configuration.getValueBool(ppn,"FillS1VsS0");
-  fillCorrelationHistos = configuration.getValueBool(ppn,"FillCorrelationHistos");
+  fillS0     = configuration.getValueBool(ptn,"FillS0");
+  fillS1     = configuration.getValueBool(ptn,"FillS1");
+  fillS1VsS0 = configuration.getValueBool(ptn,"FillS1VsS0");
+  fillCorrelationHistos = configuration.getValueBool(ptn,"FillCorrelationHistos");
   int nParticleFilters = particleFilters.size();
   if (reportInfo(__FUNCTION__))
     {

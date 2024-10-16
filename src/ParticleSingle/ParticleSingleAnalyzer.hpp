@@ -73,8 +73,6 @@ public:
 
 protected:
   
-
-
   ClassDef(ParticleSingleAnalyzer,0)
 };
 

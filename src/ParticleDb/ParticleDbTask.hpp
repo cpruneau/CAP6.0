@@ -47,6 +47,7 @@ public:
   virtual void setDefaultConfiguration();
   virtual void configure();
   virtual void initialize();
+  virtual void finalize();
   virtual void execute();
   virtual void importParticleDb();
   virtual void exportParticleDb();

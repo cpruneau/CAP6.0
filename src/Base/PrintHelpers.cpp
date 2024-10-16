@@ -121,7 +121,7 @@ void printRange(const char * keyword, int minimum, int maximum,
   << " Minimum=" << minimum << "  Maximum=" << maximum << std::endl;
 }
 
-void printRangeOr(const char * keyword, 
+void printDualRange(const char * keyword, 
                   double minimum,  double maximum,
                   double minimum2, double maximum2,
                   std::ostream & output, int style, int size)
@@ -133,7 +133,7 @@ void printRangeOr(const char * keyword,
   << std::endl;
 }
 
-void printRangeOr(const char * keyword,
+void printDualRange(const char * keyword,
                   int minimum,  int maximum,
                   int minimum2, int maximum2,
                   std::ostream & output, int style, int size)

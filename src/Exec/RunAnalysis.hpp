@@ -26,15 +26,9 @@ public:
   RunAnalysis & operator=(const RunAnalysis & task);
   virtual void setDefaultConfiguration();
   virtual void configure();
+  virtual void initialize();
+  virtual void finalize();
   void execute();
-
-protected:
-
-  Task * createTask(const String & taskTypeName);
-
-  Task * createTask(Task *parent,
-                    const String & taskReferenceName,
-                    Configuration & requestedConfiguration);
 
   ClassDef(RunAnalysis,0)
 };

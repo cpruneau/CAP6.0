@@ -58,6 +58,7 @@ ParticlePairCalculator & ParticlePairCalculator::operator=(const ParticlePairCal
 void ParticlePairCalculator::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
+  addProperty("HistogramBaseName", "Pair");
   addProperty("FillEta",           fillEta);
   addProperty("FillY",             fillY);
   addProperty("FillP2",            fillP2);
@@ -177,7 +178,7 @@ void ParticlePairCalculator::initialize()
 void ParticlePairCalculator::importHistograms(TFile & inputFile)
 {
   if (reportStart(__FUNCTION__)) { /* */ };
-  String bn  = getName();
+  String bn = getValueString( "HistogramBaseName");
   fillEta = getValueBool("FillEta");
   fillY   = getValueBool("FillY");
   fillP2  = getValueBool("FillP2");
@@ -223,31 +224,25 @@ void ParticlePairCalculator::importHistograms(TFile & inputFile)
 void ParticlePairCalculator::createHistograms()
 {
   if (reportStart(__FUNCTION__))  { /* */ };
-  String bn  = getName();
+  String bn = getValueString( "HistogramBaseName");
   HistogramGroup * histos;
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
   std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
 
-  if (reportInfo(__FUNCTION__))
+  if (reportDebug(__FUNCTION__))
     {
-    cout << endl;
+    printCR();
     printValue("Creating Derived HistogramGroup",bn);
     printValue("nEventFilters",eventFilters.size());
     printValue("nParticleFilters",particleFilters.size());
-    cout << endl;
+    printCR();
     }
   for (auto & eventFilter : eventFilters)
     {
     String efn = eventFilter->getName();
-    if (reportDebug(__FUNCTION__))
-      {
-      cout << endl;
-      printValue("Event filter",efn);
-      }
     for (auto & particleFilter : particleFilters)
       {
       String pfn = particleFilter->getName();
-      if (reportDebug(__FUNCTION__)) printValue("Particle filter",pfn);
       histos = new ParticleSingleDerivedHistos();
       histos->setConfiguration(configuration);
       histos->setParentTask(this);
@@ -258,11 +253,9 @@ void ParticlePairCalculator::createHistograms()
     for (auto & particleFilter1 : particleFilters)
       {
       String pfn1 = particleFilter1->getName();
-      if (reportDebug(__FUNCTION__)) printValue("Particle filter 1",pfn1);
       for (auto & particleFilter2 : particleFilters)
         {
         String pfn2 = particleFilter2->getName();
-        if (reportDebug(__FUNCTION__)) printValue("Particle filter 2",pfn2);
         histos = new ParticlePairDerivedHistos();
         histos->setName(createName(bn,efn,pfn1,pfn2));
         histos->setConfiguration(configuration);
@@ -278,16 +271,17 @@ void ParticlePairCalculator::createHistograms()
 void ParticlePairCalculator::execute()
 {
   if (reportStart(__FUNCTION__))  { /* */ };
-
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
   std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
-
   int nEventFilters    = eventFilters.size();
   int nParticleFilters = particleFilters.size();
 
-  printCR();
-  printValue("nEventFilters",nEventFilters);
-  printValue("nParticleFilters",nParticleFilters);
+  if (reportDebug(__FUNCTION__))
+    {
+    printCR();
+    printValue("nEventFilters",nEventFilters);
+    printValue("nParticleFilters",nParticleFilters);
+    }
 
   for (int iEventFilter = 0; iEventFilter<nEventFilters;iEventFilter++)
     {
@@ -296,21 +290,10 @@ void ParticlePairCalculator::execute()
     for (int iParticleFilter1 = 0; iParticleFilter1<nParticleFilters;iParticleFilter1++)
       {
       int indexSingle1 = baseSingle + iParticleFilter1;
-      printValue("iParticleFilter1",iParticleFilter1);
-      printValue("indexSingle1",indexSingle1);
-      printString("Single");
-     ParticleSingleHistos & bSingleHistos1 = (ParticleSingleHistos &) getGroupAt(0,indexSingle1);
-      printString("SingleDerived");
+      ParticleSingleHistos & bSingleHistos1 = (ParticleSingleHistos &) getGroupAt(0,indexSingle1);
       ParticleSingleDerivedHistos &dSingleHistos1 = (ParticleSingleDerivedHistos &)  getGroupAt(2,indexSingle1);
       dSingleHistos1.calculateDerivedHistograms(bSingleHistos1);
       }
-
-    printCR();
-    printCR();
-    printCR();
-    printCR();
-    printString("Singles all done");
-    printLine();
 
     for (int iParticleFilter1 = 0; iParticleFilter1<nParticleFilters;iParticleFilter1++)
       {
@@ -325,16 +308,6 @@ void ParticlePairCalculator::execute()
         ParticleSingleDerivedHistos &dSingleHistos2 = (ParticleSingleDerivedHistos &) getGroupAt(2,indexSingle2);
         ParticlePairHistos &bPairHistos = (ParticlePairHistos &) getGroupAt(1,indexPairs12);
         ParticlePairDerivedHistos & dPairHistos = (ParticlePairDerivedHistos &) getGroupAt(3,indexPairs12);
-        if (reportDebug(__FUNCTION__))
-          {
-          cout << endl;
-          printValue("bSingleHistos1",bSingleHistos1.getName());
-          printValue("bSingleHistos2",bSingleHistos2.getName());
-          printValue("dSingleHistos1",dSingleHistos1.getName());
-          printValue("dSingleHistos2",dSingleHistos2.getName());
-          printValue("bPairHistos",bPairHistos.getName());
-          printValue("dPairHistos",dPairHistos.getName());
-          }
         dPairHistos.calculatePairDerivedHistograms(bSingleHistos1,bSingleHistos2,dSingleHistos1,dSingleHistos2,bPairHistos,1.0);
         }
       }
@@ -342,4 +315,11 @@ void ParticlePairCalculator::execute()
 
   if (reportEnd(__FUNCTION__))   { /* */ };
 }
+
+void ParticlePairCalculator::scaleHistograms()
+{
+  
+}
+
+
 } // namespace CAP

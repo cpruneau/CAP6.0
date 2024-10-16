@@ -45,6 +45,7 @@ GlobalCalculator & GlobalCalculator::operator=(const GlobalCalculator & analyzer
 void GlobalCalculator::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
+  addProperty("HistogramBaseName","Global");
   addProperty("FillCorrelationHistos",false);
   addProperty("Fill2D",               false);
   addProperty("nBins_n",              500);
@@ -94,13 +95,13 @@ void GlobalCalculator::initialize()
   clearSets();
   addSet("global");
   addSet("derived");
+  HistogramTask::importHistograms();
+  createHistograms();
 }
 
 void GlobalCalculator::importHistograms(TFile & inputFile)
 {
-//  printCR();
-//  printString("GlobalCalculator::importHistograms()");
-  String bn  = getName( );
+  String bn = getValueString( "HistogramBaseName");
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
   std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
   for (auto & eventFilter : eventFilters)
@@ -124,7 +125,7 @@ void GlobalCalculator::createHistograms()
 {
 //  printCR();
 //  printString("GlobalCalculator::createHistograms()");
-  String bn  = getName( );
+  String bn = getValueString( "HistogramBaseName");
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
   std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
   for (auto & eventFilter : eventFilters)
@@ -151,15 +152,20 @@ void GlobalCalculator::execute()
     printCR();
     printString("Nothing to do");
     }
-//  exit(1);
-//  std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
-//  for (unsigned int iEventFilter = 0; iEventFilter<eventFilters.size(); iEventFilter++)
-//    {
-//    GlobalHistos & baseHistos = (GlobalHistos &) getGroupAt(0,iEventFilter);
-//    GlobalDerivedHistos & derivedHistos = (GlobalDerivedHistos &) getGroupAt(1,iEventFilter);
-//    derivedHistos.calculateDerivedHistograms(baseHistos);
-//    }
+  std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
+  for (unsigned int iEventFilter = 0; iEventFilter<eventFilters.size(); iEventFilter++)
+    {
+    GlobalHistos & baseHistos = (GlobalHistos &) getGroupAt(0,iEventFilter);
+    GlobalDerivedHistos & derivedHistos = (GlobalDerivedHistos &) getGroupAt(1,iEventFilter);
+    derivedHistos.calculateDerivedHistograms(baseHistos);
+    }
 }
+
+void GlobalCalculator::scaleHistograms()
+{
+
+}
+
 
 } // namespace CAP
 

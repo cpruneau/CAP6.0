@@ -256,9 +256,11 @@ void PythiaEventGenerator::finalize()
 {
   if (reportInfo(__FUNCTION__) && getValueBool("Print:Statistics"))
     {
-    cout << endl;
+    printCR();
+    printLine();
     pythia->stat();
-    cout << endl;
+    printLine();
+    printCR();
     }
   delete pythia;
   if (reportEnd(__FUNCTION__)) { /* no ops */};

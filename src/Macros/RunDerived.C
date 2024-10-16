@@ -12,63 +12,22 @@
 #include <iostream>
 #include <fstream>
 #include <TStyle.h>
+#include <TSystem.h>
 #include <TROOT.h>
-void loadBase(const TString & includeBasePath);
-void loadMath(const TString & includeBasePath);
-void loadParticleDb(const TString & includeBasePath);
-void loadParticles(const TString & includeBasePath);
-void loadPythia(const TString & includeBasePath);
-void loadPerformance(const TString & includeBasePath);
-void loadGlobal(const TString & includeBasePath);
-void loadSpherocity(const TString & includeBasePath);
-void loadSingle(const TString & includeBasePath);
-void loadPair(const TString & includeBasePath);
-void loadNuDyn(const TString & includeBasePath);
-void loadSubSample(const TString & includeBasePath);
-void loadExec(const TString & includeBasePath);
-void loadTherminator(const TString & includeBasePath);
 
-//!
-//! Run generic data analysis based on the configuration listed in 'configFile'
-//!
-//! configFile     :  configuration file (.ini) describing the task(s) to be done
-//! outputPath   :  output path used for all files created
-//! seed            :  provided by slurm (grid job engine) or directly by user
-//! isGrid          :   must be true for jobs running on grid
-//! nEventsPerSubbunch : number of events to run per bunch  (actual on grid or simulated on a single node)
-//! nSubbunchesPerBunch : number of sub-bunches  (must be 1 on grid)
-//! nBunches :  number of bunches  (must be 1 on grid)
-//!
+void loadLibraries(const TString & includeBasePath);
 
-int RunDerived(TString configFile="Pythia/pp_13.7TeV/RunDerived.ini",
-           TString histogramPath="./pythiaTest/",
-           long seed=1121331,
-           bool isGrid=false,
-           long nEventsPerSubbunch=10,
-           int  nSubbunchesPerBunch=1,
-           int  nBunches=1)
+
+int RunDerived(TString configFile="Pythia/pp_13.7TeV/RunAna.ini",
+               TString histogramPath="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest/",
+               int nLevels = 1,
+               long seed=12312231)
 {
   TString includeBasePath = getenv("CAP_SRC_PATH");
-  loadBase(includeBasePath);
-  loadMath(includeBasePath);
-  loadParticleDb(includeBasePath);
-  loadParticles(includeBasePath);
-  loadGlobal(includeBasePath);
-  loadSpherocity(includeBasePath);
-
-  loadSingle(includeBasePath);
-  loadPair(includeBasePath);
-  loadNuDyn(includeBasePath);
-  loadSubSample(includeBasePath);
-  loadPythia(includeBasePath);
-  loadTherminator(includeBasePath);
-  loadExec(includeBasePath);
-  loadPerformance(includeBasePath);
-
+  loadLibraries(includeBasePath);
+  if (seed!=0)  gRandom->SetSeed(seed);
   try
   {
-  if (isGrid || seed!=0)  gRandom->SetSeed(seed);
-
   CAP::Configuration configuration;
   TString configurationPath = getenv("CAP_PROJECTS_PATH");
   TString configurationFile = configFile;
@@ -78,20 +37,41 @@ int RunDerived(TString configFile="Pythia/pp_13.7TeV/RunDerived.ini",
   CAP::printLine();
   CAP::printValue("Configuration path",configurationPath);
   CAP::printValue("Configuration file",configurationFile);
-  CAP::printValue("RunDerived:isGrid",isGrid);
   configuration.importProperties(configurationPath,configurationFile);
-  configuration.addProperty("Run:Analysis:isGrid",isGrid);
-  CAP::RunAnalysis * analysis = new CAP::RunAnalysis();
-  analysis->setRequestedConfiguration(configuration);
-  CAP::printString("Configure RunDerived starting");
-  analysis->configure();
-  CAP::printString("Configure RunDerived done");
-  CAP::printString("Execute RunDerived");
-  analysis->execute();
+  configuration.addProperty("FileIterator:nLevels",nLevels);
+
+  String histoBasePath;
+  if (histogramPath.BeginsWith("/"))
+    {
+    histoBasePath = histogramPath;
+    }
+  else
+    {
+    histoBasePath = getenv("CAP_HISTOS_IMPORT_PATH");
+    histoBasePath += "/";
+    histoBasePath += histogramPath;
+    histoBasePath += "/";
+    }
+  cout << "Setting environment variable CAP_HISTOS_IMPORT_PATH to :" << histoBasePath << endl;
+  cout << "Setting environment variable CAP_HISTOS_EXPORT_PATH to :" << histoBasePath << endl;
+  setenv("CAP_HISTOS_IMPORT_PATH",histoBasePath,1);
+  setenv("CAP_HISTOS_EXPORT_PATH",histoBasePath,1);
+
+  CAP::TaskCreator * creatorTask = new CAP::TaskCreator();
+  creatorTask->setTargetTaskName("RunDerived");
+  creatorTask->setRequestedConfiguration(configuration);
+  creatorTask->configure();
+  creatorTask->execute();
+  CAP::Task * workTask = creatorTask->getCreatedTask();
+  workTask->initialize();
+  workTask->execute();
+  workTask->finalize();
+  delete workTask;
+  delete creatorTask;
+  CAP::printLine();
   CAP::printString("RunDerived completed successfully");
   CAP::printLine();
-  CAP::printLine();
-  return 1;
+  return 0;
   }
   catch (CAP::TaskException & exception)
   {
@@ -101,17 +81,12 @@ int RunDerived(TString configFile="Pythia/pp_13.7TeV/RunDerived.ini",
   {
   exception.print();
   }
-//  catch (CAP::MathException exception)
-//  {
-//  exception.print();
-//  }
-  catch (CAP::Exception  &  exception)
+  catch (CAP::PropertyException  & exception)
   {
   exception.print();
   }
   CAP::printLine();
-  CAP::printString("RunDerived NOT completed");
-  CAP::printLine();
+  CAP::printString("RunAna FAILED");
   CAP::printLine();
   return 0;
 }
@@ -301,3 +276,27 @@ void loadTherminator(const TString & includeBasePath)
   gSystem->Load(includePath+"Model.hpp");
   gSystem->Load("libTherminator.dylib");
 }
+
+void loadLibraries(const TString & includeBasePath)
+{
+  loadBase(includeBasePath);
+  loadMath(includeBasePath);
+  loadParticleDb(includeBasePath);
+  loadParticles(includeBasePath);
+  loadGlobal(includeBasePath);
+  loadSpherocity(includeBasePath);
+  loadSingle(includeBasePath);
+  loadPair(includeBasePath);
+  loadNuDyn(includeBasePath);
+  loadSubSample(includeBasePath);
+  loadPythia(includeBasePath);
+  loadTherminator(includeBasePath);
+//  loadAmpt(includeBasePath)
+//  loadEpos(includeBasePath)
+//  loadHijing(includeBasePath)
+//  loadHerwig(includeBasePath)
+//  loadUrqmd(includeBasePath)
+  loadExec(includeBasePath);
+  loadPerformance(includeBasePath);
+}
+

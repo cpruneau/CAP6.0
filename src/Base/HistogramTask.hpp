@@ -35,17 +35,7 @@ class HistogramTask : public Task
 {
 protected:
 
-  bool   histogramScale;
-  bool   histogramForceRewrite;
-  String histogramImportPath;
-  String histogramImportFile;
-  String histogramExportPath;
-  String histogramExportFile;
-  bool   histogramExportPartial;
-  long   histogramExportPartialCount;
-  long   histogramExportMaxPerPartial;
   vector<HistogramSet*> histogramSets;
-
   TFile * rootInputFile;
   TFile * rootOutputFile;
 
@@ -116,30 +106,11 @@ public:
   HistogramSet * getSetAt(int index);
 
   void addGroupInSet(unsigned int index, HistogramGroup * group);
-
-
-//  void setHistogramFileNames(const String inputName, const String outputName)
-//  {
-//  addProperty("FileFromParent", true);
-//  addProperty("HistogramImportFileName", inputName);
-//  addProperty("HistogramOuputFileName", outputName);
-//  }
-
-  String getHistosImportPath() const { return histogramImportPath; }
-  String getHistosExportPath() const { return histogramExportPath; }
-  String getHistosImportFile() const { return histogramImportFile; }
-  String getHistosExportFile() const { return histogramExportFile; }
-
-  void setHistosImportPath(const String & s)  { histogramImportPath = s; }
-  void setHistosExportPath(const String & s)  { histogramExportPath = s; }
-  void setHistosImportFile(const String & s)  { histogramImportFile = s; }
-  void setHistosExportFile(const String & s)  { histogramExportFile = s; }
-
-  void setHistosScale(bool v)         {  histogramScale = v;}
-  void setHistosForceRewrite(bool v)  {  histogramForceRewrite = v;}
- 
   virtual String getHistoImportPath();
+  virtual String getHistoImportFile();
   virtual String getHistoExportPath();
+  virtual String getHistoExportFile();
+  virtual bool   histogramsForceRewrite();
 
 
   ClassDef(HistogramTask,0)

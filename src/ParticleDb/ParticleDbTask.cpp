@@ -361,6 +361,10 @@ void ParticleDbTask::initialize()
 
 }
 
+void ParticleDbTask::finalize()
+{
+
+}
 
 //!
 //!Import particle data from DB files.

@@ -20,7 +20,6 @@ namespace CAP
 GlobalAnalyzer::GlobalAnalyzer()
 :
 EventTask(),
-setEvent(false),
 n(),
 e(),
 q(),
@@ -29,16 +28,14 @@ b(),
 ptSum()
 {
   appendClassName("GlobalAnalyzer");
-  setInstanceName("Global");
-  setName("Global");
-  setTitle("Global");
-  setVersion("1.0");
+  setInstanceName("GlobalAnalyzer");
+  setName("GlobalAnalyzer");
+  setTitle("GlobalAnalyzer");
 }
 
 GlobalAnalyzer::GlobalAnalyzer(const GlobalAnalyzer & analyzer)
 :
 EventTask(analyzer),
-setEvent(analyzer.setEvent),
 n(analyzer.n),
 e(analyzer.e),
 q(analyzer.q),
@@ -52,7 +49,6 @@ GlobalAnalyzer & GlobalAnalyzer::operator=(const GlobalAnalyzer & analyzer)
   if (this!=&analyzer)
     {
     EventTask::operator=(analyzer);
-    setEvent = analyzer.setEvent;
     n = analyzer.n;
     e = analyzer.e;
     q = analyzer.q;
@@ -68,6 +64,8 @@ GlobalAnalyzer & GlobalAnalyzer::operator=(const GlobalAnalyzer & analyzer)
 void GlobalAnalyzer::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
+  addProperty("HistogramBaseName","Global");
+
   addProperty("FillCorrelationHistos",false);
   addProperty("Fill2D",               false);
   addProperty("nBins_n",              500);
@@ -114,13 +112,11 @@ void GlobalAnalyzer::initialize()
   addSet("derived");
   if (nEventFilters<1 || nParticleFilters<1)
     throw NoFilterGlobalException(nEventFilters,nParticleFilters,__FUNCTION__);
-  setEvent = getValueBool("SetEvent");
   String bn  = getName( );
 
   if (reportInfo(__FUNCTION__))
     {
     printCR();
-    printValue("setEvent",setEvent);
     printValue("Creating HistogramGroup for",bn);
     printValue("nEventFilters",nEventFilters);
     printValue("nParticleFilters",nParticleFilters);
@@ -138,17 +134,15 @@ void GlobalAnalyzer::initialize()
 void GlobalAnalyzer::createHistograms()
 {
   if (reportStart(__FUNCTION__)) {  /* no ops */ };
-  String bn  = getName( );
+  String bn = getValueString( "HistogramBaseName");
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
   std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
+  GlobalHistos * histos;
    for (auto & eventFilter : eventFilters)
     {
     String efn = eventFilter->getName();
-    String name = bn;
-    name += "_";
-    name += efn;
-    GlobalHistos * histos = new GlobalHistos();
-    histos->setName(getName());
+    histos = new GlobalHistos();
+    histos->setName(createName(bn,efn));
     histos->setConfiguration(configuration);
     histos->setParentTask(this);
     histos->setParticleFilters(particleFilters);
@@ -222,17 +216,50 @@ void GlobalAnalyzer::execute()
           b[iParticleFilter] = 0.0;
           ptSum[iParticleFilter] = 0.0;
           }
-//        String pfName = particleFilters[iParticleFilter]->getName();
-//        String keyword = evfName;
-//        keyword += "_";
-//        keyword += pfName;
-        String keyword = "All_All_GLOBAL_";
-        event.addProperty(keyword+"N", n[iParticleFilter]);
-        event.addProperty(keyword+"E", e[iParticleFilter]);
-        event.addProperty(keyword+"Q", q[iParticleFilter]);
-        event.addProperty(keyword+"S", s[iParticleFilter]);
-        event.addProperty(keyword+"B", s[iParticleFilter]);
-        event.addProperty(keyword+"PTSUM", ptSum[iParticleFilter]);
+
+        switch (iParticleFilter)
+          {
+            case 0:
+            {
+            event.setCl0(0.0); // needs fix
+            event.setMult0(n[0]);
+            event.setEnergy0(e[0]);
+            }
+            break;
+
+            case 1:
+            {
+            event.setCl1(0.0);
+            event.setMult1(n[1]);
+            event.setEnergy1(e[1]);
+            }
+            break;
+
+            case 2:
+            {
+            event.setCl2(0.0);
+            event.setMult2(n[2]);
+            event.setEnergy2(e[2]);
+            }
+            break;
+
+            case 3:
+            {
+            event.setCl3(0.0);
+            event.setMult3(n[3]);
+            event.setEnergy3(e[3]);
+            }
+            break;
+
+            case 4:
+            {
+            event.setCl4(0.0);
+            event.setMult4(n[4]);
+            event.setEnergy4(e[4]);
+            }
+            break;
+            default: break; // not stored.
+          }
         }
       GlobalHistos & globalHistos = (GlobalHistos &) getGroupAt(0,iEventFilter);
       globalHistos.fill(n,ptSum,e,q,s,b,1.0);

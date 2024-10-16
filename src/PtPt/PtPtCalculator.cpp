@@ -28,7 +28,6 @@ EventTask()
   appendClassName("PtPtCalculator");
   setName("PtPt");
   setTitle("PtPt");
-  setVersion("1.0");
 }
 
 PtPtCalculator::PtPtCalculator(const PtPtCalculator & task)
@@ -51,9 +50,10 @@ PtPtCalculator::~PtPtCalculator()
 void PtPtCalculator::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
-  addProperty("nBins_mult",        200);
-  addProperty("Min_mult",          0.0);
-  addProperty("Max_mult",          200.0);
+  addProperty("HistogramBaseName","PtPt");
+  addProperty("nBins_EvtClass",        200);
+  addProperty("Min_EvtClass",          0.0);
+  addProperty("Max_EvtClass",          200.0);
 }
 
 void PtPtCalculator::configure()
@@ -80,7 +80,6 @@ void PtPtCalculator::initialize()
     }
   HistogramTask::importHistograms();
   createHistograms();
-  if (reportEnd(__FUNCTION__)) { /* */ }
 }
 
 void PtPtCalculator::importHistograms(TFile & inputFile)
@@ -88,7 +87,7 @@ void PtPtCalculator::importHistograms(TFile & inputFile)
   if (reportStart(__FUNCTION__)) { /* no ops */ }
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
   std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
-  String bn = getName();
+  String bn = getValueString( "HistogramBaseName");
   for (auto & eventFilter : eventFilters)
     {
     String efn  = eventFilter->getName();
@@ -106,7 +105,7 @@ void PtPtCalculator::importHistograms(TFile & inputFile)
 void PtPtCalculator::createHistograms()
 {
   if (reportStart(__FUNCTION__))   { /* no ops */ }
-  String bn = getName(); bn += "_";
+  String bn = getValueString( "HistogramBaseName");
   String efn;
   String histoName;
   String pfn;
@@ -124,7 +123,7 @@ void PtPtCalculator::createHistograms()
     histos->createHistograms();
     addGroupInSet(1,histos);
     }
-  if (reportEnd(__FUNCTION__))   { /* no ops */ }
+
 }
 
 void PtPtCalculator::execute()
@@ -137,6 +136,11 @@ void PtPtCalculator::execute()
     derivedHistos.calculateDerivedHistograms(&baseHistos);
     }
   if (reportEnd(__FUNCTION__))   { /* no ops */ }
+}
+
+void PtPtCalculator::scaleHistograms()
+{
+
 }
 
 }  // namespace CAP

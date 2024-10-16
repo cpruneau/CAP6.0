@@ -11,7 +11,6 @@
  * *********************************************************************/
 #include "ParticlePair3DHistos.hpp"
 
-
 ClassImp(ParticlePair3DHistos);
 
 ParticlePair3DHistos::ParticlePair3DHistos(Task * _parent,

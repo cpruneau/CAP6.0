@@ -44,18 +44,22 @@ void SubSampleStatCalculator::configure()
 
 void SubSampleStatCalculator::execute()
 {
+  String histogramsImportPath  = getHistoImportPath();
+  String histogramsImportFile  = getHistoImportFile();
+  String histogramsExportPath  = getHistoExportPath();
+  String histogramsExportFile  = getHistoExportFile();
   if (reportInfo(__FUNCTION__))
     {
     CAP::printCR();
     CAP::printLine();
-    CAP::printValue("HistogramsImportPath",histogramImportPath);
-    CAP::printValue("HistogramsImportFile",histogramImportFile);
-    CAP::printValue("HistogramsExportPath",histogramExportPath);
-    CAP::printValue("HistogramsExportFile",histogramExportFile);
+    CAP::printValue("HistogramsImportPath",histogramsImportPath);
+    CAP::printValue("HistogramsImportFile",histogramsImportFile);
+    CAP::printValue("HistogramsExportPath",histogramsExportPath);
+    CAP::printValue("HistogramsExportFile",histogramsExportFile);
     }
   bool prependPath = true;
   bool verbose = false;
-  std::vector<String> directories = listDirsIn(histogramImportPath,verbose);
+  std::vector<String> directories = listDirsIn(histogramsImportPath,verbose);
   int nDirectories = directories.size();
   if (directories.size()<2) throw TaskException("directories.size()<2",__FUNCTION__);
   if (reportInfo(__FUNCTION__))
@@ -73,20 +77,20 @@ void SubSampleStatCalculator::execute()
   double nExecutedTotal = 0;
   for (auto & name : directories)
     {
-    String path = histogramImportPath; path += "/"; path += name;
-    printValue("HistogramImportPath",path);
-    printValue("HistogramImportFile",histogramImportFile);
+    String path = histogramsImportPath; path += "/"; path += name;
+    printValue("histogramsImportPath",path);
+    printValue("histogramsImportFile",histogramsImportFile);
     printValue("File index",         iFile);
     if (iFile==0)
       {
-      firstFile = openOldRootFile(path, histogramImportFile);
+      firstFile = openOldRootFile(path, histogramsImportFile);
       groupAverage->loadGroup(*firstFile);
       nExecuted = TaskAccountant::importNEexecutedTask(*firstFile);
       //EventAccountant::importEventsAccepted(*firstFile);
       }
     else
       {
-      otherFile = openOldRootFile(path, histogramImportFile);
+      otherFile = openOldRootFile(path, histogramsImportFile);
       group = new HistogramGroup();
       group->loadGroup(*otherFile);
       nExecuted = TaskAccountant::importNEexecutedTask(*otherFile);
@@ -104,7 +108,7 @@ void SubSampleStatCalculator::execute()
     iFile++;
     }
 
-  TFile & rootOutputFile = *openRecreateRootFile(histogramExportPath,histogramExportFile);
+  TFile & rootOutputFile = *openRecreateRootFile(histogramsExportPath,histogramsExportFile);
   TaskAccountant::exportNEexecutedTask(rootOutputFile);
   //EventAccountant::exportEventsAccepted(rootOutputFile);
   groupAverage->exportHistograms(rootOutputFile);

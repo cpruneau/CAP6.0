@@ -29,7 +29,7 @@ public:
   virtual void execute();
   virtual void createHistograms();
   virtual void importHistograms(TFile & inputFile);
-
+  virtual void scaleHistograms();
  protected:
   ClassDef(PtPtCalculator,0)
 };

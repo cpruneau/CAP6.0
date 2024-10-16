@@ -8,6 +8,7 @@
 #pragma link C++ class CAP::Timer+;
 #pragma link C++ class CAP::Counter+;
 #pragma link C++ class CAP::Parser+;
+//#pragma link C++ class CAP::Condition+;
 #pragma link C++ class CAP::Property+;
 #pragma link C++ class CAP::Properties+;
 #pragma link C++ class CAP::PropertiesParser+;

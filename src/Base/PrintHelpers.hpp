@@ -23,11 +23,11 @@ void printRange(const char * keyword, int minimum, int maximum,
                 std::ostream & output=std::cout, int style=0, int size=50);
 void printRange(const char * keyword, double minimum, double maximum,
                 std::ostream & output=std::cout, int style=0, int size=50);
-void printRangeOr(const char * keyword,
+void printDualRange(const char * keyword,
                   double minimum,  double maximum,
                   double minimum2, double maximum2,
                   std::ostream & output=std::cout, int style=0, int size=0);
-void printRangeOr(const char * keyword,
+void printDualRange(const char * keyword,
                   int minimum,  int maximum,
                   int minimum2, int maximum2,
                   std::ostream & output=std::cout, int style=0, int size=0);

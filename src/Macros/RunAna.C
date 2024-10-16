@@ -13,20 +13,8 @@
 #include <fstream>
 #include <TStyle.h>
 #include <TROOT.h>
-void loadBase(const TString & includeBasePath);
-void loadMath(const TString & includeBasePath);
-void loadParticleDb(const TString & includeBasePath);
-void loadParticles(const TString & includeBasePath);
-void loadPythia(const TString & includeBasePath);
-void loadPerformance(const TString & includeBasePath);
-void loadGlobal(const TString & includeBasePath);
-void loadSpherocity(const TString & includeBasePath);
-void loadSingle(const TString & includeBasePath);
-void loadPair(const TString & includeBasePath);
-void loadNuDyn(const TString & includeBasePath);
-void loadSubSample(const TString & includeBasePath);
-void loadExec(const TString & includeBasePath);
-void loadTherminator(const TString & includeBasePath);
+
+void loadLibraries(const TString & includeBasePath);
 
 //!
 //! Run generic data analysis based on the configuration listed in 'configFile'
@@ -41,34 +29,13 @@ void loadTherminator(const TString & includeBasePath);
 //!
 
 int RunAna(TString configFile="Pythia/pp_13.7TeV/RunAna.ini",
-           TString histogramPath="./pythiaTest/",
-           long seed=1121331,
-           bool isGrid=false,
-           long nEventsPerSubbunch=10,
-           int  nSubbunchesPerBunch=1,
-           int  nBunches=1)
+           TString histogramPath="pythiaTest/",
+           long seed=1121331)
 {
   TString includeBasePath = getenv("CAP_SRC_PATH");
-  loadBase(includeBasePath);
-  loadMath(includeBasePath);
-  loadParticleDb(includeBasePath);
-  loadParticles(includeBasePath);
-  loadGlobal(includeBasePath);
-  loadSpherocity(includeBasePath);
-
-  loadSingle(includeBasePath);
-  loadPair(includeBasePath);
-  loadNuDyn(includeBasePath);
-  loadSubSample(includeBasePath);
-  loadPythia(includeBasePath);
-  loadTherminator(includeBasePath);
-  loadExec(includeBasePath);
-  loadPerformance(includeBasePath);
-
+  if (seed!=0)  gRandom->SetSeed(seed);
   try
   {
-  if (isGrid || seed!=0)  gRandom->SetSeed(seed);
-
   CAP::Configuration configuration;
   TString configurationPath = getenv("CAP_PROJECTS_PATH");
   TString configurationFile = configFile;
@@ -78,59 +45,58 @@ int RunAna(TString configFile="Pythia/pp_13.7TeV/RunAna.ini",
   CAP::printLine();
   CAP::printValue("Configuration path",configurationPath);
   CAP::printValue("Configuration file",configurationFile);
-  CAP::printValue("Run:Analysis:isGrid",isGrid);
-  CAP::printValue("Run:Analysis:HistogramsImportPath",histogramPath);
-  CAP::printValue("Run:Analysis:HistogramsExportPath",histogramPath);
-  CAP::printValue("Run:Analysis:nEventsPerSubbunch",nEventsPerSubbunch);
-  CAP::printValue("Run:Analysis:nBunches",nBunches);
-
   configuration.importProperties(configurationPath,configurationFile);
-  configuration.addProperty("Run:Analysis:isGrid",                  isGrid);
-  configuration.addProperty("Run:HistogramsImportPath",             histogramPath);
-  configuration.addProperty("Run:HistogramsExportPath",             histogramPath);
-  configuration.addProperty("Run:Analysis:HistogramsImportPath",    histogramPath);
-  configuration.addProperty("Run:Analysis:HistogramsExportPath",    histogramPath);
-  configuration.addProperty("Run:Analysis:nEventsPerSubbunch",      nEventsPerSubbunch);
-  configuration.addProperty("Run:Analysis:nSubbunchesPerBunch",     nSubbunchesPerBunch);
-  configuration.addProperty("Run:Analysis:nBunches",                nBunches);
-  configuration.print(cout);
-  CAP::printString("Instantiate RunAnalysis");
-  CAP::RunAnalysis * analysis = new CAP::RunAnalysis();
-  analysis->setRequestedConfiguration(configuration);
+
+  String histoBasePath;
+  if (histogramPath.BeginsWith("/"))
+    {
+    histoBasePath = histogramPath;
+    }
+  else
+    {
+    histoBasePath = getenv("CAP_HISTOS_IMPORT_PATH");
+    histoBasePath += "/";
+    histoBasePath += histogramPath;
+    histoBasePath += "/";
+    }
+  cout << "Setting environment variable CAP_HISTOS_IMPORT_PATH to :" << histoBasePath << endl;
+  cout << "Setting environment variable CAP_HISTOS_EXPORT_PATH to :" << histoBasePath << endl;
+  setenv("CAP_HISTOS_IMPORT_PATH",histoBasePath,1);
+  setenv("CAP_HISTOS_EXPORT_PATH",histoBasePath,1);
+
   CAP::printLine();
-  CAP::printString("Configure RunAnalysis starting");
-  analysis->configure();
-  CAP::printString("Configure RunAnalysis done");
-  CAP::printString("Execute RunAnalysis");
+  CAP::printString("Instantiate TaskCreator");
+  CAP::TaskCreator * creatorTask = new CAP::TaskCreator();
+  creatorTask->setTargetTaskName("RunAnalysis");
+  creatorTask->setRequestedConfiguration(configuration);
+  creatorTask->configure();
+  creatorTask->execute();
+  CAP::Task * ana = creatorTask->getCreatedTask();
+  ana->initialize();
+  ana->execute();
+  ana->finalize();
+  delete ana;
+  delete creatorTask;
   CAP::printLine();
-  analysis->execute();
+  CAP::printString("RunAna completed successfully");
   CAP::printLine();
-  CAP::printString("RunAnalysis completed successfully");
-  CAP::printLine();
-  return 1;
+  return 0;
   }
   catch (CAP::TaskException & exception)
   {
   exception.print();
-  //exit(1);
   }
   catch (CAP::FileException  & exception)
   {
   exception.print();
-  //exit(1);
   }
-//  catch (CAP::MathException exception)
-//  {
-//  exception.print();
-//  // exit(1);
-//  }
-  catch (CAP::Exception  &  exception)
+  catch (CAP::IncompatibleHistogramException   & exception)
   {
   exception.print();
-  //exit(1);
   }
+
   CAP::printLine();
-  CAP::printString("RunAnalysis NOT completed");
+  CAP::printString("RunAna FAILED");
   CAP::printLine();
   return 0;
 }
@@ -320,3 +286,27 @@ void loadTherminator(const TString & includeBasePath)
   gSystem->Load(includePath+"Model.hpp");
   gSystem->Load("libTherminator.dylib");
 }
+
+void loadLibraries(const TString & includeBasePath)
+{
+  loadBase(includeBasePath);
+  loadMath(includeBasePath);
+  loadParticleDb(includeBasePath);
+  loadParticles(includeBasePath);
+  loadGlobal(includeBasePath);
+  loadSpherocity(includeBasePath);
+  loadSingle(includeBasePath);
+  loadPair(includeBasePath);
+  loadNuDyn(includeBasePath);
+  loadSubSample(includeBasePath);
+  loadPythia(includeBasePath);
+  loadTherminator(includeBasePath);
+//  loadAmpt(includeBasePath)
+//  loadEpos(includeBasePath)
+//  loadHijing(includeBasePath)
+//  loadHerwig(includeBasePath)
+//  loadUrqmd(includeBasePath)
+  loadExec(includeBasePath);
+  loadPerformance(includeBasePath);
+}
+

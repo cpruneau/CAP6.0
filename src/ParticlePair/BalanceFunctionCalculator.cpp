@@ -420,37 +420,6 @@ TH2* BalanceFunctionCalculator::calculate_Diff(const String & histoBaseName,
 void BalanceFunctionCalculator::configure()
 {
   EventTask::configure();
-
-  printString("BalanceFunctionCalculator::configure()");
-  exit(1);
-
-  histogramImportPath    = getValueString("HistogramsImportPath");
-  histogramImportFile    = getValueString("HistogramsImportFile");
-  histogramExportPath    = getValueString("HistogramsExportPath");
-  histogramExportFile    = getValueString("HistogramsExportFile");
-  histogramForceRewrite  = getValueBool(  "HistogramsForceRewrite");
-  appendedString      = getValueString("AppendedString");
-  calculateCI         = getValueBool("calculateCI" );
-  calculateCD         = getValueBool("calculateCD" );
-  calculateBF         = getValueBool("calculateBF" );
-  calculateDiffs      = getValueBool("calculateDiffs" );
-
-  if (reportInfo(__FUNCTION__))
-    {
-    printCR();
-    printValue("Task name",             getName());
-    printValue("HistogramsImportPath",  histogramImportPath);
-    printValue("HistogramsImportFile",  histogramImportFile);
-    printValue("HistogramsExportPath",  histogramExportPath);
-    printValue("HistogramsExportFile",  histogramExportFile);
-    printValue("HistogramsForceRewrite",histogramForceRewrite);
-    printValue("AppendedString",        appendedString);
-    printValue("calculateCI",           calculateCI);
-    printValue("calculateCD",           calculateCD);
-    printValue("calculateBF",           calculateBF);
-    printValue("calculateDiffs",        calculateDiffs);
-    printCR();
-    }
 }
 
 void BalanceFunctionCalculator::initialize()
@@ -460,218 +429,223 @@ void BalanceFunctionCalculator::initialize()
   if (reportEnd(__FUNCTION__)) {/* no ops */}
 }
 
-
-
 void BalanceFunctionCalculator::execute()
 {
-  if (reportStart(__FUNCTION__)) {/* no ops */}
-  if (histogramImportFile.Contains("DEFAULT") ||
-      histogramImportFile.Contains("none") ||
-      histogramImportFile.Contains("null") ||
-      histogramImportFile.Contains("nil") ||
-      histogramImportFile.IsNull() )
-    {
-    if (reportInfo(__FUNCTION__))
-      {
-      printCR();
-      printString("Generating a list of files!");
-      }
-    vector<String> includePatterns = getSelectedValues("IncludedPattern", "none");
-    vector<String> excludePatterns = getSelectedValues("ExcludedPattern", "none");
-    for (unsigned int k=0;k<includePatterns.size();k++) cout << " k:" << k << "  Include: " << includePatterns[k] << endl;
-    for (unsigned int k=0;k<excludePatterns.size();k++) cout << " k:" << k << "  Exclude: " << excludePatterns[k] << endl;
-    printLine();
-    bool prependPath = true;
-    bool verbose     = true;
-    int  maximumDepth = 2;
-    allFilesToAnalyze = listFilesInDir(histogramImportPath,includePatterns,excludePatterns,
-                                       prependPath, verbose, maximumDepth,0);
-    }
-  else
-    {
-    if (reportInfo(__FUNCTION__))
-      {
-      printLine();
-      printString("Using a fixed file!");
-      printValue("HistogramsImportPath",histogramImportPath);
-      printValue("HistogramsImportFile",histogramImportFile);
-      }
-    allFilesToAnalyze.push_back(histogramImportPath+histogramImportFile);
-    }
-  int nFilesToAnalyze = allFilesToAnalyze.size();
-  if (reportInfo(__FUNCTION__))
-    {
-    printCR();
-    printValue("Task name",             getName());
-    printValue("HistogramsImportPath",  histogramImportPath);
-    printValue("HistogramsImportFile",  histogramImportFile);
-    printValue("HistogramsExportPath",  histogramExportPath);
-    printValue("HistogramsExportFile",  histogramExportFile);
-    printValue("HistogramsForceRewrite",histogramForceRewrite);
-    printValue("AppendedString",        appendedString);
-    printValue("calculateCI",           calculateCI);
-    printValue("calculateCD",           calculateCD);
-    printValue("calculateBF",           calculateBF);
-    printValue("calculateDiffs",        calculateDiffs);
-    printValue("nFilesToAnalyze",       nFilesToAnalyze);
-    printCR();
-    }
-  if (nFilesToAnalyze<1) throw FileException(histogramImportPath,"*","No files found",__FUNCTION__);
-  std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
-  std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
-
-  for (auto & histogramImportFile : allFilesToAnalyze)
-    {
-    histogramExportFile  = removeRootExtension(histogramImportFile);
-    histogramExportFile.ReplaceAll(String("Derived"),appendedString);
-    TFile & inputFile = *openRootFile("",histogramImportFile,"OLD");
-    String option = "NEW";
-    if (histogramForceRewrite) option = "RECREATE";
-    TFile & outputFile = *openRootFile("",histogramExportFile,option);
-    if (reportInfo(__FUNCTION__))
-      {
-      printCR();
-      printLine();
-      printValue("From",histogramImportFile);
-      printValue("Saved to",histogramExportFile);
-      }
-    // Use hGroup  as helper to load and calculate histograms, etc.
-    HistogramGroup * hGroup  = new HistogramGroup();
-    //hGroup ->setOwnership(false);
-    hGroup ->setName(getName());
-    hGroup ->setParentTask(this);
-    hGroup ->setConfiguration(configuration);
-    importNEexecutedTask(inputFile);
-    EventAccountant::importEventsAccepted(inputFile);
-
-    unsigned int nSpecies = particleFilters.size()/2;
-    vector<String>  sObsNames;
-    vector<String>  pObsNames;
-    int observableSelection = 5;
-    switch (observableSelection)
-      {
-        default:
-        case 0: // eta based observables, full complement
-        sObsNames.push_back("n1_eta");
-        sObsNames.push_back("n1_phi");
-        pObsNames.push_back("R2_ptpt");
-        pObsNames.push_back("R2_phiPhi");
-        pObsNames.push_back("R2_etaEta");
-        pObsNames.push_back("R2_DetaDphi_shft");
-        break;
-
-        case 1: // eta based observables, only DeltaEta vs DeltaPhi
-        sObsNames.push_back("n1_eta");
-        sObsNames.push_back("n1_phi");
-        pObsNames.push_back("rho2_DetaDphi_shft");
-        break;
-
-        case 2: // y based observables, full complement
-        sObsNames.push_back("n1_y");
-        sObsNames.push_back("n1_phi");
-        pObsNames.push_back("R2_ptpt");
-        pObsNames.push_back("R2_phiPhi");
-        pObsNames.push_back("R2_yY");
-        pObsNames.push_back("R2_DyDphi_shft");
-        break;
-
-        case 3: // y based observables, only DeltaY vs DeltaPhi
-        sObsNames.push_back("n1_y");
-        sObsNames.push_back("n1_phi");
-        pObsNames.push_back("R2_DyDphi_shft");
-        break;
-
-        case 4: // eta based observables, only DeltaEta vs DeltaPhi
-        sObsNames.push_back("n1_eta");
-        sObsNames.push_back("n1_phi");
-        pObsNames.push_back("rho2_DetaDphi_shft");
-        pObsNames.push_back("R2_DetaDphi_shft");
-        //pObsNames.push_back("B2AB_DetaDphi_shft");
-        //pObsNames.push_back("B2BA_DetaDphi_shft");
-        //        pObsNames.push_back("n2_phiPhi");
-        break;
-
-        case 5: // y based observables
-        sObsNames.push_back("n1_y");
-        sObsNames.push_back("n1_phi");
-        pObsNames.push_back("A2_DyDphi_shft");
-        pObsNames.push_back("B2_DyDphi_shft");
-        pObsNames.push_back("C2_DyDphi_shft");
-        pObsNames.push_back("D2_DyDphi_shft");
-        pObsNames.push_back("R2_DyDphi_shft");
-        pObsNames.push_back("B2_yY");
-        //pObsNames.push_back("B2_phiPhi");
-        break;
-      }
-    if (reportInfo(__FUNCTION__))
-      {
-      cout << endl;
-      printValue("nSpecies",nSpecies);
-      for (unsigned int iPart1=0; iPart1<nSpecies; iPart1++)
-        {
-        cout << "iPart1:" <<  iPart1 << "  named: "<< particleFilters[iPart1]->getName() << endl;
-        }
-      printValue("sObsNames.size()",int(sObsNames.size()));
-      for (unsigned int k=0; k<sObsNames.size(); k++)
-        printValue("   ",sObsNames[k]);
-      printValue("pObsNames.size()",int(pObsNames.size()));
-      for (unsigned int k=0; k<pObsNames.size(); k++)
-        printValue("   ",pObsNames[k]);
-      }
-    for (auto & pObsName : pObsNames)
-      {
-      for (auto & particleFilter1 : particleFilters)
-        {
-        for (auto & particleFilter2 : particleFilters)
-          {
-          for (auto & eventFilter : eventFilters)
-            {
-            // load histogram and compute derived files.
-            String en     = eventFilter->getName();
-            String pn1    = particleFilter1->getName();
-            String pn1Bar = (particleFilter1+nSpecies)->getName();
-            String pn2    = particleFilter2->getName();
-            String pn2Bar = (particleFilter2+nSpecies)->getName();
-            //TH1 * rho1_1         = hGroup ->importH1(inputFile,createName(getName(),en,pn1,   sObsNames[0]));
-            //TH1 * rho1_1Bar      = hGroup ->importH1(inputFile,createName(getName(),en,pn1Bar,sObsNames[0]));
-            TH1 * rho1_2         = hGroup ->importH1(inputFile,createName(getName(),en,pn2,   sObsNames[0]));
-            TH1 * rho1_2Bar      = hGroup ->importH1(inputFile,createName(getName(),en,pn2Bar,sObsNames[0]));
-            TH2 * obs_1_2        = hGroup ->importH2(inputFile,createName(getName(),en,pn1,    pn2,    pObsName));
-            TH2 * obs_1Bar_2     = hGroup ->importH2(inputFile,createName(getName(),en,pn1Bar, pn2,    pObsName));
-            TH2 * obs_1_2Bar     = hGroup ->importH2(inputFile,createName(getName(),en,pn1,    pn2Bar, pObsName));
-            TH2 * obs_1Bar_2Bar  = hGroup ->importH2(inputFile,createName(getName(),en,pn1Bar, pn2Bar, pObsName));
-
-            if (calculateCI)
-              calculate_CI(getName(),en,pn1,pn2, pObsName,obs_1_2,obs_1Bar_2,obs_1_2Bar,obs_1Bar_2Bar,hGroup );
-
-            if (calculateCD)
-              calculate_CD(getName(),en,pn1,pn2, pObsName,obs_1_2,obs_1Bar_2,obs_1_2Bar,obs_1Bar_2Bar,hGroup );
-
-            if (calculateBF)
-              {
-              TH2* bfa = calculate_BalFct(getName(),en,pn1,pn2, pObsName, "B2_1_2Bar",rho1_2Bar, obs_1_2Bar, obs_1Bar_2Bar,hGroup );
-              TH2* bfb = calculate_BalFct(getName(),en,pn1,pn2, pObsName, "B2_1Bar_2",rho1_2,    obs_1Bar_2, obs_1_2,hGroup );
-              calculate_BalFctSum(getName(),en,pn1,pn2, pObsName, "B2_12Sum",bfa,bfb,hGroup );
-              }
-            if (calculateDiffs)
-              {
-              calculate_Diff(getName(),en,pn1,pn2, pObsName, "Diff_US",   obs_1Bar_2,    obs_1_2Bar,hGroup );
-              calculate_Diff(getName(),en,pn1,pn2, pObsName, "Diff_LS",   obs_1Bar_2Bar, obs_1_2,hGroup );
-              }
-            }
-          }
-        }
-      }
-    outputFile.cd();
-    hGroup->exportHistograms(outputFile);
-    EventAccountant::exportEventsAccepted(outputFile);
-    TaskAccountant::exportNEexecutedTask(outputFile);
-    inputFile.Close();
-    outputFile.Close();
-    hGroup->clearHistograms();
-    delete hGroup ;
-    }
-  if (reportEnd(__FUNCTION__)) {/* no ops */}
+//  if (reportStart(__FUNCTION__)) {/* no ops */}
+//  String histogramsImportPath    = getHistoImportPath();
+//  String histogramsImportFile    = getHistoImportFile();
+//  String histogramsExportPath    = getHistoExportPath();
+//  String histogramsExportFile    = getHistoExportFile();
+//  bool   forceRewrite  = histogramsForceRewrite();
+//  appendedString      = getValueString("AppendedString");
+//  calculateCI         = getValueBool("calculateCI" );
+//  calculateCD         = getValueBool("calculateCD" );
+//  calculateBF         = getValueBool("calculateBF" );
+//  calculateDiffs      = getValueBool("calculateDiffs" );
+//
+//
+//  if (histogramsImportFile.Contains("DEFAULT") ||
+//      histogramsImportFile.Contains("none") ||
+//      histogramsImportFile.Contains("null") ||
+//      histogramsImportFile.Contains("nil") ||
+//      histogramsImportFile.IsNull() )
+//    {
+//    if (reportInfo(__FUNCTION__))
+//      {
+//      printCR();
+//      printString("Generating a list of files!");
+//      }
+//    vector<String> includePatterns = getSelectedValues("IncludedPattern", "none");
+//    vector<String> excludePatterns = getSelectedValues("ExcludedPattern", "none");
+//    for (unsigned int k=0;k<includePatterns.size();k++) cout << " k:" << k << "  Include: " << includePatterns[k] << endl;
+//    for (unsigned int k=0;k<excludePatterns.size();k++) cout << " k:" << k << "  Exclude: " << excludePatterns[k] << endl;
+//    printLine();
+//    bool prependPath = true;
+//    bool verbose     = true;
+//    int  maximumDepth = 2;
+//    allFilesToAnalyze = listFilesInDir(histogramsImportPath,
+//                                       includePatterns,excludePatterns,
+//                                       prependPath, verbose, maximumDepth,0);
+//    }
+//  else
+//    {
+//    if (reportInfo(__FUNCTION__))
+//      {
+//      printLine();
+//      printString("Using a fixed file!");
+//      printValue("HistogramsImportPath",histogramsImportPath);
+//      printValue("HistogramsImportFile",histogramsImportFile);
+//      }
+//    allFilesToAnalyze.push_back(histogramsImportPath+histogramsImportFile);
+//    }
+//  int nFilesToAnalyze = allFilesToAnalyze.size();
+//  if (reportInfo(__FUNCTION__))
+//    {
+//    printCR();
+//    printValue("AppendedString",        appendedString);
+//    printValue("calculateCI",           calculateCI);
+//    printValue("calculateCD",           calculateCD);
+//    printValue("calculateBF",           calculateBF);
+//    printValue("calculateDiffs",        calculateDiffs);
+//    printValue("nFilesToAnalyze",       nFilesToAnalyze);
+//    printCR();
+//    }
+//  if (nFilesToAnalyze<1) throw FileException(histogramImportPath,"*","No files found",__FUNCTION__);
+//  std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
+//  std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
+//
+//  for (auto & histogramImportFile : allFilesToAnalyze)
+//    {
+//    histogramExportFile  = removeRootExtension(histogramImportFile);
+//    histogramExportFile.ReplaceAll(String("Derived"),appendedString);
+//    TFile & inputFile = *openRootFile("",histogramImportFile,"OLD");
+//    String option = "NEW";
+//    if (histogramForceRewrite) option = "RECREATE";
+//    TFile & outputFile = *openRootFile("",histogramExportFile,option);
+//    if (reportInfo(__FUNCTION__))
+//      {
+//      printCR();
+//      printLine();
+//      printValue("From",histogramImportFile);
+//      printValue("Saved to",histogramExportFile);
+//      }
+//    // Use hGroup  as helper to load and calculate histograms, etc.
+//    HistogramGroup * hGroup  = new HistogramGroup();
+//    //hGroup ->setOwnership(false);
+//    hGroup ->setName(getName());
+//    hGroup ->setParentTask(this);
+//    hGroup ->setConfiguration(configuration);
+//    importNEexecutedTask(inputFile);
+//    EventAccountant::importEventsAccepted(inputFile);
+//
+//    unsigned int nSpecies = particleFilters.size()/2;
+//    vector<String>  sObsNames;
+//    vector<String>  pObsNames;
+//    int observableSelection = 5;
+//    switch (observableSelection)
+//      {
+//        default:
+//        case 0: // eta based observables, full complement
+//        sObsNames.push_back("n1_eta");
+//        sObsNames.push_back("n1_phi");
+//        pObsNames.push_back("R2_ptpt");
+//        pObsNames.push_back("R2_phiPhi");
+//        pObsNames.push_back("R2_etaEta");
+//        pObsNames.push_back("R2_DetaDphi_shft");
+//        break;
+//
+//        case 1: // eta based observables, only DeltaEta vs DeltaPhi
+//        sObsNames.push_back("n1_eta");
+//        sObsNames.push_back("n1_phi");
+//        pObsNames.push_back("rho2_DetaDphi_shft");
+//        break;
+//
+//        case 2: // y based observables, full complement
+//        sObsNames.push_back("n1_y");
+//        sObsNames.push_back("n1_phi");
+//        pObsNames.push_back("R2_ptpt");
+//        pObsNames.push_back("R2_phiPhi");
+//        pObsNames.push_back("R2_yY");
+//        pObsNames.push_back("R2_DyDphi_shft");
+//        break;
+//
+//        case 3: // y based observables, only DeltaY vs DeltaPhi
+//        sObsNames.push_back("n1_y");
+//        sObsNames.push_back("n1_phi");
+//        pObsNames.push_back("R2_DyDphi_shft");
+//        break;
+//
+//        case 4: // eta based observables, only DeltaEta vs DeltaPhi
+//        sObsNames.push_back("n1_eta");
+//        sObsNames.push_back("n1_phi");
+//        pObsNames.push_back("rho2_DetaDphi_shft");
+//        pObsNames.push_back("R2_DetaDphi_shft");
+//        //pObsNames.push_back("B2AB_DetaDphi_shft");
+//        //pObsNames.push_back("B2BA_DetaDphi_shft");
+//        //        pObsNames.push_back("n2_phiPhi");
+//        break;
+//
+//        case 5: // y based observables
+//        sObsNames.push_back("n1_y");
+//        sObsNames.push_back("n1_phi");
+//        pObsNames.push_back("A2_DyDphi_shft");
+//        pObsNames.push_back("B2_DyDphi_shft");
+//        pObsNames.push_back("C2_DyDphi_shft");
+//        pObsNames.push_back("D2_DyDphi_shft");
+//        pObsNames.push_back("R2_DyDphi_shft");
+//        pObsNames.push_back("B2_yY");
+//        //pObsNames.push_back("B2_phiPhi");
+//        break;
+//      }
+//    if (reportInfo(__FUNCTION__))
+//      {
+//      cout << endl;
+//      printValue("nSpecies",nSpecies);
+//      for (unsigned int iPart1=0; iPart1<nSpecies; iPart1++)
+//        {
+//        cout << "iPart1:" <<  iPart1 << "  named: "<< particleFilters[iPart1]->getName() << endl;
+//        }
+//      printValue("sObsNames.size()",int(sObsNames.size()));
+//      for (unsigned int k=0; k<sObsNames.size(); k++)
+//        printValue("   ",sObsNames[k]);
+//      printValue("pObsNames.size()",int(pObsNames.size()));
+//      for (unsigned int k=0; k<pObsNames.size(); k++)
+//        printValue("   ",pObsNames[k]);
+//      }
+//    for (auto & pObsName : pObsNames)
+//      {
+//      for (auto & particleFilter1 : particleFilters)
+//        {
+//        for (auto & particleFilter2 : particleFilters)
+//          {
+//          for (auto & eventFilter : eventFilters)
+//            {
+//            // load histogram and compute derived files.
+//            String en     = eventFilter->getName();
+//            String pn1    = particleFilter1->getName();
+//            String pn1Bar = (particleFilter1+nSpecies)->getName();
+//            String pn2    = particleFilter2->getName();
+//            String pn2Bar = (particleFilter2+nSpecies)->getName();
+//            //TH1 * rho1_1         = hGroup ->importH1(inputFile,createName(getName(),en,pn1,   sObsNames[0]));
+//            //TH1 * rho1_1Bar      = hGroup ->importH1(inputFile,createName(getName(),en,pn1Bar,sObsNames[0]));
+//            TH1 * rho1_2         = hGroup ->importH1(inputFile,createName(getName(),en,pn2,   sObsNames[0]));
+//            TH1 * rho1_2Bar      = hGroup ->importH1(inputFile,createName(getName(),en,pn2Bar,sObsNames[0]));
+//            TH2 * obs_1_2        = hGroup ->importH2(inputFile,createName(getName(),en,pn1,    pn2,    pObsName));
+//            TH2 * obs_1Bar_2     = hGroup ->importH2(inputFile,createName(getName(),en,pn1Bar, pn2,    pObsName));
+//            TH2 * obs_1_2Bar     = hGroup ->importH2(inputFile,createName(getName(),en,pn1,    pn2Bar, pObsName));
+//            TH2 * obs_1Bar_2Bar  = hGroup ->importH2(inputFile,createName(getName(),en,pn1Bar, pn2Bar, pObsName));
+//
+//            if (calculateCI)
+//              calculate_CI(getName(),en,pn1,pn2, pObsName,obs_1_2,obs_1Bar_2,obs_1_2Bar,obs_1Bar_2Bar,hGroup );
+//
+//            if (calculateCD)
+//              calculate_CD(getName(),en,pn1,pn2, pObsName,obs_1_2,obs_1Bar_2,obs_1_2Bar,obs_1Bar_2Bar,hGroup );
+//
+//            if (calculateBF)
+//              {
+//              TH2* bfa = calculate_BalFct(getName(),en,pn1,pn2, pObsName, "B2_1_2Bar",rho1_2Bar, obs_1_2Bar, obs_1Bar_2Bar,hGroup );
+//              TH2* bfb = calculate_BalFct(getName(),en,pn1,pn2, pObsName, "B2_1Bar_2",rho1_2,    obs_1Bar_2, obs_1_2,hGroup );
+//              calculate_BalFctSum(getName(),en,pn1,pn2, pObsName, "B2_12Sum",bfa,bfb,hGroup );
+//              }
+//            if (calculateDiffs)
+//              {
+//              calculate_Diff(getName(),en,pn1,pn2, pObsName, "Diff_US",   obs_1Bar_2,    obs_1_2Bar,hGroup );
+//              calculate_Diff(getName(),en,pn1,pn2, pObsName, "Diff_LS",   obs_1Bar_2Bar, obs_1_2,hGroup );
+//              }
+//            }
+//          }
+//        }
+//      }
+//    outputFile.cd();
+//    hGroup->exportHistograms(outputFile);
+//    EventAccountant::exportEventsAccepted(outputFile);
+//    TaskAccountant::exportNEexecutedTask(outputFile);
+//    inputFile.Close();
+//    outputFile.Close();
+//    hGroup->clearHistograms();
+//    delete hGroup ;
+//    }
+//  if (reportEnd(__FUNCTION__)) {/* no ops */}
 }
 
 }  // namespace CAP

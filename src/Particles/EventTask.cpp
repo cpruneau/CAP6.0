@@ -111,7 +111,6 @@ void EventTask::initialize()
   TaskAccountant::reset();
   particleFactory = Particle::getFactory();
   particleDb = Manager<ParticleDb>::getObjectAt(0);
-
   eventFilters     = Manager<EventFilter>::getObjects();
   particleFilters  = Manager<ParticleFilter>::getObjects();
   nEventFilters    = eventFilters.size();
@@ -129,7 +128,6 @@ void EventTask::initialize()
   std::vector<Particle*> dummy;
   dummy.reserve(4000);
   allParticlesAccepted.assign(nParticleFilters,dummy);
-
   if (reportEnd(__FUNCTION__)) { /* no ops */ }
 }
 
@@ -141,26 +139,29 @@ void EventTask::finalize()
 {
   bool scaleHistos = getValueBool("HistogramsScale");
   if (scaleHistos) scaleHistograms();
-  String histoPath = getHistoExportPath();
-  if (reportInfo(__FUNCTION__))
+  String exportPath = getHistoExportPath();
+  String exportFile = getHistoExportFile();
+  if (reportDebug(__FUNCTION__))
     {
     printCR();
     printLine();
-    printValue("Histos Export Path",histoPath);
-    printValue("Histos Export File",histogramExportFile);
+    printValue("Histos Export Path",exportPath);
+    printValue("Histos Export File",exportFile);
     printLine();
     }
-  if (histoPath.Length()>2) createDirectory(histoPath);
-  if (histogramExportFile.Length()<5)
-    throw FileException(histogramExportFile,"File name too short. Must have 5 character or more...",__FUNCTION__);
-  String option = "NEW";
-  if (histogramForceRewrite) option = "RECREATE";
-  TFile & rootOutputFile = *openRootFile(histoPath,histogramExportFile,option);
-  exportNEexecutedTask(rootOutputFile);
-  exportEventsAccepted(rootOutputFile);
-  exportHistograms(rootOutputFile);
-  rootOutputFile.Close();
-  if (reportInfo(__FUNCTION__)) print();
+  if (exportPath.Length()>2) createDirectory(exportPath);
+  if (exportFile.Length()<5)
+    throw FileException(exportFile,"File name too short. Must have 5 character or more...",__FUNCTION__);
+  TFile * rootOutputFile;
+  if (histogramsForceRewrite())
+    rootOutputFile = openRecreateRootFile(exportPath,exportFile);
+  else
+    rootOutputFile = openNewRootFile(exportPath,exportFile);
+  exportHistograms(*rootOutputFile);
+  exportNEexecutedTask(*rootOutputFile);
+  exportEventsAccepted(*rootOutputFile);
+  rootOutputFile->Close();
+  if (reportDebug(__FUNCTION__)) print();
   TaskAccountant::clear();
   EventAccountant::clear();
   if (reportEnd(__FUNCTION__)) { /* no ops */ };
@@ -215,28 +216,20 @@ bool EventTask::analyzeThisEvent(Event & event,
 {
   bool analyzeEvent = false;
   unsigned int iEventFilter=0;
-  // printValue("analyzeThisEvent(Event...)",1);
   for (auto & eventFilter : eventFilters)
     {
     if (eventFilter->accept(event))
       {
-      // printValue("analyzeThisEvent(Event...)",2);
       incrementEventsAccepted(iEventFilter);
-      // printValue("analyzeThisEvent(Event...)",3);
       eventFilterAccepted[iEventFilter] = true;
-      // printValue("analyzeThisEvent(Event...)",4);
       analyzeEvent = true;
       }
     else
       {
-      // printValue("analyzeThisEvent(Event...)",5);
       eventFilterAccepted[iEventFilter] = false;
-      // printValue("analyzeThisEvent(Event...)",6);
       }
     iEventFilter++;
-    // printValue("analyzeThisEvent(Event...)",7);
     }
-  // printValue("analyzeThisEvent(Event...)",8);
   return analyzeEvent;
 }
 
@@ -321,7 +314,7 @@ bool EventTask::countPtSum(std::vector<Particle*>  & particles,
     for (auto & particle : particles)
       {
       if (particleFilter->accept(*particle)) 
-        {
+        { 
         count++;
         pt = particle->getMomentum().Pt();
         pt2 = pt*pt;

@@ -28,9 +28,8 @@ fillP2(false)
 {
   appendClassName("ParticlePairAnalyzer");
   setInstanceName("Pair");
-  setName("Pair");
-  setTitle("Pair");
-  setVersion("1.0");
+  setName("ParticlePairAnalyzer");
+  setTitle("ParticlePairAnalyzer");
 }
 
 ParticlePairAnalyzer::ParticlePairAnalyzer(const ParticlePairAnalyzer & task)
@@ -57,6 +56,7 @@ ParticlePairAnalyzer & ParticlePairAnalyzer::operator=(const ParticlePairAnalyze
 void ParticlePairAnalyzer::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
+  addProperty("HistogramBaseName","Pair");
   addProperty("FillEta",           fillEta);
   addProperty("FillY",             fillY);
   addProperty("FillP2",            fillP2);
@@ -113,7 +113,7 @@ void ParticlePairAnalyzer::configure()
   fillEta = getValueBool("FillEta");
   fillY   = getValueBool("FillY");
   fillP2  = getValueBool("FillP2");
-  if (reportInfo(__FUNCTION__))
+  if (reportDebug(__FUNCTION__))
     {
     printCR();
     printLine();
@@ -144,7 +144,7 @@ void ParticlePairAnalyzer::initialize()
 void ParticlePairAnalyzer::createHistograms()
 {
   if (reportStart(__FUNCTION__)) {/* no ops */};
-  String bn  = getName();
+  String bn = getValueString( "HistogramBaseName");
   HistogramGroup * histos;
   for (auto & eventFilter : eventFilters)
     {

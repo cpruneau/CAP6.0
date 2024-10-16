@@ -26,7 +26,7 @@ template <class Event> class Manager;
 //!
 //! Class encupsalting all components of events (real data or monte carlo)
 //!
-class Event : public Properties
+class Event
 {
 protected:
 
@@ -117,6 +117,49 @@ protected:
   //!
   void setEventNumber(unsigned long number){ eventNumber = number;}
 
+  double getCl0() const { return cl0; }
+  double getCl1() const { return cl1; }
+  double getCl2() const { return cl2; }
+  double getCl3() const { return cl3; }
+  double getCl4() const { return cl4; }
+  double getMult0() const { return mult0; }
+  double getMult1() const { return mult1; }
+  double getMult2() const { return mult2; }
+  double getMult3() const { return mult3; }
+  double getMult4() const { return mult4; }
+  double getSpherocity0() const { return spherocity0; }
+  double getSpherocity1() const { return spherocity1; }
+  double getSpherocity2() const { return spherocity2; }
+  double getSpherocity3() const { return spherocity3; }
+  double getSpherocity4() const { return spherocity4; }
+  double getEnergy0() const { return energy0; }
+  double getEnergy1() const { return energy1; }
+  double getEnergy2() const { return energy2; }
+  double getEnergy3() const { return energy3; }
+  double getEnergy4() const { return energy4; }
+
+
+  void setCl0(double value) { cl0 = value; }
+  void setCl1(double value) { cl1 = value; }
+  void setCl2(double value) { cl2 = value; }
+  void setCl3(double value) { cl3 = value; }
+  void setCl4(double value) { cl4 = value; }
+  void setMult0(double value) { mult0 = value; }
+  void setMult1(double value) { mult1 = value; }
+  void setMult2(double value) { mult2 = value; }
+  void setMult3(double value) { mult3 = value; }
+  void setMult4(double value) { mult4 = value; }
+  void setSpherocity0(double value) { spherocity0 = value; }
+  void setSpherocity1(double value) { spherocity1 = value; }
+  void setSpherocity2(double value) { spherocity2 = value; }
+  void setSpherocity3(double value) { spherocity3 = value; }
+  void setSpherocity4(double value) { spherocity4 = value; }
+  void setEnergy0(double value) { energy0 = value; }
+  void setEnergy1(double value) { energy1 = value; }
+  void setEnergy2(double value) { energy2 = value; }
+  void setEnergy3(double value) { energy3 = value; }
+  void setEnergy4(double value) { energy4 = value; }
+
   friend Manager<Event>;
 
 protected:
@@ -127,6 +170,11 @@ protected:
   Particle projectileA;
   Particle projectileB;
   vector<Particle*> particles;
+
+  double cl0, cl1, cl2, cl3, cl4;
+  double mult0, mult1, mult2, mult3, mult4;
+  double spherocity0, spherocity1, spherocity2, spherocity3, spherocity4;
+  double energy0, energy1, energy2, energy3, energy4;
 
   ClassDef(Event,0)
 };

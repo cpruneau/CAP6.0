@@ -218,23 +218,23 @@ void ParticlePairHistos::createHistograms()
   const String & bn  = getName();
   const String & ptn = getParentName();
   const String & ppn = getParentPathName();
-  nBins_n2  = configuration.getValueInt(ppn,   "nBins_n2");
-  min_n2    = configuration.getValueDouble(ppn,"Min_n2");
-  max_n2    = configuration.getValueDouble(ppn,"Max_n2");
+  nBins_n2  = configuration.getValueInt(ptn,   "nBins_n2");
+  min_n2    = configuration.getValueDouble(ptn,"Min_n2");
+  max_n2    = configuration.getValueDouble(ptn,"Max_n2");
   
-  nBins_n2  = configuration.getValueInt(ppn,   "nBins_n2");
-  min_n2    = configuration.getValueDouble(ppn,"Min_n2");
-  max_n2    = configuration.getValueDouble(ppn,"Max_n2");
+  nBins_n2  = configuration.getValueInt(ptn,   "nBins_n2");
+  min_n2    = configuration.getValueDouble(ptn,"Min_n2");
+  max_n2    = configuration.getValueDouble(ptn,"Max_n2");
 
-  nBins_pt = configuration.getValueInt(ppn,   "nBins_pt");
-  min_pt   = configuration.getValueDouble(ppn,"Min_pt");
-  max_pt   = configuration.getValueDouble(ppn,"Max_pt");
+  nBins_pt = configuration.getValueInt(ptn,   "nBins_pt");
+  min_pt   = configuration.getValueDouble(ptn,"Min_pt");
+  max_pt   = configuration.getValueDouble(ptn,"Max_pt");
   range_pt = max_pt - min_pt;
   scale_pt = double(nBins_pt)/range_pt;
 
-  nBins_phi   = configuration.getValueInt(ppn,   "nBins_phi");
-  min_phi     = configuration.getValueDouble(ppn,"Min_phi");
-  max_phi     = configuration.getValueDouble(ppn,"Max_phi");
+  nBins_phi   = configuration.getValueInt(ptn,   "nBins_phi");
+  min_phi     = configuration.getValueDouble(ptn,"Min_phi");
+  max_phi     = configuration.getValueDouble(ptn,"Max_phi");
   range_phi   = max_phi - min_phi;
   scale_phi   = double(nBins_phi)/range_phi;
   width_Dphi  = range_phi/double(nBins_phi);
@@ -246,9 +246,9 @@ void ParticlePairHistos::createHistograms()
   min_Dphi_shft    = min_Dphi - width_Dphi*double(nBins_Dphi_shft);
   max_Dphi_shft    = max_Dphi - width_Dphi*double(nBins_Dphi_shft);
 
-  nBins_eta = configuration.getValueInt(ppn,   "nBins_eta");
-  min_eta   = configuration.getValueDouble(ppn,"Min_eta");
-  max_eta   = configuration.getValueDouble(ppn,"Max_eta");
+  nBins_eta = configuration.getValueInt(ptn,   "nBins_eta");
+  min_eta   = configuration.getValueDouble(ptn,"Min_eta");
+  max_eta   = configuration.getValueDouble(ptn,"Max_eta");
   range_eta = max_eta - min_eta;
   scale_eta = double(nBins_eta)/range_eta;
 
@@ -256,23 +256,23 @@ void ParticlePairHistos::createHistograms()
   min_Deta  = -range_eta;
   max_Deta  = range_eta;
 
-  nBins_y = configuration.getValueInt(ppn,   "nBins_y");
-  min_y   = configuration.getValueDouble(ppn,"Min_y");
-  max_y   = configuration.getValueDouble(ppn,"Max_y");
+  nBins_y = configuration.getValueInt(ptn,   "nBins_y");
+  min_y   = configuration.getValueDouble(ptn,"Min_y");
+  max_y   = configuration.getValueDouble(ptn,"Max_y");
   range_y = max_y - min_y;
   scale_y = double(nBins_y)/range_y;
 
-  //  nBins_DeltaP  = configuration.getValueInt(ppn,"nBins_DeltaP");
-  //  min_DeltaP    = configuration.getValueDouble(ppn,"Min_DeltaP");
-  //  max_DeltaP    = configuration.getValueDouble(ppn,"Max_DeltaP");
+  //  nBins_DeltaP  = configuration.getValueInt(ptn,"nBins_DeltaP");
+  //  min_DeltaP    = configuration.getValueDouble(ptn,"Min_DeltaP");
+  //  max_DeltaP    = configuration.getValueDouble(ptn,"Max_DeltaP");
 
   nBins_Dy  = 2*nBins_y-1;
   min_Dy    = -range_y;
   max_Dy    = range_y;
 
-  fillEta    = configuration.getValueBool(ppn,"FillEta");
-  fillY      = configuration.getValueBool(ppn,"FillY");
-  fillP2     = configuration.getValueBool(ppn,"FillP2");
+  fillEta    = configuration.getValueBool(ptn,"FillEta");
+  fillY      = configuration.getValueBool(ptn,"FillY");
+  fillP2     = configuration.getValueBool(ptn,"FillP2");
 
   if (reportDebug(__FUNCTION__))
     {
@@ -362,9 +362,9 @@ void ParticlePairHistos::importHistograms(TFile & inputFile)
   const String & bn  = getName();
   const String & ptn = getParentName();
   const String & ppn = getParentPathName();
-  fillEta       = configuration.getValueBool(ppn,"FillEta");
-  fillY         = configuration.getValueBool(ppn,"FillY");
-  fillP2        = configuration.getValueBool(ppn,"FillP2");
+  fillEta       = configuration.getValueBool(ptn,"FillEta");
+  fillY         = configuration.getValueBool(ptn,"FillY");
+  fillP2        = configuration.getValueBool(ptn,"FillP2");
   if (reportInfo(__FUNCTION__))
     {
     cout << endl;

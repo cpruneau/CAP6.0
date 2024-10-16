@@ -11,8 +11,6 @@
  * *********************************************************************/
 #include "ParticlePair3DDerivedHistogramCalculator.hpp"
 
-
-
 ClassImp(ParticlePair3DDerivedHistogramCalculator);
 
 ParticlePair3DDerivedHistogramCalculator::ParticlePair3DDerivedHistogramCalculator(const String & _name,
@@ -28,65 +26,65 @@ DerivedHistogramCalculator(_name, _configuration, _eventFilters, _particleFilter
 void ParticlePair3DDerivedHistogramCalculator::setDefaultConfiguration()
 {
   Task::setDefaultConfiguration();
-  addProperty("UseParticles",     true);
-  addProperty("HistogramsCreate", true);
-  addProperty("HistogramsImport",   true);
-  addProperty("HistogramsExport",   true);
-  addProperty("binCorrPP", 1.0);
-  addProperty("fillEta",  true);
-  addProperty("fillY",    false);
-  addProperty("fillP2",   false);
-  addProperty("nBins_n1",  100);
-  addProperty("min_n1",    0.0);
-  addProperty("max_n1",  100.0);
-  addProperty("nBins_eTot",  100);
-  addProperty("min_eTot",    0.0);
-  addProperty("max_eTot",  100.0);
-  addProperty("nBins_pt",   18);
-  addProperty("min_pt",   0.20);
-  addProperty("max_pt",   2.00);
-  addProperty("nBins_phi",  72);
-  addProperty("min_phi",   0.0);
-  addProperty("max_phi", CAP::Math::twoPi());
-  addProperty("nBins_eta",   20);
-  addProperty("min_eta",   -1.0);
-  addProperty("max_eta",    1.0);
-  addProperty("nBins_y",     20);
-  addProperty("min_y",     -1.0);
-  addProperty("max_y",      1.0);
-  addProperty("nBins_phiEta",    720);
-  addProperty("nBins_phiEtaPt",  7200);
-  addProperty("nBins_phiY",      720);
-  addProperty("nBins_phiYPt",    7200);
-  addProperty("nBins_n2",          100);
-  addProperty("min_n2",            0.0);
-  addProperty("max_n2",         1000.0);
-  addProperty("nBins_DeltaPlong",   10);
-  addProperty("min_DeltaPlong",   -1.0);
-  addProperty("max_DeltaPlong",    1.0);
-  addProperty("nBins_DeltaPside",   10);
-  addProperty("min_DeltaPside",   -1.0);
-  addProperty("max_DeltaPside",    1.0);
-  addProperty("range_DeltaPside",  2.0);
-  addProperty("nBins_DeltaPout",    10);
-  addProperty("min_DeltaPout",    -1.0);
-  addProperty("max_DeltaPout",     1.0);
-  addProperty("range_DeltaPout",   2.0);
-  addProperty("nBins_Dphi",         36);
-  addProperty("min_Dphi",          0.0);
-  addProperty("max_Dphi",CAP::Math::twoPi());
-  addProperty("width_Dphi",CAP::Math::twoPi());
-  addProperty("nBins_Dphi_shft",    36);
-  addProperty("min_Dphi_shft",     0.0);
-  addProperty("max_Dphi_shft",     0.0);
-  addProperty("nBins_Deta",         39);
-  addProperty("min_Deta",         -2.0);
-  addProperty("max_Deta",          2.0);
-  addProperty("width_Deta",   4.0/39.0);
-  addProperty("nBins_Dy",           39);
-  addProperty("min_Dy",           -2.0);
-  addProperty("max_Dy",            2.0);
-  addProperty("width_Dy",     4.0/39.0);
+  addParameter("UseParticles",     true);
+  addParameter("HistogramsCreate", true);
+  addParameter("HistogramsImport",   true);
+  addParameter("HistogramsExport",   true);
+  addParameter("binCorrPP", 1.0);
+  addParameter("fillEta",  true);
+  addParameter("fillY",    false);
+  addParameter("fillP2",   false);
+  addParameter("nBins_n1",  100);
+  addParameter("min_n1",    0.0);
+  addParameter("max_n1",  100.0);
+  addParameter("nBins_eTot",  100);
+  addParameter("min_eTot",    0.0);
+  addParameter("max_eTot",  100.0);
+  addParameter("nBins_pt",   18);
+  addParameter("min_pt",   0.20);
+  addParameter("max_pt",   2.00);
+  addParameter("nBins_phi",  72);
+  addParameter("min_phi",   0.0);
+  addParameter("max_phi", CAP::Math::twoPi());
+  addParameter("nBins_eta",   20);
+  addParameter("min_eta",   -1.0);
+  addParameter("max_eta",    1.0);
+  addParameter("nBins_y",     20);
+  addParameter("min_y",     -1.0);
+  addParameter("max_y",      1.0);
+  addParameter("nBins_phiEta",    720);
+  addParameter("nBins_phiEtaPt",  7200);
+  addParameter("nBins_phiY",      720);
+  addParameter("nBins_phiYPt",    7200);
+  addParameter("nBins_n2",          100);
+  addParameter("min_n2",            0.0);
+  addParameter("max_n2",         1000.0);
+  addParameter("nBins_DeltaPlong",   10);
+  addParameter("min_DeltaPlong",   -1.0);
+  addParameter("max_DeltaPlong",    1.0);
+  addParameter("nBins_DeltaPside",   10);
+  addParameter("min_DeltaPside",   -1.0);
+  addParameter("max_DeltaPside",    1.0);
+  addParameter("range_DeltaPside",  2.0);
+  addParameter("nBins_DeltaPout",    10);
+  addParameter("min_DeltaPout",    -1.0);
+  addParameter("max_DeltaPout",     1.0);
+  addParameter("range_DeltaPout",   2.0);
+  addParameter("nBins_Dphi",         36);
+  addParameter("min_Dphi",          0.0);
+  addParameter("max_Dphi",CAP::Math::twoPi());
+  addParameter("width_Dphi",CAP::Math::twoPi());
+  addParameter("nBins_Dphi_shft",    36);
+  addParameter("min_Dphi_shft",     0.0);
+  addParameter("max_Dphi_shft",     0.0);
+  addParameter("nBins_Deta",         39);
+  addParameter("min_Deta",         -2.0);
+  addParameter("max_Deta",          2.0);
+  addParameter("width_Deta",   4.0/39.0);
+  addParameter("nBins_Dy",           39);
+  addParameter("min_Dy",           -2.0);
+  addParameter("max_Dy",            2.0);
+  addParameter("width_Dy",     4.0/39.0);
 }
 
 void ParticlePair3DDerivedHistogramCalculator::HistogramsCreate()
@@ -204,11 +202,11 @@ void ParticlePair3DDerivedHistogramCalculator::execute()
     {
     cout << endl;
     cout << "Computing derived histograms for: " << endl;
-    printValue("nEventFilters",nEventFilters);
-    printValue("nParticleFilters",nParticleFilters);
-    printValue("nSingleHistos",getNBaseSingleHistograms());
-    printValue("PairHistos",getNBasePairHistograms());
-    printValue("nDerivedHistos",getNDerivedPairHistograms());
+    printItem("nEventFilters",nEventFilters);
+    printItem("nParticleFilters",nParticleFilters);
+    printItem("nSingleHistos",getNBaseSingleHistograms());
+    printItem("PairHistos",getNBasePairHistograms());
+    printItem("nDerivedHistos",getNDerivedPairHistograms());
     }
   ParticleHistos        * bSingleHistos1;
   ParticleHistos        * bSingleHistos2;
@@ -222,7 +220,7 @@ void ParticlePair3DDerivedHistogramCalculator::execute()
     if (reportDebug(__FUNCTION__))
       {
       cout << endl;
-      printValue("iEventFilter",iEventFilter);
+      printItem("iEventFilter",iEventFilter);
       }
 
     unsigned int index;
