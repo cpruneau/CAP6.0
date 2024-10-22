@@ -72,6 +72,7 @@ public:
   bool fillEta;
   bool fillY;
   bool fillP2;
+  bool fillPtvsY;
   bool fillPid;
   bool useEffCorrection;
   int  efficiencyOpt;
@@ -112,6 +113,7 @@ public:
 
   TH2 * h_n1_phiY;
   TH2 * h_spt_phiY;
+  TH2 * h_n1_ptY;
 
   TH1 * h_pdgId;
 

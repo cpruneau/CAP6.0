@@ -28,8 +28,8 @@ void loadLibraries(const TString & includeBasePath);
 //! nBunches :  number of bunches  (must be 1 on grid)
 //!
 
-int RunAna(TString configFile="Pythia/pp_13.7TeV/RunAna.ini",
-           TString histogramPath="pythiaTest/",
+int RunAna(TString configFile="Pythia/pp_13.7TeV/RunAna3D.ini",
+           TString histogramPath="pythiaTest3D/",
            long seed=1121331)
 {
   TString includeBasePath = getenv("CAP_SRC_PATH");

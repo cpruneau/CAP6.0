@@ -23,6 +23,7 @@ HistogramGroup(),
 fillEta(0),
 fillY(0),
 fillP2(0),
+fillPtvsY(0),
 fillPid(0),
 useEffCorrection(0),
 efficiencyOpt(0),
@@ -53,6 +54,7 @@ h_n1_phiEta(nullptr),
 h_spt_phiEta(nullptr),
 h_n1_phiY(nullptr),
 h_spt_phiY(nullptr),
+h_n1_ptY(nullptr),
 h_pdgId(nullptr)
 {
   appendClassName("ParticleSingleHistos");
@@ -65,6 +67,7 @@ HistogramGroup(group),
 fillEta(group.fillEta ),
 fillY(group.fillY ),
 fillP2(group.fillP2 ),
+fillPtvsY(group.fillPtvsY ),
 fillPid(group.fillPid ),
 useEffCorrection(group.useEffCorrection ),
 efficiencyOpt(group.efficiencyOpt ),
@@ -95,6 +98,7 @@ h_n1_phiEta(nullptr),
 h_spt_phiEta(nullptr),
 h_n1_phiY(nullptr),
 h_spt_phiY(nullptr),
+h_n1_ptY(nullptr),
 h_pdgId(nullptr)
 {
   cloneAll(group);
@@ -105,10 +109,11 @@ ParticleSingleHistos & ParticleSingleHistos::operator=(const ParticleSingleHisto
   if (this!=&group)
     {
     HistogramGroup::operator=(group);
-    fillEta =  group.fillEta;
-    fillY   =  group.fillY;
-    fillP2  =  group.fillP2;
-    fillPid =  group.fillPid;
+    fillEta   =  group.fillEta;
+    fillY     =  group.fillY;
+    fillP2    =  group.fillP2;
+    fillPtvsY =  group.fillPtvsY;
+    fillPid   =  group.fillPid;
     useEffCorrection =  group.useEffCorrection;
     efficiencyOpt    =  group.efficiencyOpt;
     nBins_n1  =  group.nBins_n1;
@@ -146,6 +151,7 @@ void ParticleSingleHistos::cloneAll(const ParticleSingleHistos & group)
   if (group.h_spt_phiEta) h_spt_phiEta = (TH2*) group.h_spt_phiEta->Clone();
   if (group.h_n1_phiY)    h_n1_phiY    = (TH2*) group.h_n1_phiY->Clone();
   if (group.h_spt_phiY)   h_spt_phiY   = (TH2*) group.h_spt_phiY->Clone();
+  if (group.h_n1_ptY)     h_n1_ptY     = (TH2*) group.h_n1_ptY->Clone();
   if (group.h_pdgId)      h_pdgId      = (TH1*) group.h_pdgId->Clone();
 }
 
@@ -185,10 +191,11 @@ void ParticleSingleHistos::createHistograms()
   max_y   = configuration.getValueDouble(ptn,"Max_y");
   range_y = max_y - min_y;
   
-  fillEta = configuration.getValueBool(ptn,"FillEta");
-  fillY   = configuration.getValueBool(ptn,"FillY");
-  fillP2  = configuration.getValueBool(ptn,"FillP2");
-  fillPid = configuration.getValueBool(ptn,"FillPid");
+  fillEta   = configuration.getValueBool(ptn,"FillEta");
+  fillY     = configuration.getValueBool(ptn,"FillY");
+  fillP2    = configuration.getValueBool(ptn,"FillP2");
+  fillPid   = configuration.getValueBool(ptn,"FillPid");
+  fillPtvsY = configuration.getValueBool(ptn,"FillPtvsY");
 
   if (reportDebug(__FUNCTION__))
     {
@@ -200,6 +207,7 @@ void ParticleSingleHistos::createHistograms()
     printValue("Single:FillEta",    fillEta);
     printValue("Single:FillY",      fillY  );
     printValue("Single:FillP2",     fillP2 );
+    printValue("Single:FillPtvsY",  fillPtvsY );
     printValue("Single:nBins_n1",   int(nBins_n1));
     printValue("Single:Min_n1",     min_n1);
     printValue("Single:Max_n1",     max_n1);
@@ -219,10 +227,6 @@ void ParticleSingleHistos::createHistograms()
     printValue("Single:Min_y",      min_y);
     printValue("Single:Max_y",      max_y);
     printValue("Single:range_y",    range_y);
-    printValue("Single:FillEta",    fillEta);
-    printValue("Single:FillY",      fillY);
-    printValue("Single:FillP2",     fillP2);
-    printValue("Single:FillPid",     fillPid);
     printLine();
     printCR();
     }
@@ -247,6 +251,13 @@ void ParticleSingleHistos::createHistograms()
       h_spt_phiY  = createHistogram(createName(bn,"spt_phiY"),  nBins_y,   min_y,   max_y, nBins_phi, min_phi, max_phi, "y", "#varphi","N");
       }
     }
+
+  if (fillPtvsY)
+    {
+    h_n1_ptY  = createHistogram(createName(bn,"n1_ptY"),     nBins_y,   min_y,   max_y, nBins_pt, min_pt, max_pt, "y", "p_{T}","N");
+    }
+
+
   if (fillPid)
     h_pdgId  = createHistogram(createName(bn,"n1_indexId"),  6000,  -3000.5, 2999.5, "Index", "N");
 
@@ -279,6 +290,8 @@ void ParticleSingleHistos::importHistograms(TFile & inputFile)
   fillY        = configuration.getValueBool(ptn,"FillY");
   fillP2       = configuration.getValueBool(ptn,"FillP2");
   fillPid      = configuration.getValueBool(ptn,"FillPid");
+  fillPtvsY    = configuration.getValueBool(ptn,"FillPtvsY");
+
   h_n1         = importH1(inputFile,  createName(bn,"n1"));
   h_n1_eTotal  = importH1(inputFile,  createName(bn,"n1_eTotal"));
   h_n1_pt      = importH1(inputFile,  createName(bn,"n1_pt"));
@@ -302,6 +315,11 @@ void ParticleSingleHistos::importHistograms(TFile & inputFile)
       h_spt_phiY  = importH2(inputFile,  createName(bn,"spt_phiY"));
       }
     }
+  if (fillPtvsY)
+    {
+    h_n1_ptY  = importH2(inputFile,  createName(bn,"n1_ptY"));
+    }
+
   if (fillPid)
     h_pdgId  = importH1(inputFile,  createName(bn,"n1_indexId"));
 
@@ -437,6 +455,9 @@ void ParticleSingleHistos::fill(vector<ParticleDigit*> & particles, double weigh
       h_n1_phiY->AddBinContent(iG,weight);
       if (fillP2) h_spt_phiY->AddBinContent(iG,weight*pt);
       }
+
+
+
     }
   h_n1_pt->SetEntries(h_n1_pt->GetEntries()+nSingles);
   h_n1_ptXS->SetEntries(h_n1_ptXS->GetEntries()+nSingles);
@@ -512,6 +533,12 @@ void ParticleSingleHistos::fill(Particle & particle, double weight)
     h_n1_phiY->Fill(rapidity,phi,weight);
     if (fillP2) h_spt_phiY->Fill(rapidity,phi,weight*pt);
     }
+  if (fillPtvsY)
+    {
+    h_n1_ptY->Fill(rapidity,pt);
+    }
+
+
   if (fillPid)
     {
     int pdgIndex = particle.getType().getPdgCode();

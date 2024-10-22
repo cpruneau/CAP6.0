@@ -47,45 +47,47 @@ ParticlePair3DAnalyzer & ParticlePair3DAnalyzer::operator=(const ParticlePair3DA
 void ParticlePair3DAnalyzer::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
-  addProperty("HistogramBaseName","Pair");
-  addProperty("nBins_pt",          18);
-  addProperty("Min_pt",            0.20);
-  addProperty("Max_pt",            2.00);
-  addProperty("nBins_phi",          72);
-  addProperty("Min_phi",           0.0);
-  addProperty("Max_phi",           CAP::Math::twoPi());
-  addProperty("nBins_eta",           20);
-  addProperty("Min_eta",           -1.0);
-  addProperty("Max_eta",            1.0);
-  addProperty("nBins_y",             20);
-  addProperty("Min_y",             -1.0);
-  addProperty("Max_y",              1.0);
-  addProperty("nBins_phiEta",      720);
-  addProperty("nBins_phiEtaPt",    7200);
-  addProperty("nBins_phiY",        720);
-  addProperty("nBins_phiYPt",       7200);
-  addProperty("nBins_n2",           100);
-  addProperty("Min_n2",             0.0);
-  addProperty("Max_n2",            1000.0);
-  addProperty("nBins_Dphi",         36);
-  addProperty("Min_Dphi",             0.0);
-  addProperty("Max_Dphi",          CAP::Math::twoPi());
-  addProperty("Width_Dphi",        CAP::Math::twoPi());
-  addProperty("nBins_Dphi_shft",    36);
-  addProperty("Min_Dphi_shft",     0.0);
-  addProperty("Max_Dphi_shft",     0.0);
-  addProperty("nBins_Deta",         39);
-  addProperty("Min_Deta",         -2.0);
-  addProperty("Max_Deta",          2.0);
-  addProperty("Width_Deta",   4.0/39.0);
-  addProperty("nBins_Dy",           39);
-  addProperty("Min_Dy",           -2.0);
-  addProperty("Max_Dy",            2.0);
-  addProperty("Width_Dy",     4.0/39.0);
-  addProperty("nBins_DeltaP",   10);
-  addProperty("Min_DeltaP",   -4.0);
-  addProperty("Max_DeltaP",    4.0);
-  addProperty("binCorrPP",     1.0);
+  addProperty("HistogramBaseName","Pair3D");
+  addProperty("nBins_n1",          100);
+  addProperty("Min_n1",            0.0);
+  addProperty("Max_n1",            100.0);
+  addProperty("nBins_eTot",        100);
+  addProperty("Min_eTot",          0.0);
+  addProperty("Max_eTot",          100.0);
+  addProperty( "nBins_pt",  100);
+  addProperty( "Min_pt",    0.0);
+  addProperty( "Max_pt",  100.0);
+
+  addProperty( "nBins_y",  200);
+  addProperty( "Min_y",   -10.0);
+  addProperty( "Max_y",    10.0);
+
+  addProperty( "nBins_phi",  36);
+  addProperty( "Min_phi",    0.0);
+  addProperty( "Max_phi",    CAP::Math::twoPi());
+
+  addProperty( "nBins_phiEta",    720);
+  addProperty( "nBins_phiEtaPt",  7200);
+  addProperty( "nBins_phiY",      720);
+  addProperty( "nBins_phiYPt",    7200);
+  addProperty( "FillEta",         false);
+  addProperty( "FillY",           true);
+  addProperty( "FillP2",          false);
+  addProperty( "FillPid",         false);
+  addProperty( "FillPtvsY",       true); // needed for n1n1 calculation
+
+  addProperty("nBins_Qinv",     90);     // q invariant
+  addProperty("Min_Qinv",       0.0);
+  addProperty("Max_Qinv",       1.8);
+  addProperty("nBins_DeltaPs",  60);     // q invariant side
+  addProperty("Min_DeltaPs",    0.0);
+  addProperty("Max_DeltaPs",    1.2);
+  addProperty("nBins_DeltaPo",  60);     // q invariant out
+  addProperty("Min_DeltaPo",    0.0);
+  addProperty("Max_DeltaPo",    1.2);
+  addProperty("nBins_DeltaPl",  60);     // q invariant long
+  addProperty("Min_DeltaPl",    0.0);
+  addProperty("Max_DeltaPl",    1.2);
 }
 
 void ParticlePair3DAnalyzer::configure()

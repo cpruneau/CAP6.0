@@ -18,9 +18,9 @@
 void loadLibraries(const TString & includeBasePath);
 
 
-int RunDerived(TString configFile="Pythia/pp_13.7TeV/RunAna.ini",
-               TString histogramPath="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest/",
-               int nLevels = 1,
+int RunDerived(TString configFile="Pythia/pp_13.7TeV/RunAna3D.ini",
+               TString histogramPath="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/",
+               int nLevels = 0,
                long seed=12312231)
 {
   TString includeBasePath = getenv("CAP_SRC_PATH");
