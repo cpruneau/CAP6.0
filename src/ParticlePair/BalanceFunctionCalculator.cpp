@@ -529,8 +529,8 @@ void BalanceFunctionCalculator::execute()
 //        sObsNames.push_back("n1_eta");
 //        sObsNames.push_back("n1_phi");
 //        pObsNames.push_back("R2_ptpt");
-//        pObsNames.push_back("R2_phiPhi");
-//        pObsNames.push_back("R2_etaEta");
+//        pObsNames.push_back("R2_phiphi");
+//        pObsNames.push_back("R2_etaeta");
 //        pObsNames.push_back("R2_DetaDphi_shft");
 //        break;
 //
@@ -544,7 +544,7 @@ void BalanceFunctionCalculator::execute()
 //        sObsNames.push_back("n1_y");
 //        sObsNames.push_back("n1_phi");
 //        pObsNames.push_back("R2_ptpt");
-//        pObsNames.push_back("R2_phiPhi");
+//        pObsNames.push_back("R2_phiphi");
 //        pObsNames.push_back("R2_yY");
 //        pObsNames.push_back("R2_DyDphi_shft");
 //        break;
@@ -562,7 +562,7 @@ void BalanceFunctionCalculator::execute()
 //        pObsNames.push_back("R2_DetaDphi_shft");
 //        //pObsNames.push_back("B2AB_DetaDphi_shft");
 //        //pObsNames.push_back("B2BA_DetaDphi_shft");
-//        //        pObsNames.push_back("n2_phiPhi");
+//        //        pObsNames.push_back("n2_phiphi");
 //        break;
 //
 //        case 5: // y based observables
@@ -574,7 +574,7 @@ void BalanceFunctionCalculator::execute()
 //        pObsNames.push_back("D2_DyDphi_shft");
 //        pObsNames.push_back("R2_DyDphi_shft");
 //        pObsNames.push_back("B2_yY");
-//        //pObsNames.push_back("B2_phiPhi");
+//        //pObsNames.push_back("B2_phiphi");
 //        break;
 //      }
 //    if (reportInfo(__FUNCTION__))

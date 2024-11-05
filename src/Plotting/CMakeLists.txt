@@ -1,15 +1,17 @@
 ################################################################################################
 # Project CAP/Plotting
 ################################################################################################
-ROOT_GENERATE_DICTIONARY(G__Plotting CanvasGroup.hpp CanvasConfiguration.hpp DataGraph.hpp FunctionGroup.hpp GraphConfiguration.hpp  Plotter.hpp  LegendConfiguration.hpp
-BalFctPlotter.hpp LINKDEF PlottingLinkDef.h)
+ROOT_GENERATE_DICTIONARY(G__Plotting CanvasGroup.hpp CanvasConfiguration.hpp DataGraph.hpp FunctionGroup.hpp GraphConfiguration.hpp  Plotter.hpp  LegendConfiguration.hpp LINKDEF PlottingLinkDef.h)
+#BalFctPlotter.hpp
 
 ################################################################################################
 # Create a shared library with geneated dictionary
 ################################################################################################
 add_compile_options(-Wall -Wextra -pedantic)
-add_library(Plotting SHARED CanvasGroup.cpp CanvasConfiguration.cpp  DataGraph.cpp   FunctionGroup.cpp  GraphConfiguration.cpp Plotter.cpp LegendConfiguration.cpp BalFctPlotter.cpp
+add_library(Plotting SHARED CanvasGroup.cpp CanvasConfiguration.cpp  DataGraph.cpp   FunctionGroup.cpp  GraphConfiguration.cpp Plotter.cpp LegendConfiguration.cpp
  G__Plotting.cxx)
+ 
+ # BalFctPlotter.cpp
 
 target_link_libraries(Plotting Base ParticleDb ${ROOT_LIBRARIES} ${EXTRA_LIBS} )
 target_include_directories(Plotting  PUBLIC Plotting Base ParticleDb ${EXTRA_INCLUDES} )

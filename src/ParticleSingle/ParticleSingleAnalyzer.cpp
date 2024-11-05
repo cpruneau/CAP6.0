@@ -128,6 +128,7 @@ void ParticleSingleAnalyzer::createHistograms()
 
 void ParticleSingleAnalyzer::execute()
 {
+  TaskAccountant::increment();
   Event & event = *Manager<Event>::getObjectAt(0);
   std::vector<Particle*>       & particles       = event.getParticles();
   if (!analyzeThisEvent(event,eventFilters,eventFilterAccepted)) return;

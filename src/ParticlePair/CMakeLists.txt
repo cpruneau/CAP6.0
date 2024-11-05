@@ -6,13 +6,13 @@
 #include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
 #add_definitions(${ROOT_CXX_FLAGS})
 
-ROOT_GENERATE_DICTIONARY(G__ParticlePair ParticlePairHistos.hpp ParticlePairDerivedHistos.hpp ParticlePairAnalyzer.hpp ParticlePairCalculator.hpp BalanceFunctionCalculator.hpp LINKDEF ParticlePairLinkDef.h)
+ROOT_GENERATE_DICTIONARY(G__ParticlePair ParticlePairHistos.hpp ParticlePairDerivedHistos.hpp ParticlePairAnalyzer.hpp ParticlePairCalculator.hpp ParticlePairBfCalculator.hpp   ParticlePairBfHistos.hpp LINKDEF ParticlePairLinkDef.h)
 
 ################################################################################################
 # Create a shared library with geneated dictionary
 ################################################################################################
 add_compile_options(-Wall -Wextra -pedantic)
-add_library(ParticlePair SHARED ParticlePairExceptions.cpp ParticlePairHistos.cpp ParticlePairDerivedHistos.cpp  ParticlePairAnalyzer.cpp  ParticlePairCalculator.cpp BalanceFunctionCalculator.cpp G__ParticlePair.cxx)
+add_library(ParticlePair SHARED ParticlePairExceptions.cpp ParticlePairHistos.cpp ParticlePairDerivedHistos.cpp  ParticlePairAnalyzer.cpp  ParticlePairCalculator.cpp ParticlePairBfCalculator.cpp   ParticlePairBfHistos.cpp G__ParticlePair.cxx)
 
 target_link_libraries(ParticlePair Base ParticleDb  Particles ParticleSingle ${ROOT_LIBRARIES} ${EXTRA_LIBS} )
 target_include_directories(ParticlePair  PUBLIC Base Particles ParticleSingle ParticlePair ${EXTRA_INCLUDES} )

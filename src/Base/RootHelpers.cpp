@@ -513,6 +513,7 @@ TH3 * createNewHistogram(const String & name,
                          const String & title_x,
                          const String & title_y,
                          const String & title_z,
+                         const String & title_w,
                          int storageOption,
                          bool verbose)
 {
@@ -527,7 +528,7 @@ TH3 * createNewHistogram(const String & name,
       default:
       throw HistogramException(name,"Invalid Storage Option (3D)",__FUNCTION__);
     }
-  setTitles(h,title_x,title_y,title_z);
+  setTitles(h,title_x,title_y,title_z,title_w);
   return h;
 }
 
@@ -2163,44 +2164,6 @@ void calculateAvgH2H2(const TH2 * source, TH2 * target, double scaleFactor)
 }
 
 
-///Calculate R2 = binCorrection*N2/N1/N1 - 1
-void calculateR2_H1H1H1(const TH1 * n2_12, const TH1 * n1n1_12, TH1 * r2_12, bool ijNormalization, double a1, double a2)
-{
-  if (!ptrExist(__FUNCTION__,n2_12,n1n1_12,r2_12))  throw NullPointerException(__FUNCTION__);
-  int n2_12_n_x    = n2_12->GetNbinsX();
-  int n1n1_12_n_x  = n1n1_12->GetNbinsX();
-  int r2_12_n_x    = r2_12->GetNbinsX();
-  if (n2_12_n_x!=n1n1_12_n_x || n2_12_n_x!=r2_12_n_x )
-    throw IncompatibleHistogramException(__FUNCTION__);
-  double v1,ev1,v2,ev2,v,ev, re1,re2;
-  for (int i1=1;i1<=n2_12_n_x;++i1)
-    {
-    v1  = a1*n2_12->GetBinContent(i1);    ev1 = a1*n2_12->GetBinError(i1);
-    v2  = a2*n1n1_12->GetBinContent(i1);  ev2 = a2*n1n1_12->GetBinError(i1);
-    if (v1>0 && v2>0 && ev1/v1<0.5  && ev2/v2<0.5 )
-      {
-      if (ijNormalization) //account for the fact only half the pairs were counted
-        {
-        v   = 2*v1/v2;
-        }
-      else // all pairs counted - no need to multiply by 2
-        {
-        v   = v1/v2;
-        }
-      re1 = ev1/v1;
-      re2 = ev2/v2;
-      ev  = v*sqrt(re1*re1+re2*re2);
-      v   -= 1.;
-      }
-    else
-      {
-      v = 0.;
-      ev = 0;
-      }
-    r2_12->SetBinContent(i1,v); r2_12->SetBinError(i1,ev);
-    }
-}
-
 
 void calculateAverageVsDeta(const TH2 * obs_12, TH2 * avgObs_12, int n)
 {
@@ -2236,15 +2199,121 @@ void calculateAverageVsDeta(const TH2 * obs_12, TH2 * avgObs_12, int n)
     }
 }
 
-//Calculate R2 = N2/N1/N1 - 1
+//!
+//! Calculate C2 = N2 - N1*N1
+//!
+void calculateC2_H1H1H1(const TH1 * n2_12, const TH1 * n1n1_12, TH1 * c2_12, bool ijNormalization, double a1, double a2)
+{
+  if (!ptrExist(__FUNCTION__,n2_12,n1n1_12,c2_12))  throw NullPointerException(__FUNCTION__);
+  if (!sameDimensions(__FUNCTION__,n2_12,n1n1_12,c2_12))  throw IncompatibleHistogramException(__FUNCTION__);
+  int n2_12_n_x = n2_12->GetNbinsX();
+  double v1,ev1,v2,ev2,v,ev;
+  for (int i1=1;i1<=n2_12_n_x;++i1)
+    {
+    v1  = a1*n2_12->GetBinContent(i1);    ev1 = a1*n2_12->GetBinError(i1);
+    v2  = a2*n1n1_12->GetBinContent(i1);  ev2 = a2*n1n1_12->GetBinError(i1);
+    v  = v1-v2;
+    ev = sqrt(ev1*ev1+ev2*ev2);
+    c2_12->SetBinContent(i1,v); c2_12->SetBinError(i1,ev);
+    }
+}
+
+//!
+//! Calculate C2 = N2 - N1*N1
+//!
+void calculateC2_H2H2H2(const TH2 * n2_12, const TH2 * n1n1_12, TH2 * c2_12, bool ijNormalization, double a1, double a2)
+{
+  if (!ptrExist(__FUNCTION__,n2_12,n1n1_12,c2_12))  throw NullPointerException(__FUNCTION__);
+  if (!sameDimensions(__FUNCTION__,n2_12,n1n1_12,c2_12))  throw IncompatibleHistogramException(__FUNCTION__);
+  int n2_12_n_x = n2_12->GetNbinsX();
+  int n2_12_n_y = n2_12->GetNbinsY();
+  double v1,ev1,v2,ev2,v,ev;
+  for (int i1=1;i1<=n2_12_n_x;++i1)
+    {
+    for (int i2=1;i2<=n2_12_n_y;++i2)
+      {
+      v1  = a1*n2_12->GetBinContent(i1,i2);    ev1 = a1*n2_12->GetBinError(i1,i2);
+      v2  = a2*n1n1_12->GetBinContent(i1,i2);  ev2 = a2*n1n1_12->GetBinError(i1,i2);
+      v  = v1-v2;
+      ev = sqrt(ev1*ev1+ev2*ev2);
+      c2_12->SetBinContent(i1,i2,v); c2_12->SetBinError(i1,i2,ev);
+      }
+    }
+}
+
+//!
+//! Calculate C2 = N2 - N1*N1
+//!
+void calculateC2_H3H3H3(const TH3 * n2_12, const TH3 * n1n1_12, TH3 * c2_12, bool ijNormalization, double a1, double a2)
+{
+  if (!ptrExist(__FUNCTION__,n2_12,n1n1_12,c2_12))  throw NullPointerException(__FUNCTION__);
+  if (!sameDimensions(__FUNCTION__,n2_12,n1n1_12,c2_12))  throw IncompatibleHistogramException(__FUNCTION__);
+  int n2_12_n_x   = n2_12->GetNbinsX();
+  int n2_12_n_y   = n2_12->GetNbinsY();
+  int n2_12_n_z   = n2_12->GetNbinsZ();
+  double v1,ev1,v2,ev2,v,ev;
+  for (int i1=1;i1<=n2_12_n_x;++i1)
+    {
+    for (int i2=1;i2<=n2_12_n_y;++i2)
+      {
+      for (int i3=1;i2<=n2_12_n_y;++i2)
+        {
+        v1  = a1*n2_12->GetBinContent(i1,i2,i3);    ev1 = a1*n2_12->GetBinError(i1,i2,i3);
+        v2  = a2*n1n1_12->GetBinContent(i1,i2,i3);  ev2 = a2*n1n1_12->GetBinError(i1,i2,i3);
+        v  = v1-v2;
+        ev = sqrt(ev1*ev1+ev2*ev2);
+        c2_12->SetBinContent(i1,i2,i3,v); c2_12->SetBinError(i1,i2,i3,ev);
+        }
+      }
+    }
+}
+
+//!
+//! Calculate R2 = binCorrection*N2/N1/N1 - 1
+//!
+void calculateR2_H1H1H1(const TH1 * n2_12, const TH1 * n1n1_12, TH1 * r2_12, bool ijNormalization, double a1, double a2)
+{
+  if (!ptrExist(__FUNCTION__,n2_12,n1n1_12,r2_12))  throw NullPointerException(__FUNCTION__);
+  if (!sameDimensions(__FUNCTION__,n2_12,n1n1_12,r2_12))  throw IncompatibleHistogramException(__FUNCTION__);
+  int n2_12_n_x = n2_12->GetNbinsX();
+  double v1,ev1,v2,ev2,v,ev, re1,re2;
+  for (int i1=1;i1<=n2_12_n_x;++i1)
+    {
+    v1  = a1*n2_12->GetBinContent(i1);    ev1 = a1*n2_12->GetBinError(i1);
+    v2  = a2*n1n1_12->GetBinContent(i1);  ev2 = a2*n1n1_12->GetBinError(i1);
+    if (v1>0 && v2>0 && ev1/v1<0.5  && ev2/v2<0.5 )
+      {
+      if (ijNormalization) //account for the fact only half the pairs were counted
+        {
+        v   = 2*v1/v2;
+        }
+      else // all pairs counted - no need to multiply by 2
+        {
+        v   = v1/v2;
+        }
+      re1 = ev1/v1;
+      re2 = ev2/v2;
+      ev  = v*sqrt(re1*re1+re2*re2);
+      v   -= 1.;
+      }
+    else
+      {
+      v = 0.;
+      ev = 0;
+      }
+    r2_12->SetBinContent(i1,v); r2_12->SetBinError(i1,ev);
+    }
+}
+
+//!
+//! Calculate R2 = binCorrection*N2/N1/N1 - 1
+//!
 void calculateR2_H2H2H2(const TH2 * n2_12, const TH2 * n1n1_12, TH2 * r2_12, bool ijNormalization, double a1, double a2)
 {
-
   if (!ptrExist(__FUNCTION__,n2_12,n1n1_12,r2_12)) throw NullPointerException(__FUNCTION__);
   if (!sameDimensions(__FUNCTION__,n2_12,n1n1_12,r2_12))  throw IncompatibleHistogramException(__FUNCTION__);
   int n2_12_n_x = n2_12->GetNbinsX();
   int n2_12_n_y = n2_12->GetNbinsY();
-
   double v1,ev1,v2,ev2,v,ev, re1,re2;
   for (int i_x=1;i_x<=n2_12_n_x;++i_x)
     {
@@ -2272,6 +2341,48 @@ void calculateR2_H2H2H2(const TH2 * n2_12, const TH2 * n1n1_12, TH2 * r2_12, boo
       }
     }
 }
+
+//!
+//! Calculate R2 = binCorrection*N2/N1/N1 - 1
+//!
+void calculateR2_H3H3H3(const TH3 * n2_12, const TH3 * n1n1_12, TH3 * r2_12, bool ijNormalization, double a1, double a2)
+{
+  if (!ptrExist(__FUNCTION__,n2_12,n1n1_12,r2_12)) throw NullPointerException(__FUNCTION__);
+  if (!sameDimensions(__FUNCTION__,n2_12,n1n1_12,r2_12))  throw IncompatibleHistogramException(__FUNCTION__);
+  int n2_12_n_x = n2_12->GetNbinsX();
+  int n2_12_n_y = n2_12->GetNbinsY();
+  int n2_12_n_z = n2_12->GetNbinsZ();
+  double v1,ev1,v2,ev2,v,ev, re1,re2;
+  for (int i_x=1;i_x<=n2_12_n_x;++i_x)
+    {
+    for (int i_y=1;i_y<=n2_12_n_y;++i_y)
+      {
+      for (int i_z=1;i_z<=n2_12_n_z;++i_z)
+        {
+        v1  = a1*n2_12->GetBinContent(i_x,i_y,i_z);    ev1 = a1*n2_12->GetBinError(i_x,i_y,i_z);
+        v2  = a2*n1n1_12->GetBinContent(i_x,i_y,i_z);  ev2 = a2*n1n1_12->GetBinError(i_x,i_y,i_z);
+        if (v1>0 && v2>0) //   && ev1/v1<0.5  && ev2/v2<0.5)
+          {
+          if (ijNormalization) //account for the fact only half the pairs were counted
+            v   = 2*v1/v2;
+          else // all pairs counted - no need to multiply by 2
+            v   = v1/v2;
+          re1 = ev1/v1;
+          re2 = ev2/v2;
+          ev  = v*sqrt(re1*re1+re2*re2);
+          v   -= 1.;
+          }
+        else
+          {
+          v = 0.;
+          ev = 0;
+          }
+        r2_12->SetBinContent(i_x,i_y,i_z,v); r2_12->SetBinError(i_x,i_y,i_z,ev);
+        }
+      }
+    }
+}
+
 
 //Calculate R2 = N2/N1/N1 - 1
 void calculateR2_H1H2H2(const TH1 * n2_12, const TH2 * n1n1_12, TH2 * r2_12, bool ijNormalization, double a1, double a2)
@@ -3642,7 +3753,8 @@ void setTitles(TH2 * histogram,
 void setTitles(TH3 * histogram,
                const String & title_x,
                const String & title_y,
-               const String & title_z)
+               const String & title_z,
+               const String & title_w __attribute__((unused)) )
 {
   if (title_x.Sizeof()>0)  histogram->GetXaxis()->SetTitle(title_x);
   if (title_y.Sizeof()>0)  histogram->GetYaxis()->SetTitle(title_y);

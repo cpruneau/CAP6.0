@@ -99,6 +99,10 @@ echo " CAP_CALIB_IMPORT_PATH......................................: " $CAP_CALIB
 echo " CAP_CALIB_EXPORT_PATH......................................: " $CAP_CALIB_EXPORT_PATH
 echo " PYTHIA8_INCLUDE_PATH.......................................: " $PYTHIA8_INCLUDE_PATH
 echo " PYTHIA8_LIB_PATH...........................................: " $PYTHIA8_LIB_PATH
+echo " FASTJET_PATH...............................................: " $FASTJET_PATH
+echo " FASTJET_INCLUDE_PATH.......................................: " $FASTJET_INCLUDE_PATH
+echo " "
+echo " "
 echo " "
 echo " Build instructions"
 echo "========================================================================================"

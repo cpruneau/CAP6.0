@@ -150,6 +150,7 @@ void ParticlePair3DAnalyzer::createHistograms()
 
 void ParticlePair3DAnalyzer::execute()
 {
+  TaskAccountant::increment();
   Event & event = *Manager<Event>::getObjectAt(0);
   std::vector<Particle*> & particles = event.getParticles();
   if (!analyzeThisEvent(event,eventFilters,eventFilterAccepted)) return;

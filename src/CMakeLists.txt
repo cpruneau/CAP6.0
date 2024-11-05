@@ -1,6 +1,6 @@
 ################################################################################################
 #
-# CMakeLists.txt for CAP package. Versoin 6.0
+# CMakeLists.txt for CAP package. Version 6.1
 #
 # Creates  libraries with dictionary
 #
@@ -38,18 +38,21 @@ list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
 ################################################################################################
 find_package(ROOT REQUIRED COMPONENTS EG MathCore MathMore RIO Hist Tree Net )
 find_library(PYTHIA8_LIB pythia8 PATHS $ENV{PYTHIA8_LIB_PATH})
+find_library(FASTJET_LIB fastjet PATHS $ENV{DYLD_LIBRARY_PATH} )
 
 ################################################################################################
 # Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
 ################################################################################################
 include(${ROOT_USE_FILE})
-include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS} "Base" "Math" "Xml" "ParticleDb" "Particles"  "SubSample"  "CAPPythia"  "Global"
-"Spherocity" "ParticleSingle" "ParticlePair" "ParticlePair3D" "NuDyn" "PtPt"  "Plotting" "Therminator"  "Performance" "Exec" "$ENV{ROOTSYS}/include" "$ENV{PYTHIA8_INCLUDE_PATH}" "$ENV{PYTHIA8_INCLUDE_PATH}/Pythia8/" )
+include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS} "Base" "Math" "Xml" "ParticleDb" "Particles"  "SubSample"  "CAPPythia"  "Global" "Jets" "Spherocity" "ParticleSingle" "ParticlePair" "ParticlePair3D" "NuDyn" "PtPt"  "Plotting" "Therminator"  "Performance" "Exec" "$ENV{ROOTSYS}/include"
+"$ENV{FASTJET_INCLUDE_PATH}" "$ENV{PYTHIA8_INCLUDE_PATH}" "$ENV{PYTHIA8_INCLUDE_PATH}/Pythia8/" )
 add_definitions(${ROOT_CXX_FLAGS})
 add_compile_options(-Wall -Wextra -pedantic)
 add_library(EG SHARED IMPORTED)
 add_library(PYTHIA8_LIB SHARED IMPORTED)
 set_target_properties(PYTHIA8_LIB PROPERTIES IMPORTED_LOCATION ${PYTHIA8_LIB})
+add_library(FASTJET_LIB SHARED IMPORTED)
+set_target_properties(FASTJET_LIB PROPERTIES IMPORTED_LOCATION ${FASTJET_LIB})
 
 add_subdirectory(Base)
 add_subdirectory(Math)
@@ -67,6 +70,7 @@ add_subdirectory(ParticlePair3D)
 add_subdirectory(NuDyn)
 add_subdirectory(PtPt)
 add_subdirectory(Performance)
+add_subdirectory(Jets)
 #add_subdirectory(BasicGen)
 #add_subdirectory(ThermalGas)
 #add_subdirectory(CollGeom)

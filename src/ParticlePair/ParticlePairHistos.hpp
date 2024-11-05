@@ -72,53 +72,18 @@ public:
 
 protected:
 
-  int    nBins_n1;
-  double min_n1;
-  double max_n1;
-
-  int    nBins_n2;
-  double min_n2;
-  double max_n2;
-
-  int    nBins_pt;
-  double min_pt;
-  double max_pt;
-  double range_pt;
+  int nBins_n2, nBins_pt, nBins_phi, nBins_eta, nBins_y;
+  double min_n2,  max_n2;
+  double min_pt,  max_pt;
+  double min_phi, max_phi;
+  double min_eta, max_eta;
+  double min_y, max_y;
   double scale_pt;
-
-  int    nBins_phi;
-  double min_phi;
-  double max_phi;
-  double range_phi;
   double scale_phi;
-
-  int    nBins_eta;
-  double min_eta;
-  double max_eta;
-  double range_eta;
   double scale_eta;
-
-  int    nBins_y;
-  double min_y;
-  double max_y;
-  double range_y;
   double scale_y;
-
-  int    nBins_Dphi;
-  double min_Dphi;
-  double max_Dphi;
   double width_Dphi;
 
-  int    nBins_Deta;
-  double min_Deta;
-  double max_Deta;
-  int    nBins_Dy;
-  double min_Dy;
-  double max_Dy;
-
-  int    nBins_Dphi_shft;
-  double min_Dphi_shft;
-  double max_Dphi_shft;
 
   bool fillEta;
   bool fillY;
@@ -127,11 +92,11 @@ protected:
   TH1 * h_n2;
   TH2 * h_n2_ptpt;
 
-  TH2 * h_n2_etaEta;
-  TH2 * h_DptDpt_etaEta;
+  TH2 * h_n2_etaeta;
+  TH2 * h_DptDpt_etaeta;
 
-  TH2 * h_n2_phiPhi;
-  TH2 * h_DptDpt_phiPhi;
+  TH2 * h_n2_phiphi;
+  TH2 * h_DptDpt_phiphi;
   
   TH2 * h_n2_yY;
   TH2 * h_DptDpt_yY;
@@ -141,8 +106,6 @@ protected:
 
   TH2* h_n2_DyDphi;
   TH2* h_DptDpt_DyDphi;
-
-  TH3 * h_n2_DeltaP;
 
   ClassDef(ParticlePairHistos,0)
 };

@@ -148,6 +148,7 @@ void SpherocityAnalyzer::createHistograms()
 
 void SpherocityAnalyzer::execute()
 {
+  TaskAccountant::increment();
   static double factor = CAP::Math::pi()*CAP::Math::pi()/4.0;
   Event & event = *Manager<Event>::getObjectAt(0);
   std::vector<Particle*> & particles = event.getParticles();

@@ -373,107 +373,107 @@ void ParticleSingleHistos::loadCalibration(TFile & inputFile)
 //!
 //! Fiil  single particle histograms of this class with the particles contained in the given list.
 //!
-void ParticleSingleHistos::fill(vector<ParticleDigit*> & particles, double weight)
-{
-  double nSingles      = 0;
-  double nSinglesEta   = 0;
-  double nSinglesY     = 0;
-  double totalEnergy   = 0;
-  for (auto & particle : particles)
-    {
-    float        e    = particle->e;
-    float        pt   = particle->pt;
-    float        eta  = particle->eta;
-    float        phi  = particle->phi;
-    float        y    = particle->y;
-    unsigned int iPt  = particle->iPt;
-    unsigned int iPhi = particle->iPhi;
-    unsigned int iEta = particle->iEta;
-    unsigned int iY   = particle->iY;
-
-    if (useEffCorrection)
-      {
-      int k = 0;
-      double eff = 0.0;
-      switch (efficiencyOpt)
-        {
-          case 0:
-          k = h_eff_pt->FindBin(pt);
-          eff = h_eff_pt->GetBinContent(k);
-          break;
-
-          case 1:
-          k = h_eff_ptEta->FindBin(eta,pt);
-          eff = h_eff_ptEta->GetBinContent(k);
-          break;
-
-          case 2:
-          k = h_eff_ptY->FindBin(y,pt);
-          eff = h_eff_ptY->GetBinContent(k);
-          break;
-
-          case 3:
-          k = h_eff_ptPhiEta->FindBin(eta,phi,pt);
-          eff = h_eff_ptPhiEta->GetBinContent(k);
-          break;
-
-          case 4:
-          k = h_eff_ptPhiY->FindBin(y,phi,pt);
-          eff = h_eff_ptPhiY->GetBinContent(k);
-          break;
-        }
-      if (eff>0) weight /= eff;
-      }
-
-    nSingles++;
-    totalEnergy += e;
-
-    int iG = h_n1_pt->GetBin(iPt);
-    h_n1_pt  ->AddBinContent(iG,weight);
-    h_n1_ptXS->AddBinContent(iG,weight/pt);
-
-    if (fillEta)
-      {
-      iG = h_n1_phiEta->GetBin(iEta,iPhi);
-      if (iG<=0)
-        {
-        cout << "iG:" << iG << endl;
-        }
-      nSinglesEta++;
-      h_n1_phiEta->AddBinContent(iG,weight);
-      if (fillP2) h_spt_phiEta->AddBinContent(iG,weight*pt);
-      }
-
-    if (fillY)
-      {
-      iG = h_n1_phiY->GetBin(iY,iPhi);
-      if (iG<=0)
-        {
-        cout << "iG:" << iG << endl;
-        }
-      nSinglesY++;
-      h_n1_phiY->AddBinContent(iG,weight);
-      if (fillP2) h_spt_phiY->AddBinContent(iG,weight*pt);
-      }
-
-
-
-    }
-  h_n1_pt->SetEntries(h_n1_pt->GetEntries()+nSingles);
-  h_n1_ptXS->SetEntries(h_n1_ptXS->GetEntries()+nSingles);
-  if (fillEta)
-    {
-    h_n1_phiEta->SetEntries(h_n1_phiEta->GetEntries()+nSinglesEta);
-    if (fillP2) h_spt_phiEta->SetEntries(h_spt_phiEta->GetEntries()+nSinglesEta);
-    }
-  if (fillY)
-    {
-    h_n1_phiY->SetEntries(h_n1_phiY->GetEntries()+nSinglesY);
-    if (fillP2) h_spt_phiY->SetEntries(h_spt_phiY->GetEntries()+nSinglesY);
-    }
-  h_n1->Fill(nSingles, weight);
-  h_n1_eTotal->Fill(totalEnergy, weight);
-}
+//void ParticleSingleHistos::fill(vector<ParticleDigit*> & particles, double weight)
+//{
+//  double nSingles      = 0;
+//  double nSinglesEta   = 0;
+//  double nSinglesY     = 0;
+//  double totalEnergy   = 0;
+//  for (auto & particle : particles)
+//    {
+//    float        e    = particle->e;
+//    float        pt   = particle->pt;
+//    float        eta  = particle->eta;
+//    float        phi  = particle->phi;
+//    float        y    = particle->y;
+//    unsigned int iPt  = particle->iPt;
+//    unsigned int iPhi = particle->iPhi;
+//    unsigned int iEta = particle->iEta;
+//    unsigned int iY   = particle->iY;
+//
+//    if (useEffCorrection)
+//      {
+//      int k = 0;
+//      double eff = 0.0;
+//      switch (efficiencyOpt)
+//        {
+//          case 0:
+//          k = h_eff_pt->FindBin(pt);
+//          eff = h_eff_pt->GetBinContent(k);
+//          break;
+//
+//          case 1:
+//          k = h_eff_ptEta->FindBin(eta,pt);
+//          eff = h_eff_ptEta->GetBinContent(k);
+//          break;
+//
+//          case 2:
+//          k = h_eff_ptY->FindBin(y,pt);
+//          eff = h_eff_ptY->GetBinContent(k);
+//          break;
+//
+//          case 3:
+//          k = h_eff_ptPhiEta->FindBin(eta,phi,pt);
+//          eff = h_eff_ptPhiEta->GetBinContent(k);
+//          break;
+//
+//          case 4:
+//          k = h_eff_ptPhiY->FindBin(y,phi,pt);
+//          eff = h_eff_ptPhiY->GetBinContent(k);
+//          break;
+//        }
+//      if (eff>0) weight /= eff;
+//      }
+//
+//    nSingles++;
+//    totalEnergy += e;
+//
+//    int iG = h_n1_pt->GetBin(iPt);
+//    h_n1_pt  ->AddBinContent(iG,weight);
+//    h_n1_ptXS->AddBinContent(iG,weight/pt);
+//
+//    if (fillEta)
+//      {
+//      iG = h_n1_phiEta->GetBin(iEta,iPhi);
+//      if (iG<=0)
+//        {
+//        cout << "iG:" << iG << endl;
+//        }
+//      nSinglesEta++;
+//      h_n1_phiEta->AddBinContent(iG,weight);
+//      if (fillP2) h_spt_phiEta->AddBinContent(iG,weight*pt);
+//      }
+//
+//    if (fillY)
+//      {
+//      iG = h_n1_phiY->GetBin(iY,iPhi);
+//      if (iG<=0)
+//        {
+//        cout << "iG:" << iG << endl;
+//        }
+//      nSinglesY++;
+//      h_n1_phiY->AddBinContent(iG,weight);
+//      if (fillP2) h_spt_phiY->AddBinContent(iG,weight*pt);
+//      }
+//
+//
+//
+//    }
+//  h_n1_pt->SetEntries(h_n1_pt->GetEntries()+nSingles);
+//  h_n1_ptXS->SetEntries(h_n1_ptXS->GetEntries()+nSingles);
+//  if (fillEta)
+//    {
+//    h_n1_phiEta->SetEntries(h_n1_phiEta->GetEntries()+nSinglesEta);
+//    if (fillP2) h_spt_phiEta->SetEntries(h_spt_phiEta->GetEntries()+nSinglesEta);
+//    }
+//  if (fillY)
+//    {
+//    h_n1_phiY->SetEntries(h_n1_phiY->GetEntries()+nSinglesY);
+//    if (fillP2) h_spt_phiY->SetEntries(h_spt_phiY->GetEntries()+nSinglesY);
+//    }
+//  h_n1->Fill(nSingles, weight);
+//  h_n1_eTotal->Fill(totalEnergy, weight);
+//}
 
 //!
 //! Fiil  single particle histograms of this class with the particles contained in the given list.

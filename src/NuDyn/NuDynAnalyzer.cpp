@@ -179,6 +179,7 @@ void NuDynAnalyzer::createHistograms()
 
 void NuDynAnalyzer::execute()
 {
+  TaskAccountant::increment();
   Event & event = *Manager<Event>::getObjectAt(0);
   std::vector<Particle*> & particles = event.getParticles();
   if (!analyzeThisEvent(event,eventFilters,eventFilterAccepted)) return;

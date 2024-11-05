@@ -15,7 +15,7 @@
 #include "Event.hpp"
 #include "EventFilter.hpp"
 #include "ParticleFilter.hpp"
-
+#include "JetFilter.hpp"
 
 ClassImp(CAP::TaskCreator);
 
@@ -178,6 +178,35 @@ void TaskCreator::configureParticleFilters(Task * _task,
     else
       dynamic_cast<Manager<ParticleFilter>*>(_task)->use(name);      }
 }
+
+void TaskCreator::configureJetFilters(Task * _task,
+                                      const String  & taskReferenceName,
+                                      Configuration & requestedConfiguration)
+{
+  int nJetFilters = requestedConfiguration.getValueInt(taskReferenceName+"nJetFilters");
+  for (int k=0; k<nJetFilters; k++)
+    {
+    String referenceName = taskReferenceName;
+    referenceName += "JetFilterName";
+    referenceName += k;
+    String name = requestedConfiguration.getValueString(referenceName);
+    referenceName = taskReferenceName;
+    referenceName += "JetFilterOwner";
+    referenceName += k;
+    bool owner = requestedConfiguration.getValueBool(referenceName);
+    if (reportDebug(__FUNCTION__))
+      {
+      printCR();
+      printValue("JetFilter Index",k);
+      printValue("JetFilter Name",name);
+      printValue("JetFilter Owner",owner);
+      }
+    if (owner)
+      dynamic_cast<Manager<JetFilter>*>(_task)->create(name);
+    else
+      dynamic_cast<Manager<JetFilter>*>(_task)->use(name);      }
+}
+
 
 void TaskCreator::configureSubtasks(Task * _task,
                                     const String  & taskReferenceName,

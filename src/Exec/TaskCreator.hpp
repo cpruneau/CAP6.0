@@ -47,6 +47,10 @@ protected:
   virtual void configureParticleFilters(Task * task,
                                         const String  & taskReferenceName,
                                         Configuration & requestedConfiguration);
+  virtual void configureJetFilters(Task * task,
+                                   const String  & taskReferenceName,
+                                   Configuration & requestedConfiguration);
+
   virtual void configureSubtasks(Task * task,
                                  const String  & taskReferenceName,
                                  Configuration & requestedConfiguration);

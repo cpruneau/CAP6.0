@@ -266,7 +266,7 @@ void GlobalAnalyzer::execute()
       }
     }
   // printValue("GlobalAnalyzer::execute()",100);
-
+  TaskAccountant::increment();
 }
 
 void GlobalAnalyzer::scaleHistograms()

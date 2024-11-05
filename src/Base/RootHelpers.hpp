@@ -83,38 +83,39 @@ String  substitute(const String & inputString, const String & subString, const S
 // histogram helpers
 TH1 * createNewHistogram(const String & name,
                          int n, double min_x, double max_x,
-                         const String & title_x="",
-                         const String & title_y="",
+                         const String & title_x="x",
+                         const String & title_y="N",
                          int storageOption=1,
                          bool verbose=false);
 TH1 * createNewHistogram(const String & name,
                          int n, double * bins,
-                         const String & title_x="",
-                         const String & title_y="",
+                         const String & title_x="x",
+                         const String & title_y="N",
                          int storageOption=1,
                          bool verbose=false);
 TH2 * createNewHistogram(const String & name,
                          int n_x, double min_x, double max_x,
                          int n_y, double min_y, double max_y,
-                         const String & title_x="",
-                         const String & title_y="",
-                         const String & title_z="",
+                         const String & title_x="x",
+                         const String & title_y="y",
+                         const String & title_z="N",
                          int storageOption=1,
                          bool verbose=false);
 TH2 * createNewHistogram(const String & name,
                          int n_x, double* xbins, int n_y, double min_y, double max_y,
-                         const String & title_x="",
-                         const String & title_y="",
-                         const String & title_z="",
+                         const String & title_x="x",
+                         const String & title_y="y",
+                         const String & title_z="N",
                          int storageOption=1,
                          bool verbose=false);
 TH3 * createNewHistogram(const String & name,
                          int n_x, double min_x, double max_x,
                          int n_y, double min_y, double max_y,
                          int n_z, double min_z, double max_z,
-                         const String & title_x="",
-                         const String & title_y="",
-                         const String & title_z="",
+                         const String & title_x="x",
+                         const String & title_y="y",
+                         const String & title_z="z",
+                         const String & title_w="N",
                          int storageOption=1,
                          bool verbose=false);
 TProfile * createNewProfile(const String & _name,
@@ -193,9 +194,16 @@ void scaleAllHistoByBinWidth(double scale);
 void sumw2All();
 void unpack_vsXY_to_vsXVsY(const TH1 * source, TH2 * target);
 void correctMerging(TH1 * h, int nEta, int nPhi, bool reverse);
-void calculateR2_H1H1H1(const TH1 * n2_12, const TH1 * n1n1_12, TH1 * r2_12, bool ijNormalization, double a1, double a2);
-void calculateR2_H2H2H2(const TH2 * n2_12, const TH2 * n1n1_12, TH2 * r2_12, bool ijNormalization, double a1, double a2);
-void calculateR2_H1H2H2(const TH1 * n2_12, const TH2 * n1n1_12, TH2 * r2_12, bool ijNormalization, double a1, double a2);
+
+void calculateC2_H1H1H1(const TH1 * n2_12, const TH1 * n1n1_12, TH1 * c2_12, bool ijNormalization=0, double a1=1.0, double a2=1.0);
+void calculateC2_H2H2H2(const TH2 * n2_12, const TH2 * n1n1_12, TH2 * c2_12, bool ijNormalization=0, double a1=1.0, double a2=1.0);
+void calculateC2_H3H3H3(const TH3 * n2_12, const TH3 * n1n1_12, TH3 * c2_12, bool ijNormalization=0, double a1=1.0, double a2=1.0);
+
+
+void calculateR2_H1H1H1(const TH1 * n2_12, const TH1 * n1n1_12, TH1 * r2_12, bool ijNormalization=0, double a1=1.0, double a2=1.0);
+void calculateR2_H2H2H2(const TH2 * n2_12, const TH2 * n1n1_12, TH2 * r2_12, bool ijNormalization=0, double a1=1.0, double a2=1.0);
+void calculateR2_H3H3H3(const TH3 * n2_12, const TH3 * n1n1_12, TH3 * r2_12, bool ijNormalization=0, double a1=1.0, double a2=1.0);
+void calculateR2_H1H2H2(const TH1 * n2_12, const TH2 * n1n1_12, TH2 * r2_12, bool ijNormalization=0, double a1=1.0, double a2=1.0);
 void calculateAverageVsDeta(const TH2 * obs_12, TH2 * avgObs_12, int n);
 void calculateR2VsM(const TProfile * h1, const TProfile * h2, const TProfile * h12, TH1 * r2VsM, TH1 * intR2, bool sameFilter);
 void calculateBinCorr(const TProfile * h1, const TProfile * h2, TH1 * intBinCorrVsM1, bool sameFilter);
@@ -277,6 +285,11 @@ void setTitles(TH3 * histogram,
                const String & title_x,
                const String & title_y,
                const String & title_z);
+void setTitles(TH3 * histogram,
+               const String & title_x,
+               const String & title_y,
+               const String & title_z,
+               const String & title_w);
 
 
 

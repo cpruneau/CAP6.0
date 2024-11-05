@@ -69,8 +69,8 @@ void ParticlePair3DCalculator::setDefaultConfiguration()
   addProperty( "nBins_phiEtaPt",  7200);
   addProperty( "nBins_phiY",      720);
   addProperty( "nBins_phiYPt",    7200);
-  addProperty( "FillEta",         true);
-  addProperty( "FillY",           false);
+  addProperty( "FillEta",         false);
+  addProperty( "FillY",           true);
   addProperty( "FillP2",          false);
   addProperty( "FillPid",         false);
 
@@ -197,13 +197,13 @@ void ParticlePair3DCalculator::createHistograms()
 
 int ParticlePair3DCalculator::getPidFor(ParticleFilter* pf)
 {
-  std::vector<Condition*> pf->getConditions();
+  std::vector<Condition*> conditions = pf->getConditions();
   for (auto & condition : conditions)
     {
     int filterSubType = condition->conditionSubtype;
     if (filterSubType == ParticleFilter::kPdg)
       {
-      return (dynamic_cast<ConditionInteger*> condition)->value; //PDG requested
+      return dynamic_cast<ConditionInteger*>(condition)->value; //PDG requested
       }
     }
 }
@@ -214,6 +214,7 @@ double ParticlePair3DCalculator::getMassFor(ParticleFilter* pf)
   particleDb = Manager<ParticleDb>::getObjectAt(0);
   ParticleType * particleType = particleDb->findPdgCode(pdgCode);
   return particleType->getMass();
+}
 
 void ParticlePair3DCalculator::execute()
 {
@@ -263,7 +264,7 @@ void ParticlePair3DCalculator::execute()
         //ParticleSingleDerivedHistos &dSingleHistos2 = (ParticleSingleDerivedHistos &) getGroupAt(2,indexSingle2);
         ParticlePair3DHistos &bPairHistos = (ParticlePair3DHistos &) getGroupAt(1,indexPairs12);
         ParticlePair3DDerivedHistos & dPairHistos = (ParticlePair3DDerivedHistos &) getGroupAt(3,indexPairs12);
-        dpairHistos.setMasses(masses[iParticleFilter1],masses[iParticleFilter2]);
+        dPairHistos.setMasses(masses[iParticleFilter1],masses[iParticleFilter2]);
         dPairHistos.calculatePairDerivedHistograms(bSingleHistos1,bSingleHistos2,bPairHistos);
         }
       }

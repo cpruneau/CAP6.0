@@ -28,9 +28,15 @@ void loadLibraries(const TString & includeBasePath);
 //! nBunches :  number of bunches  (must be 1 on grid)
 //!
 
+
+
+
 int RunAna(TString configFile="Pythia/pp_13.7TeV/RunAna3D.ini",
            TString histogramPath="pythiaTest3D/",
            long seed=1121331)
+//TString configFile="Pythia/pp_13.7TeV/RunAnaJets.ini",
+//           TString histogramPath="pythiaTest3D/",
+//           long seed=1121331)
 {
   TString includeBasePath = getenv("CAP_SRC_PATH");
   if (seed!=0)  gRandom->SetSeed(seed);
@@ -287,6 +293,15 @@ void loadTherminator(const TString & includeBasePath)
   gSystem->Load("libTherminator.dylib");
 }
 
+void loadJets(const TString & includeBasePath)
+{
+  TString includePath = includeBasePath + "/Jets/";
+  gSystem->Load(includePath+"JetAnalyzer.hpp");
+  gSystem->Load(includePath+"JetFilterCreator.hpp");
+  gSystem->Load("libJets.dylib");
+}
+
+
 void loadLibraries(const TString & includeBasePath)
 {
   loadBase(includeBasePath);
@@ -301,6 +316,7 @@ void loadLibraries(const TString & includeBasePath)
   loadSubSample(includeBasePath);
   loadPythia(includeBasePath);
   loadTherminator(includeBasePath);
+  loadJets(includeBasePath);
 //  loadAmpt(includeBasePath)
 //  loadEpos(includeBasePath)
 //  loadHijing(includeBasePath)
