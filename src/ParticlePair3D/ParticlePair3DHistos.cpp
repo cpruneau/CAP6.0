@@ -62,7 +62,7 @@ void ParticlePair3DHistos::createHistograms()
   double min_DeltaPl    = configuration.getValueDouble(ptn,"Min_DeltaPl");
   double max_DeltaPl    = configuration.getValueDouble(ptn,"Max_DeltaPl");
 
-  h_n2_Qinv   = createHistogram(createName(bn,"n2_Qinv"),nBins_Qinv,min_Qinv,max_Qinv, "Q_{inv}","n_{2}");
+  h_n2_Qinv   = createHistogram(createName(bn,"n2_Qinv"),nBins_Qinv,min_Qinv,max_Qinv, "Q_{inv}","n_{2}",2);
   h_n2_DeltaP = createHistogram(createName(bn,"n2_DeltaP"),
                                 nBins_DeltaPs,  min_DeltaPs, max_DeltaPs,
                                 nBins_DeltaPo,  min_DeltaPo, max_DeltaPo,

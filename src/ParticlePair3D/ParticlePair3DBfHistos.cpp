@@ -177,15 +177,15 @@ void ParticlePair3DBfHistos::createHistograms()
   min_DeltaPl    = configuration.getValueDouble(ptn,"Min_DeltaPl");
   max_DeltaPl    = configuration.getValueDouble(ptn,"Max_DeltaPl");
 
-  h_B12_Qinv      = createHistogram(createName(bn,"B12_Qinv"),    nBins_Qinv,   min_Qinv,    max_Qinv,    "Q_{inv}","B_{12}");
+  h_B12_Qinv      = createHistogram(createName(bn,"B12_Qinv"),    nBins_Qinv,   min_Qinv,    max_Qinv,    "Q_{inv}","B_{12}", 2);
   h_B12_DeltaPs   = createHistogram(createName(bn,"B12_DeltaPs"), nBins_DeltaPs,min_DeltaPs, max_DeltaPs, "p_{s}","B_{12}");
   h_B12_DeltaPo   = createHistogram(createName(bn,"B12_DeltaPo"), nBins_DeltaPo,min_DeltaPo, max_DeltaPo, "p_{o}","B_{12}");
   h_B12_DeltaPl   = createHistogram(createName(bn,"B12_DeltaPl"), nBins_DeltaPl,min_DeltaPl, max_DeltaPl, "p_{l}","B_{12}");
-  h_B21_Qinv      = createHistogram(createName(bn,"B21_Qinv"),    nBins_Qinv,   min_Qinv,    max_Qinv,    "Q_{inv}","B_{21}");
+  h_B21_Qinv      = createHistogram(createName(bn,"B21_Qinv"),    nBins_Qinv,   min_Qinv,    max_Qinv,    "Q_{inv}","B_{21}", 2);
   h_B21_DeltaPs   = createHistogram(createName(bn,"B21_DeltaPs"), nBins_DeltaPs,min_DeltaPs, max_DeltaPs, "p_{s}","B_{21}");
   h_B21_DeltaPo   = createHistogram(createName(bn,"B21_DeltaPo"), nBins_DeltaPo,min_DeltaPo, max_DeltaPo, "p_{o}","B_{21}");
   h_B21_DeltaPl   = createHistogram(createName(bn,"B21_DeltaPl"), nBins_DeltaPl,min_DeltaPl, max_DeltaPl, "p_{l}","B_{21}");
-  h_Bs_Qinv       = createHistogram(createName(bn,"Bs_Qinv"),     nBins_Qinv,   min_Qinv,    max_Qinv,    "Q_{inv}","B_{s}");
+  h_Bs_Qinv       = createHistogram(createName(bn,"Bs_Qinv"),     nBins_Qinv,   min_Qinv,    max_Qinv,    "Q_{inv}","B_{s}", 2);
   h_Bs_DeltaPs    = createHistogram(createName(bn,"Bs_DeltaPs"),  nBins_DeltaPs,min_DeltaPs, max_DeltaPs, "p_{s}","B_{s}");
   h_Bs_DeltaPo    = createHistogram(createName(bn,"Bs_DeltaPo"),  nBins_DeltaPo,min_DeltaPo, max_DeltaPo, "p_{o}","B_{s}");
   h_Bs_DeltaPl    = createHistogram(createName(bn,"Bs_DeltaPl"),  nBins_DeltaPl,min_DeltaPl, max_DeltaPl, "p_{l}","B_{s1}");

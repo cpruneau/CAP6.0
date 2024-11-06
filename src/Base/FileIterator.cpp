@@ -110,7 +110,7 @@ void FileIterator::execute()
       subtask->initialize();
       subtask->execute();
       subtask->finalize();
-      subtask->clear();
+      subtask->reset();
       }
     }
   stop();

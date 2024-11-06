@@ -66,7 +66,7 @@ int RunDerived(TString configFile="Pythia/pp_13.7TeV/RunAna3D.ini",
   workTask->initialize();
   workTask->execute();
   workTask->finalize();
-  delete workTask;
+  //delete workTask;
   delete creatorTask;
   CAP::printLine();
   CAP::printString("RunDerived completed successfully");

@@ -399,12 +399,12 @@ void ParticlePairDerivedHistos::createHistograms()
 
 
   h_n1n1_ptpt            = createHistogram(createName(bn,"n1n1_ptpt"),   nBins_pt,  min_pt,  max_pt,  nBins_pt,  min_pt,   max_pt,   "p_{T,1}", "p_{T,2}", "<n_{1}><n_{2}>");
-  h_C2N_ptpt             = createHistogram(createName(bn,"C2Nptpt"),     nBins_pt,  min_pt,  max_pt,  nBins_pt,  min_pt,   max_pt,   "p_{T,1}", "p_{T,2}", "A_{2}");
+  h_C2N_ptpt             = createHistogram(createName(bn,"C2N_ptpt"),     nBins_pt,  min_pt,  max_pt,  nBins_pt,  min_pt,   max_pt,   "p_{T,1}", "p_{T,2}", "A_{2}");
   h_C2_ptpt              = createHistogram(createName(bn,"C2_ptpt"),     nBins_pt,  min_pt,  max_pt,  nBins_pt,  min_pt,   max_pt,   "p_{T,1}", "p_{T,2}", "C_{2}");
   h_R2_ptpt              = createHistogram(createName(bn,"R2_ptpt"),     nBins_pt,  min_pt,  max_pt,  nBins_pt,  min_pt,   max_pt,   "p_{T,1}", "p_{T,2}", "R_{2}");
 
   h_n1n1_phiphi          = createHistogram(createName(bn,"n1n1_phiphi"), nBins_phi, min_phi, max_phi, nBins_phi, min_phi,  max_phi,  "#varphi_{1}", "#varphi_{2}", "<n_{1}><n_{2}>");
-  h_C2N_phiphi           = createHistogram(createName(bn,"C2Nphiphi"),   nBins_phi, min_phi, max_phi, nBins_phi, min_phi,  max_phi,  "#varphi_{1}", "#varphi_{2}", "A_{2}");
+  h_C2N_phiphi           = createHistogram(createName(bn,"C2N_phiphi"),   nBins_phi, min_phi, max_phi, nBins_phi, min_phi,  max_phi,  "#varphi_{1}", "#varphi_{2}", "A_{2}");
   h_C2_phiphi            = createHistogram(createName(bn,"C2_phiphi"),   nBins_phi, min_phi, max_phi, nBins_phi, min_phi,  max_phi,  "#varphi_{1}", "#varphi_{2}", "C_{2}");
   h_R2_phiphi            = createHistogram(createName(bn,"R2_phiphi"),   nBins_phi, min_phi, max_phi, nBins_phi, min_phi,  max_phi,  "#varphi_{1}", "#varphi_{2}", "R_{2}");
 
@@ -419,13 +419,13 @@ void ParticlePairDerivedHistos::createHistograms()
   if (fillEta)
     {
     h_n1n1_etaeta        = createHistogram(createName(bn,"n1n1_etaeta"),    nBins_eta,   min_eta,   max_eta,   nBins_eta,   min_eta,  max_eta,  "#eta_{1}", "#eta_{2}", "<n_{1}><n_{2}>");
-    h_C2N_etaeta         = createHistogram(createName(bn,"C2Netaeta"),      nBins_eta,   min_eta,   max_eta,   nBins_eta,   min_eta,  max_eta,  "#eta_{1}", "#eta_{2}", "A_{2}");
+    h_C2N_etaeta         = createHistogram(createName(bn,"C2N_etaeta"),      nBins_eta,   min_eta,   max_eta,   nBins_eta,   min_eta,  max_eta,  "#eta_{1}", "#eta_{2}", "A_{2}");
     h_C2_etaeta          = createHistogram(createName(bn,"C2_etaeta"),      nBins_eta,   min_eta,   max_eta,   nBins_eta,   min_eta,  max_eta,  "#eta_{1}", "#eta_{2}", "C_{2}");
     h_R2_etaeta          = createHistogram(createName(bn,"R2_etaeta"),      nBins_eta,   min_eta,   max_eta,   nBins_eta,   min_eta,  max_eta,  "#eta_{1}", "#eta_{2}", "R_{2}");
 
     h_n1n1_DetaDphi      = createHistogram(createName(bn,"n1n1_DetaDphi"),  nBins_Deta, min_Deta, max_Deta, nBins_Dphi, min_Dphi, max_Dphi, "#Delta#eta","#Delta#varphi", "<n_{1}><n_{1}>");
     h_C2_DetaDphi        = createHistogram(createName(bn,"C2_DetaDphi"),    nBins_Deta, min_Deta, max_Deta, nBins_Dphi, min_Dphi, max_Dphi, "#Delta#eta","#Delta#varphi", "C_{2}");
-    h_C2N_DetaDphi       = createHistogram(createName(bn,"C2NDetaDphi"),    nBins_Deta, min_Deta, max_Deta, nBins_Dphi, min_Dphi, max_Dphi, "#Delta#eta","#Delta#varphi", "A_{2}");
+    h_C2N_DetaDphi       = createHistogram(createName(bn,"C2N_DetaDphi"),    nBins_Deta, min_Deta, max_Deta, nBins_Dphi, min_Dphi, max_Dphi, "#Delta#eta","#Delta#varphi", "A_{2}");
     h_C2O_DetaDphi       = createHistogram(createName(bn,"C2O_DetaDphi"),    nBins_Deta, min_Deta, max_Deta, nBins_Dphi, min_Dphi, max_Dphi, "#Delta#eta","#Delta#varphi", "D_{2}");
     h_R2_DetaDphi        = createHistogram(createName(bn,"R2_DetaDphi"),    nBins_Deta, min_Deta, max_Deta, nBins_Dphi, min_Dphi, max_Dphi, "#Delta#eta","#Delta#varphi", "R_{2}");
     
@@ -455,7 +455,7 @@ void ParticlePairDerivedHistos::createHistograms()
     {
     h_n1n1_yY           = createHistogram(createName(bn,"n1n1_yY"),      nBins_y,   min_y,   max_y,   nBins_y,   min_y,  max_y,                 "y_{1}",     "y_{2}", "<n_{1}><n_{1}>");
     h_C2_yY             = createHistogram(createName(bn,"C2_yY"),        nBins_y,   min_y,   max_y,   nBins_y,   min_y,  max_y,                 "y_{1}",    "y_{2}", "C_{2}");
-    h_C2N_yY            = createHistogram(createName(bn,"C2NyY"),        nBins_y,   min_y,   max_y,   nBins_y,   min_y,  max_y,                 "y_{1}",    "y_{2}", "A_{2}");
+    h_C2N_yY            = createHistogram(createName(bn,"C2N_yY"),        nBins_y,   min_y,   max_y,   nBins_y,   min_y,  max_y,                 "y_{1}",    "y_{2}", "A_{2}");
     h_R2_yY             = createHistogram(createName(bn,"R2_yY"),        nBins_y,   min_y,   max_y,   nBins_y,   min_y,  max_y,                 "y_{1}",    "y_{2}", "R_{2}");
 
     h_n1n1_DyDphi       = createHistogram(createName(bn,"n1n1_DyDphi"),  nBins_Dy,  min_Dy,  max_Dy,  nBins_Dphi,  min_Dphi,      max_Dphi,     "#Delta y",  "#Delta#varphi", "<n_{1}><n_{1}>");
@@ -511,12 +511,12 @@ void ParticlePairDerivedHistos::importHistograms(TFile & inputFile)
 
   h_n1n1_phiphi          = importH2(inputFile, CAP::createName(bn,"n1n1_phiphi"));
   h_C2_phiphi            = importH2(inputFile, CAP::createName(bn,"C2_phiphi"));
-  h_C2N_phiphi           = importH2(inputFile, CAP::createName(bn,"C2Nphiphi"));
+  h_C2N_phiphi           = importH2(inputFile, CAP::createName(bn,"C2N_phiphi"));
   h_R2_phiphi            = importH2(inputFile, CAP::createName(bn,"R2_phiphi"));
 
   h_n1n1_ptpt            = importH2(inputFile, CAP::createName(bn,"n1n1_ptpt"));
   h_C2_ptpt              = importH2(inputFile, CAP::createName(bn,"C2_ptpt"));
-  h_C2N_ptpt             = importH2(inputFile, CAP::createName(bn,"C2Nptpt"));
+  h_C2N_ptpt             = importH2(inputFile, CAP::createName(bn,"C2N_ptpt"));
   h_R2_ptpt              = importH2(inputFile, CAP::createName(bn,"R2_ptpt"));
 
   if (fillP2)
@@ -531,16 +531,16 @@ void ParticlePairDerivedHistos::importHistograms(TFile & inputFile)
     {
     h_n1n1_etaeta        = importH2(inputFile, CAP::createName(bn,"n1n1_etaeta"));
     h_C2_etaeta          = importH2(inputFile, CAP::createName(bn,"C2_etaeta"));
-    h_C2N_etaeta         = importH2(inputFile, CAP::createName(bn,"C2Netaeta"));
+    h_C2N_etaeta         = importH2(inputFile, CAP::createName(bn,"C2N_etaeta"));
     h_R2_etaeta          = importH2(inputFile, CAP::createName(bn,"R2_etaeta"));
 
-    h_n1n1_DetaDphi      = importH2(inputFile, CAP::createName(bn,"n1n1_DetaDphi"));
-    h_C2_DetaDphi        = importH2(inputFile, CAP::createName(bn,"C2_DetaDphi"));
-    h_C2N_DetaDphi       = importH2(inputFile, CAP::createName(bn,"C2NDetaDphi"));
-    h_R2_DetaDphi        = importH2(inputFile, CAP::createName(bn,"R2_DetaDphi"));
+    h_n1n1_DetaDphi      = importH2(inputFile, CAP::createName(bn,"n1n1_DetaDphi_shft"));
+    h_C2_DetaDphi        = importH2(inputFile, CAP::createName(bn,"C2_DetaDphi_shft"));
+    h_C2N_DetaDphi       = importH2(inputFile, CAP::createName(bn,"C2N_DetaDphi_shft"));
+    h_R2_DetaDphi        = importH2(inputFile, CAP::createName(bn,"R2_DetaDphi_shft"));
 
     h_C2_DetaDphi_shft   = importH2(inputFile, CAP::createName(bn,"C2_DetaDphi_shft"));
-    h_C2N_DetaDphi_shft  = importH2(inputFile, CAP::createName(bn,"C2NDetaDphi_shft"));
+    h_C2N_DetaDphi_shft  = importH2(inputFile, CAP::createName(bn,"C2N_DetaDphi_shft"));
     h_R2_DetaDphi_shft   = importH2(inputFile, CAP::createName(bn,"R2_DetaDphi_shft"));
 
     if (fillP2)
@@ -550,10 +550,10 @@ void ParticlePairDerivedHistos::importHistograms(TFile & inputFile)
       h_P2_etaeta            = importH2(inputFile, CAP::createName(bn,"P2_etaeta"));
       h_G2_etaeta            = importH2(inputFile, CAP::createName(bn,"G2_etaeta"));
 
-      h_pt1pt1_DetaDphi      = importH2(inputFile, CAP::createName(bn,"pt1pt1_DetaDphi"));
-      h_DptDpt_DetaDphi      = importH2(inputFile, CAP::createName(bn,"DptDpt_DetaDphi"));
-      h_P2_DetaDphi          = importH2(inputFile, CAP::createName(bn,"P2_DetaDphi"));
-      h_G2_DetaDphi          = importH2(inputFile, CAP::createName(bn,"G2_DetaDphi"));
+      h_pt1pt1_DetaDphi      = importH2(inputFile, CAP::createName(bn,"pt1pt1_DetaDphi_shft"));
+      h_DptDpt_DetaDphi      = importH2(inputFile, CAP::createName(bn,"DptDpt_DetaDphi_shft"));
+      h_P2_DetaDphi          = importH2(inputFile, CAP::createName(bn,"P2_DetaDphi_shft"));
+      h_G2_DetaDphi          = importH2(inputFile, CAP::createName(bn,"G2_DetaDphi_shft"));
       h_DptDpt_DetaDphi_shft = importH2(inputFile, CAP::createName(bn,"DptDpt_DetaDphi_shft"));
       h_P2_DetaDphi_shft     = importH2(inputFile, CAP::createName(bn,"P2_DetaDphi_shft"));
       h_G2_DetaDphi_shft     = importH2(inputFile, CAP::createName(bn,"G2_DetaDphi_shft"));
@@ -564,17 +564,17 @@ void ParticlePairDerivedHistos::importHistograms(TFile & inputFile)
     {
     h_n1n1_yY           = importH2(inputFile, CAP::createName(bn,"n1n1_yY"));
     h_C2_yY             = importH2(inputFile, CAP::createName(bn,"C2_yY"));
-    h_C2N_yY             = importH2(inputFile, CAP::createName(bn,"C2NyY"));
+    h_C2N_yY             = importH2(inputFile,CAP::createName(bn,"C2N_yY"));
     h_R2_yY             = importH2(inputFile, CAP::createName(bn,"R2_yY"));
 
     h_n1n1_DyDphi       = importH2(inputFile, CAP::createName(bn,"n1n1_DyDphi"));
     h_C2_DyDphi         = importH2(inputFile, CAP::createName(bn,"C2_DyDphi"));
-    h_C2N_DyDphi        = importH2(inputFile, CAP::createName(bn,"C2NDyDphi"));
+    h_C2N_DyDphi        = importH2(inputFile, CAP::createName(bn,"C2N_DyDphi"));
     h_C2O_DyDphi        = importH2(inputFile, CAP::createName(bn,"C2O_DyDphi"));
     h_R2_DyDphi         = importH2(inputFile, CAP::createName(bn,"R2_DyDphi"));
 
     h_C2_DyDphi_shft    = importH2(inputFile, CAP::createName(bn,"C2_DyDphi_shft"));
-    h_C2N_DyDphi_shft   = importH2(inputFile, CAP::createName(bn,"C2NDyDphi_shft"));
+    h_C2N_DyDphi_shft   = importH2(inputFile, CAP::createName(bn,"C2N_DyDphi_shft"));
     h_C2O_DyDphi_shft   = importH2(inputFile, CAP::createName(bn,"C2_DyDphi_shft"));
     h_R2_DyDphi_shft    = importH2(inputFile, CAP::createName(bn,"R2_DyDphi_shft"));
 
@@ -585,10 +585,10 @@ void ParticlePairDerivedHistos::importHistograms(TFile & inputFile)
       h_P2_yY             = importH2(inputFile, CAP::createName(bn,"P2_yY"));
       h_G2_yY             = importH2(inputFile, CAP::createName(bn,"G2_yY"));
 
-      h_pt1pt1_DyDphi     = importH2(inputFile, CAP::createName(bn,"pt1pt1_DyDphi"));
-      h_DptDpt_DyDphi     = importH2(inputFile, CAP::createName(bn,"DptDpt_DyDphi"));
-      h_P2_DyDphi         = importH2(inputFile, CAP::createName(bn,"P2_DyDphi"));
-      h_G2_DyDphi         = importH2(inputFile, CAP::createName(bn,"G2_DyDphi"));
+      h_pt1pt1_DyDphi     = importH2(inputFile, CAP::createName(bn,"pt1pt1_DyDphi_shft"));
+      h_DptDpt_DyDphi     = importH2(inputFile, CAP::createName(bn,"DptDpt_DyDphi_shft"));
+      h_P2_DyDphi         = importH2(inputFile, CAP::createName(bn,"P2_DyDphi_shft"));
+      h_G2_DyDphi         = importH2(inputFile, CAP::createName(bn,"G2_DyDphi_shft"));
 
       h_DptDpt_DyDphi_shft= importH2(inputFile, CAP::createName(bn,"DptDpt_DyDphi_shft"));
       h_P2_DyDphi_shft    = importH2(inputFile, CAP::createName(bn,"P2_DyDphi_shft"));

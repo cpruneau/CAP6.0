@@ -148,9 +148,9 @@ void ParticlePair3DDerivedHistos::createHistograms()
   n2_DeltaPs_name = createName(bn,"n2_DeltaPs");
   n2_DeltaPo_name = createName(bn,"n2_DeltaPo");
   n2_DeltaPl_name = createName(bn,"n2_DeltaPl");
-  h_n2_DeltaPs= createHistogram(n2_DeltaPs_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{s}","n_{2}",2);
-  h_n2_DeltaPo= createHistogram(n2_DeltaPo_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{o}","n_{2}",2);
-  h_n2_DeltaPl= createHistogram(n2_DeltaPl_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{l}","n_{2}",2);
+  h_n2_DeltaPs= createHistogram(n2_DeltaPs_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{s}","n_{2}");
+  h_n2_DeltaPo= createHistogram(n2_DeltaPo_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{o}","n_{2}");
+  h_n2_DeltaPl= createHistogram(n2_DeltaPl_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{l}","n_{2}");
 
 
   h_n1n1_Qinv   = createHistogram(createName(bn,"n1n1_Qinv"),nBins_Qinv,min_Qinv,max_Qinv, "Q_{inv}","n_{1}n_{1}");
@@ -162,9 +162,9 @@ void ParticlePair3DDerivedHistos::createHistograms()
   n1n1_DeltaPs_name = createName(bn,"n1n1_DeltaPs");
   n1n1_DeltaPo_name = createName(bn,"n1n1_DeltaPo");
   n1n1_DeltaPl_name = createName(bn,"n1n1_DeltaPl");
-  h_n1n1_DeltaPs= createHistogram(n1n1_DeltaPs_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{s}","n_{1}n_{1}",2);
-  h_n1n1_DeltaPo= createHistogram(n1n1_DeltaPo_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{o}","n_{1}n_{1}",2);
-  h_n1n1_DeltaPl= createHistogram(n1n1_DeltaPl_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{l}","n_{1}n_{1}",2);
+  h_n1n1_DeltaPs= createHistogram(n1n1_DeltaPs_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{s}","n_{1}n_{1}");
+  h_n1n1_DeltaPo= createHistogram(n1n1_DeltaPo_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{o}","n_{1}n_{1}");
+  h_n1n1_DeltaPl= createHistogram(n1n1_DeltaPl_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{l}","n_{1}n_{1}");
 
   h_c2_Qinv   = createHistogram(createName(bn,"c2_Qinv"), nBins_Qinv,min_Qinv,max_Qinv, "Q_{inv}","c_{2}");
   h_c2_DeltaP = createHistogram(createName(bn,"c2_DeltaP"),
@@ -175,9 +175,9 @@ void ParticlePair3DDerivedHistos::createHistograms()
   c2_DeltaPs_name = createName(bn,"c2_DeltaPs");
   c2_DeltaPo_name = createName(bn,"c2_DeltaPo");
   c2_DeltaPl_name = createName(bn,"c2_DeltaPl");
-  h_c2_DeltaPs= createHistogram(c2_DeltaPs_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{s}","c_{2}",2);
-  h_c2_DeltaPo= createHistogram(c2_DeltaPo_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{o}","c_{2}",2);
-  h_c2_DeltaPl= createHistogram(c2_DeltaPl_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{l}","c_{2}",2);
+  h_c2_DeltaPs= createHistogram(c2_DeltaPs_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{s}","c_{2}");
+  h_c2_DeltaPo= createHistogram(c2_DeltaPo_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{o}","c_{2}");
+  h_c2_DeltaPl= createHistogram(c2_DeltaPl_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{l}","c_{2}");
 
   
   h_r2_Qinv   = createHistogram(createName(bn,"r2_Qinv"), nBins_Qinv,min_Qinv,max_Qinv, "Q_{inv}","r_{2}");
@@ -189,9 +189,9 @@ void ParticlePair3DDerivedHistos::createHistograms()
   r2_DeltaPs_name = createName(bn,"r2_DeltaPs");
   r2_DeltaPo_name = createName(bn,"r2_DeltaPo");
   r2_DeltaPl_name = createName(bn,"r2_DeltaPl");
-  h_r2_DeltaPs= createHistogram(r2_DeltaPs_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{s}","r_{2}",2);
-  h_r2_DeltaPo= createHistogram(r2_DeltaPo_name,nBins_DeltaPo,min_DeltaPo, max_DeltaPo,"p_{o}","r_{2}",2);
-  h_r2_DeltaPl= createHistogram(r2_DeltaPl_name,nBins_DeltaPl,min_DeltaPl, max_DeltaPl,"p_{l}","r_{2}",2);
+  h_r2_DeltaPs= createHistogram(r2_DeltaPs_name,nBins_DeltaPs,min_DeltaPs, max_DeltaPs,"p_{s}","r_{2}");
+  h_r2_DeltaPo= createHistogram(r2_DeltaPo_name,nBins_DeltaPo,min_DeltaPo, max_DeltaPo,"p_{o}","r_{2}");
+  h_r2_DeltaPl= createHistogram(r2_DeltaPl_name,nBins_DeltaPl,min_DeltaPl, max_DeltaPl,"p_{l}","r_{2}");
 
 //  h_B12_Qinv      = createHistogram(createName(bn,"B12_Qinv"),    nBins_Qinv,min_Qinv,max_Qinv, "Q_{inv}","B_{12}");
 //  h_B12_DeltaPs   = createHistogram(createName(bn,"B12_DeltaPs"), nBins_DeltaPs,min_DeltaPs, max_DeltaPs, "p_{s}","B_{12}");
@@ -252,12 +252,6 @@ void ParticlePair3DDerivedHistos::calculatePairDerivedHistograms(ParticleSingleH
   double qinv, qside, qlong, qout;
   int nParticle1 = part1BaseHistos.h_n1_ptY->Integral();
   int nParticle2 = part2BaseHistos.h_n1_ptY->Integral();
-  if (true)
-  {
-    printValue("nParticle1",nParticle1);
-    printValue("nParticle2",nParticle2);
-  }
-
   nEvents = 1000000;
   double scale = 1.0/double(nEvents);
   for (long iEvent=0; iEvent<nEvents; iEvent++)
