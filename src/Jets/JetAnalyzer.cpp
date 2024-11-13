@@ -23,8 +23,7 @@ namespace CAP
 
 JetAnalyzer::JetAnalyzer()
 :
-EventTask(),
-Manager<JetFilter>()
+EventTask()
 {
   appendClassName("JetAnalyzer");
   setInstanceName("Pair");
@@ -34,8 +33,7 @@ Manager<JetFilter>()
 
 JetAnalyzer::JetAnalyzer(const JetAnalyzer & task)
 :
-EventTask(task),
-Manager<JetFilter>(task)
+EventTask(task)
 {   }
 
 JetAnalyzer & JetAnalyzer::operator=(const JetAnalyzer & task)
@@ -43,7 +41,6 @@ JetAnalyzer & JetAnalyzer::operator=(const JetAnalyzer & task)
   if (this!=&task)
     {
     EventTask::operator=(task);
-    Manager<JetFilter>::operator=(task);
     }
   return *this;
 }
@@ -63,12 +60,12 @@ void JetAnalyzer::setDefaultConfiguration()
   addProperty("nBins_jet_pt",   100);
   addProperty("min_jet_pt",     0.0);
   addProperty("max_jet_pt",     100.0);
-  addProperty("nBins_jet_phi",  18);
+  addProperty("nBins_jet_phi",  32);
   addProperty("min_jet_phi",    0.0);
   addProperty("max_jet_phi",    CAP::Math::twoPi());
   addProperty("nBins_jet_eta",   20);
-  addProperty("min_jet_eta",     -1.0);
-  addProperty("max_jet_eta",     1.0);
+  addProperty("min_jet_eta",     -2.0);
+  addProperty("max_jet_eta",     2.0);
   addProperty("nBins_jet_netQ",  20);
   addProperty("min_jet_netQ",    -10.0);
   addProperty("max_jet_netQ",    10.0);
@@ -90,6 +87,9 @@ void JetAnalyzer::setDefaultConfiguration()
   addProperty("nBins_th",   20);
   addProperty("min_th",     0.0);
   addProperty("max_th",     CAP::Math::pi()/4.0);
+  addProperty("nBins_z",   50);
+  addProperty("min_z",     0.0);
+  addProperty("max_z",     1.0);
 }
 
 void JetAnalyzer::configure()
@@ -103,9 +103,7 @@ void JetAnalyzer::initialize()
   EventTask::initialize();
 
   particleDb = Manager<ParticleDb>::getObjectAt(0);
-  jetFilters  = Manager<JetFilter>::getObjects();
-  nJetFilters = jetFilters.size();
-
+ 
   clearSets();
   addSet("JetHistos");
   addSet("JetSingleHistos");
@@ -134,7 +132,7 @@ void JetAnalyzer::createHistograms()
       jetHistos->setConfiguration(configuration);
       jetHistos->setParentTask(this);
       jetHistos->createHistograms();
-//      jetHistos->setParticleDb();
+      jetHistos->setParticleDb(getParticleDb());
       addGroupInSet(0,jetHistos);
 
       jetSingleHistos = new JetSingleHistos();
@@ -149,7 +147,7 @@ void JetAnalyzer::createHistograms()
       jetPairHistos->setConfiguration(configuration);
       jetPairHistos->setParentTask(this);
       jetPairHistos->createHistograms();
-      addGroupInSet(1,jetPairHistos);
+      addGroupInSet(2,jetPairHistos);
       }
     }
   if (reportEnd(__FUNCTION__)) {/* no ops */};
@@ -160,8 +158,6 @@ void JetAnalyzer::execute()
   Event & event = *Manager<Event>::getObjectAt(0);
   std::vector<Particle*> & particles = event.getParticles();
   if (!analyzeThisEvent(event,eventFilters,eventFilterAccepted)) return;
-
-  std::vector<JetFilter*> & jetFilters = Manager<JetFilter>::getObjects();
   std::vector<PseudoJet> pseudoJetsInput;
   pseudoJetsInput.clear();
   for (auto & particle : particles)

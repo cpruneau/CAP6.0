@@ -18,6 +18,7 @@
 #include "TArrow.h"
 
 #include "CanvasGroup.hpp"
+#include "CanvasConfiguration.hpp"
 #include "GraphConfiguration.hpp"
 #include "LegendConfiguration.hpp"
 #include "DataGraph.hpp"
@@ -50,72 +51,55 @@ public:
   //!
   virtual void configure();
 
-  TCanvas *  plot(const String & canvasName,
-                  const CanvasConfiguration  & cc,
-                  const GraphConfiguration   & gc,
-                  LegendConfiguration  & lc,
-                  TH1 * h,
-                  const String & xTitle,  double xMin, double xMax,
-                  const String & yTitle,  double yMin, double yMax);
+  TCanvas *  plot(const String & _canvasName,
+                  vector<TH1*> _histograms,
+                  const String & _xTitle="",  double _xMin=1.0, double _xMax=0.0,
+                  const String & _yTitle="",  double _yMin=1.0, double _yMax=0.0,
+                  bool   _createLegend=false,
+                  double _xLegendLeft=0.1,
+                  double _xLegendRight=0.2,
+                  double _yLegendLow=0.4,
+                  double _yLegendHigh=0.5,
+                  double _legendTextSize=0.05,
+                  int    canvasIndex=0);
 
-  TCanvas *  plot(const String & canvasName,
-                  const CanvasConfiguration  & cc,
-                  const GraphConfiguration   & gc,
-                  LegendConfiguration  & lc,
-                  TH2 * h,
-                  const String & xTitle,  double xMin, double xMax,
-                  const String & yTitle,  double yMin, double yMax,
-                  const String & zTitle,  double zMin, double zMax);
+//  TCanvas *  plot(const String & canvasName,
+//                  const CanvasConfiguration  & cc,
+//                  const GraphConfiguration   & gc,
+//                  LegendConfiguration  & lc,
+//                  TH2 * h,
+//                  const String & xTitle,  double xMin, double xMax,
+//                  const String & yTitle,  double yMin, double yMax,
+//                  const String & zTitle,  double zMin, double zMax);
+//
+//  TCanvas *  plot(const String & canvasName,
+//                  const CanvasConfiguration  & cc,
+//                  const GraphConfiguration   & gc,
+//                  LegendConfiguration  & lc,
+//                  TGraph * h,
+//                  const String & xTitle,  double xMin, double xMax,
+//                  const String & yTitle,  double yMin, double yMax);
+//
+//  TCanvas *  plot(const String & canvasName,
+//                  const CanvasConfiguration  & cc,
+//                  const vector<GraphConfiguration*> & gc,
+//                  LegendConfiguration  & lc,
+//                  vector<TH1*> histograms,
+//                  const String & xTitle,  double xMin, double xMax,
+//                  const String & yTitle,  double yMin, double yMax);
+//
+//  TCanvas *  plot(const String & canvasName,
+//                  const CanvasConfiguration  & cc,
+//                  const vector<GraphConfiguration*> & gc,
+//                  LegendConfiguration  & lc,
+//                  vector<TGraph*> graphs,
+//                  const String & xTitle,  double xMin, double xMax,
+//                  const String & yTitle,  double yMin, double yMax);
 
-  TCanvas *  plot(const String & canvasName,
-                  const CanvasConfiguration  & cc,
-                  const GraphConfiguration   & gc,
-                  LegendConfiguration  & lc,
-                  TGraph * h,
-                  const String & xTitle,  double xMin, double xMax,
-                  const String & yTitle,  double yMin, double yMax);
 
-  TCanvas *  plot(const String & canvasName,
-                  const CanvasConfiguration  & cc,
-                  const vector<GraphConfiguration*> & gc,
-                  LegendConfiguration  & lc,
-                  vector<TH1*> histograms,
-                  const String & xTitle,  double xMin, double xMax,
-                  const String & yTitle,  double yMin, double yMax);
-
-  TCanvas *  plot(const String & canvasName,
-                  const CanvasConfiguration  & cc,
-                  const vector<GraphConfiguration*> & gc,
-                  LegendConfiguration  & lc,
-                  vector<TGraph*> graphs,
-                  const String & xTitle,  double xMin, double xMax,
-                  const String & yTitle,  double yMin, double yMax);
-
-  //  // ================================================================================================
-  //  // Function to plot nHists 1D histogram
-  //  // h       : vector of nHists pointers to histograms
-  //  // legends : vector of nHists pointers to labels used as legends in the body of the plot
-  //  // ================================================================================================
-  //  TCanvas *  plot(String  canvasName, Configuration & cc, vector<GraphConfiguration*> gc,
-  //                  String  xTitle,  double xMin, double xMax,
-  //                  String  yTitle,  double yMin, double yMax,
-  //                  vector<TH1*> histograms,
-  //                  VectorString  legends,
-  //                  double xMinLeg, double yMinLeg, double xMaxLeg, double yMaxLeg,double legendSize,
-  //                  bool label1=0, String text1="", double x1=0.0, double y1=0.0, int color1=1,  double fontSize1=0.05,
-  //                  bool label2=0, String text2="", double x2=0.0, double y2=0.0, int color2=1,  double fontSize2=0.05);
-  //
-  //  TCanvas * plot(String  canvasName, Configuration & cc,
-  //                 String  xTitle,  double xMin, double xMax,
-  //                 String  yTitle,  double yMin, double yMax,
-  //                 vector<DataGraph*> graphs,
-  //                 double xMinLeg, double yMinLeg, double xMaxLeg, double yMaxLeg,double legendSize);
-
-  ////////////////////////////////////////////////////////////////////////
-  // Setting Histogram Properties
-  ////////////////////////////////////////////////////////////////////////
-
-  void findMinMax(TH1* histogram, double & minimum, double & maximum);
+  void findMinMax(TH1* histogram, double & yMin, double & yMax);
+  void findMinMax(vector<TH1*> histograms, double & yMin, double & yMax,
+                  bool padding=true, double paddingValue=0.05);
 
   void setProperties(TH1 * h, 
                      const GraphConfiguration & graphConfiguration,
@@ -123,20 +107,19 @@ public:
                      const String & yTitle="none",
                      const String & zTitle="none");
   
-  void setProperties(vector<TH1*> histograms,
-                     const vector<GraphConfiguration*> & graphConfigurations,
+  void setProperties(const vector<TH1*> & histograms,
+                     const vector<GraphConfiguration> & graphConfigurations,
                      const String & xTitle="none",
                      const String & yTitle="none",
                      const String & zTitle="none");
-
 
   void setProperties(TGraph * g,
                      const GraphConfiguration & graphConfiguration,
                      const String & xTitle="none",
                      const String & yTitle="none");
 
-  void setProperties(vector<TGraph*> & graphs,
-                     const vector<GraphConfiguration*> & graphConfigurations,
+  void setProperties(const vector<TGraph*> & graphs,
+                     const vector<GraphConfiguration> & graphConfigurations,
                      const String & xTitle="none",
                      const String & yTitle="none");
 
@@ -144,9 +127,10 @@ public:
   TLatex  * createLabel(const String & text, double x, double y, double angle, int color,  double fontSize, bool doDraw=true);
   TLegend * createLegend(double x1, double y1, double x2, double y2, double fontSize);
   TLegend * createLegend(TH1*histogram, const String & legendText, double x1, double y1, double x2, double y2, double fontSize, bool doDraw=true);
-  TLegend * createLegend(vector<TH1*> h,VectorString  legendTexts,double x1, double y1, double x2, double y2, double fontSize, bool doDraw=true);
-  TLegend * createLegend(vector<TGraph*> h,VectorString  legendTexts,double x1, double y1, double x2, double y2, double fontSize, bool doDraw=true);
-  TLegend * createLegend(vector<DataGraph*> graphs,double x1, double y1, double x2, double y2, double fontSize, bool doDraw=true);
+  TLegend * createLegend(vector<TH1*> & histograms,double x1, double x2, double y1, double y2, double fontSize, bool doDraw=true);
+  TLegend * createLegend(vector<TH1*> & histograms, vector<TString> &legendTexts,double x1, double x2, double y1, double y2, double fontSize, bool doDraw=true);
+  TLegend * createLegend(vector<TGraph*> graphs, vector<TString> & legendTexts,double x1, double x2, double y1, double y2, double fontSize, bool doDraw=true);
+  TLegend * createLegend(vector<DataGraph*> graphs,double x1, double x2, double y1, double y2, double fontSize, bool doDraw=true);
 
   TLegend * createLegend(const LegendConfiguration & legendConfig);
   TLegend * createLegend(TH1*histogram, const LegendConfiguration & legendConfig);
@@ -174,7 +158,7 @@ public:
                      vector<double> vy,
                      vector<double> vey);
 
-  vector<CAP::GraphConfiguration*> createGraphConfigurationPalette(int n, int dim);
+  vector<GraphConfiguration> createGraphConfigurationPalette(int n, int dim);
 
   TGraph * sumGraphs(TGraph * g1, TGraph * g2);
 
@@ -200,8 +184,16 @@ public:
 
   double GeneralizedGaussian(double *x, double *par);
 
+  void addCanvasConfiguartion(CanvasConfiguration::CanvasFormat format,
+                              CanvasConfiguration::CanvasAxes axes);
+  void addGraphConfiguration(unsigned int n, unsigned int nDimensions);
+
+
 
 protected:
+
+  vector<CanvasConfiguration> canvasPalette;
+  vector<GraphConfiguration> graphPalette;
 
   String canvasBaseName;
   String canvasName;

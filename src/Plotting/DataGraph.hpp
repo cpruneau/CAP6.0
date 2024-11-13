@@ -11,7 +11,7 @@
  * *********************************************************************/
 #ifndef CAP__DataGraph
 #define CAP__DataGraph
-
+#include <ostream>
 #include <vector>
 #include "Aliases.hpp"
 #include "TFile.h"
@@ -20,7 +20,6 @@
 #include "TGraphAsymmErrors.h"
 #include "TH1D.h"
 #include "GraphConfiguration.hpp"
-#include "MessageLogger.hpp"
 
 using std::vector;
 
@@ -32,7 +31,7 @@ namespace CAP
 //! Class to draw graphs with statistical and systematic errors
 //! Use  the TGraph and derived classes to carry out the drawing..
 //!
-class DataGraph : public TH1D, public MessageLogger
+class DataGraph : public TH1D
 {
 protected:
 
@@ -88,10 +87,7 @@ protected:
   //! Systematic uncertainty on y (high side)
   //!
   double * eeyHigh;
-
-
   int  option;
-  
   bool visible;
 
 public:
@@ -143,12 +139,11 @@ public:
             double yMin, double yMax,
             TH1 * histo, double *eeyLow, double *eeyHigh, int opt=0);
 
-
-
   void draw(bool same);
   void setMinMax(double minY, double maxY);
   void setProperties(GraphConfiguration & graphConfig);
-  void printToFile(ostream & output);
+  void printToFile(std::ostream & output);
+  void printDataValue(int k,std::ostream & output);
 
   static DataGraph * loadGraph(const String graphName,
                                const String xTitle,

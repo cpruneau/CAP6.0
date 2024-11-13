@@ -102,7 +102,7 @@ void SpherocityAnalyzer::initialize()
   unsigned int nEventFilters    = Manager<EventFilter>::getNObjects();
   unsigned int nParticleFilters = Manager<ParticleFilter>::getNObjects();
   if (nEventFilters<1 || nParticleFilters<1)
-    throw NoFilterSpherocityException(nEventFilters,nParticleFilters,__FUNCTION__);
+    throw FilterException("nEventFilters<1 || nParticleFilters<1",__FUNCTION__);
   clearSets();
   addSet("spherocity");
   addSet("derived");

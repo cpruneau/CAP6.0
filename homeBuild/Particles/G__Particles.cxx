@@ -46,6 +46,7 @@
 #include "ParticleDecayerTask.hpp"
 #include "ParticleFilter.hpp"
 #include "ParticlePairFilter.hpp"
+#include "JetFilter.hpp"
 #include "RootChainManager.hpp"
 #include "FilterCreator.hpp"
 
@@ -267,6 +268,51 @@ namespace ROOT {
 } // end of namespace ROOT
 
 namespace ROOT {
+   static TClass *CAPcLcLManagerlECAPcLcLJetFiltergR_Dictionary();
+   static void CAPcLcLManagerlECAPcLcLJetFiltergR_TClassManip(TClass*);
+   static void *new_CAPcLcLManagerlECAPcLcLJetFiltergR(void *p = nullptr);
+   static void *newArray_CAPcLcLManagerlECAPcLcLJetFiltergR(Long_t size, void *p);
+   static void delete_CAPcLcLManagerlECAPcLcLJetFiltergR(void *p);
+   static void deleteArray_CAPcLcLManagerlECAPcLcLJetFiltergR(void *p);
+   static void destruct_CAPcLcLManagerlECAPcLcLJetFiltergR(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::CAP::Manager<CAP::JetFilter>*)
+   {
+      ::CAP::Manager<CAP::JetFilter> *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::CAP::Manager<CAP::JetFilter> >(nullptr);
+      static ::ROOT::TGenericClassInfo 
+         instance("CAP::Manager<CAP::JetFilter>", ::CAP::Manager<CAP::JetFilter>::Class_Version(), "Manager.hpp", 33,
+                  typeid(::CAP::Manager<CAP::JetFilter>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &CAPcLcLManagerlECAPcLcLJetFiltergR_Dictionary, isa_proxy, 4,
+                  sizeof(::CAP::Manager<CAP::JetFilter>) );
+      instance.SetNew(&new_CAPcLcLManagerlECAPcLcLJetFiltergR);
+      instance.SetNewArray(&newArray_CAPcLcLManagerlECAPcLcLJetFiltergR);
+      instance.SetDelete(&delete_CAPcLcLManagerlECAPcLcLJetFiltergR);
+      instance.SetDeleteArray(&deleteArray_CAPcLcLManagerlECAPcLcLJetFiltergR);
+      instance.SetDestructor(&destruct_CAPcLcLManagerlECAPcLcLJetFiltergR);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::CAP::Manager<CAP::JetFilter>*)
+   {
+      return GenerateInitInstanceLocal(static_cast<::CAP::Manager<CAP::JetFilter>*>(nullptr));
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::CAP::Manager<CAP::JetFilter>*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
+
+   // Dictionary for non-ClassDef classes
+   static TClass *CAPcLcLManagerlECAPcLcLJetFiltergR_Dictionary() {
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal(static_cast<const ::CAP::Manager<CAP::JetFilter>*>(nullptr))->GetClass();
+      CAPcLcLManagerlECAPcLcLJetFiltergR_TClassManip(theClass);
+   return theClass;
+   }
+
+   static void CAPcLcLManagerlECAPcLcLJetFiltergR_TClassManip(TClass* ){
+   }
+
+} // end of namespace ROOT
+
+namespace ROOT {
    static void delete_CAPcLcLEvent(void *p);
    static void deleteArray_CAPcLcLEvent(void *p);
    static void destruct_CAPcLcLEvent(void *p);
@@ -417,6 +463,51 @@ namespace ROOT {
 } // end of namespace ROOT
 
 namespace ROOT {
+   static TClass *CAPcLcLFilterlEfastjetcLcLPseudoJetgR_Dictionary();
+   static void CAPcLcLFilterlEfastjetcLcLPseudoJetgR_TClassManip(TClass*);
+   static void *new_CAPcLcLFilterlEfastjetcLcLPseudoJetgR(void *p = nullptr);
+   static void *newArray_CAPcLcLFilterlEfastjetcLcLPseudoJetgR(Long_t size, void *p);
+   static void delete_CAPcLcLFilterlEfastjetcLcLPseudoJetgR(void *p);
+   static void deleteArray_CAPcLcLFilterlEfastjetcLcLPseudoJetgR(void *p);
+   static void destruct_CAPcLcLFilterlEfastjetcLcLPseudoJetgR(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::CAP::Filter<fastjet::PseudoJet>*)
+   {
+      ::CAP::Filter<fastjet::PseudoJet> *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::CAP::Filter<fastjet::PseudoJet>));
+      static ::ROOT::TGenericClassInfo 
+         instance("CAP::Filter<fastjet::PseudoJet>", "Filter.hpp", 34,
+                  typeid(::CAP::Filter<fastjet::PseudoJet>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &CAPcLcLFilterlEfastjetcLcLPseudoJetgR_Dictionary, isa_proxy, 4,
+                  sizeof(::CAP::Filter<fastjet::PseudoJet>) );
+      instance.SetNew(&new_CAPcLcLFilterlEfastjetcLcLPseudoJetgR);
+      instance.SetNewArray(&newArray_CAPcLcLFilterlEfastjetcLcLPseudoJetgR);
+      instance.SetDelete(&delete_CAPcLcLFilterlEfastjetcLcLPseudoJetgR);
+      instance.SetDeleteArray(&deleteArray_CAPcLcLFilterlEfastjetcLcLPseudoJetgR);
+      instance.SetDestructor(&destruct_CAPcLcLFilterlEfastjetcLcLPseudoJetgR);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::CAP::Filter<fastjet::PseudoJet>*)
+   {
+      return GenerateInitInstanceLocal(static_cast<::CAP::Filter<fastjet::PseudoJet>*>(nullptr));
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::CAP::Filter<fastjet::PseudoJet>*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
+
+   // Dictionary for non-ClassDef classes
+   static TClass *CAPcLcLFilterlEfastjetcLcLPseudoJetgR_Dictionary() {
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal(static_cast<const ::CAP::Filter<fastjet::PseudoJet>*>(nullptr))->GetClass();
+      CAPcLcLFilterlEfastjetcLcLPseudoJetgR_TClassManip(theClass);
+   return theClass;
+   }
+
+   static void CAPcLcLFilterlEfastjetcLcLPseudoJetgR_TClassManip(TClass* ){
+   }
+
+} // end of namespace ROOT
+
+namespace ROOT {
    static void *new_CAPcLcLEventFilter(void *p = nullptr);
    static void *newArray_CAPcLcLEventFilter(Long_t size, void *p);
    static void delete_CAPcLcLEventFilter(void *p);
@@ -513,6 +604,38 @@ namespace ROOT {
 } // end of namespace ROOT
 
 namespace ROOT {
+   static void *new_CAPcLcLJetFilter(void *p = nullptr);
+   static void *newArray_CAPcLcLJetFilter(Long_t size, void *p);
+   static void delete_CAPcLcLJetFilter(void *p);
+   static void deleteArray_CAPcLcLJetFilter(void *p);
+   static void destruct_CAPcLcLJetFilter(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::CAP::JetFilter*)
+   {
+      ::CAP::JetFilter *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::CAP::JetFilter >(nullptr);
+      static ::ROOT::TGenericClassInfo 
+         instance("CAP::JetFilter", ::CAP::JetFilter::Class_Version(), "JetFilter.hpp", 21,
+                  typeid(::CAP::JetFilter), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &::CAP::JetFilter::Dictionary, isa_proxy, 4,
+                  sizeof(::CAP::JetFilter) );
+      instance.SetNew(&new_CAPcLcLJetFilter);
+      instance.SetNewArray(&newArray_CAPcLcLJetFilter);
+      instance.SetDelete(&delete_CAPcLcLJetFilter);
+      instance.SetDeleteArray(&deleteArray_CAPcLcLJetFilter);
+      instance.SetDestructor(&destruct_CAPcLcLJetFilter);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::CAP::JetFilter*)
+   {
+      return GenerateInitInstanceLocal(static_cast<::CAP::JetFilter*>(nullptr));
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::CAP::JetFilter*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
+} // end of namespace ROOT
+
+namespace ROOT {
    static void *new_CAPcLcLEventTask(void *p = nullptr);
    static void *newArray_CAPcLcLEventTask(Long_t size, void *p);
    static void delete_CAPcLcLEventTask(void *p);
@@ -525,7 +648,7 @@ namespace ROOT {
       ::CAP::EventTask *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::CAP::EventTask >(nullptr);
       static ::ROOT::TGenericClassInfo 
-         instance("CAP::EventTask", ::CAP::EventTask::Class_Version(), "EventTask.hpp", 27,
+         instance("CAP::EventTask", ::CAP::EventTask::Class_Version(), "EventTask.hpp", 28,
                   typeid(::CAP::EventTask), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::CAP::EventTask::Dictionary, isa_proxy, 4,
                   sizeof(::CAP::EventTask) );
@@ -717,7 +840,7 @@ namespace ROOT {
       ::CAP::FilterCreator *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::CAP::FilterCreator >(nullptr);
       static ::ROOT::TGenericClassInfo 
-         instance("CAP::FilterCreator", ::CAP::FilterCreator::Class_Version(), "FilterCreator.hpp", 23,
+         instance("CAP::FilterCreator", ::CAP::FilterCreator::Class_Version(), "FilterCreator.hpp", 22,
                   typeid(::CAP::FilterCreator), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::CAP::FilterCreator::Dictionary, isa_proxy, 4,
                   sizeof(::CAP::FilterCreator) );
@@ -923,6 +1046,43 @@ template <> TClass *Manager<CAP::ParticleFilter>::Class()
 } // namespace CAP
 namespace CAP {
 //______________________________________________________________________________
+template <> atomic_TClass_ptr Manager<CAP::JetFilter>::fgIsA(nullptr);  // static to hold class pointer
+
+//______________________________________________________________________________
+template <> const char *Manager<CAP::JetFilter>::Class_Name()
+{
+   return "CAP::Manager<CAP::JetFilter>";
+}
+
+//______________________________________________________________________________
+template <> const char *Manager<CAP::JetFilter>::ImplFileName()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::CAP::Manager<CAP::JetFilter>*)nullptr)->GetImplFileName();
+}
+
+//______________________________________________________________________________
+template <> int Manager<CAP::JetFilter>::ImplFileLine()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::CAP::Manager<CAP::JetFilter>*)nullptr)->GetImplFileLine();
+}
+
+//______________________________________________________________________________
+template <> TClass *Manager<CAP::JetFilter>::Dictionary()
+{
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::CAP::Manager<CAP::JetFilter>*)nullptr)->GetClass();
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+template <> TClass *Manager<CAP::JetFilter>::Class()
+{
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::CAP::Manager<CAP::JetFilter>*)nullptr)->GetClass(); }
+   return fgIsA;
+}
+
+} // namespace CAP
+namespace CAP {
+//______________________________________________________________________________
 atomic_TClass_ptr Event::fgIsA(nullptr);  // static to hold class pointer
 
 //______________________________________________________________________________
@@ -1102,6 +1262,43 @@ TClass *EventCountHistos::Dictionary()
 TClass *EventCountHistos::Class()
 {
    if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::CAP::EventCountHistos*)nullptr)->GetClass(); }
+   return fgIsA;
+}
+
+} // namespace CAP
+namespace CAP {
+//______________________________________________________________________________
+atomic_TClass_ptr JetFilter::fgIsA(nullptr);  // static to hold class pointer
+
+//______________________________________________________________________________
+const char *JetFilter::Class_Name()
+{
+   return "CAP::JetFilter";
+}
+
+//______________________________________________________________________________
+const char *JetFilter::ImplFileName()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetFilter*)nullptr)->GetImplFileName();
+}
+
+//______________________________________________________________________________
+int JetFilter::ImplFileLine()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetFilter*)nullptr)->GetImplFileLine();
+}
+
+//______________________________________________________________________________
+TClass *JetFilter::Dictionary()
+{
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetFilter*)nullptr)->GetClass();
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+TClass *JetFilter::Class()
+{
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetFilter*)nullptr)->GetClass(); }
    return fgIsA;
 }
 
@@ -1542,6 +1739,41 @@ namespace ROOT {
 
 namespace CAP {
 //______________________________________________________________________________
+template <> void Manager<CAP::JetFilter>::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class CAP::Manager<CAP::JetFilter>.
+
+   if (R__b.IsReading()) {
+      R__b.ReadClassBuffer(CAP::Manager<CAP::JetFilter>::Class(),this);
+   } else {
+      R__b.WriteClassBuffer(CAP::Manager<CAP::JetFilter>::Class(),this);
+   }
+}
+
+} // namespace CAP
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_CAPcLcLManagerlECAPcLcLJetFiltergR(void *p) {
+      return  p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) ::CAP::Manager<CAP::JetFilter> : new ::CAP::Manager<CAP::JetFilter>;
+   }
+   static void *newArray_CAPcLcLManagerlECAPcLcLJetFiltergR(Long_t nElements, void *p) {
+      return p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) ::CAP::Manager<CAP::JetFilter>[nElements] : new ::CAP::Manager<CAP::JetFilter>[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_CAPcLcLManagerlECAPcLcLJetFiltergR(void *p) {
+      delete (static_cast<::CAP::Manager<CAP::JetFilter>*>(p));
+   }
+   static void deleteArray_CAPcLcLManagerlECAPcLcLJetFiltergR(void *p) {
+      delete [] (static_cast<::CAP::Manager<CAP::JetFilter>*>(p));
+   }
+   static void destruct_CAPcLcLManagerlECAPcLcLJetFiltergR(void *p) {
+      typedef ::CAP::Manager<CAP::JetFilter> current_t;
+      (static_cast<current_t*>(p))->~current_t();
+   }
+} // end of namespace ROOT for class ::CAP::Manager<CAP::JetFilter>
+
+namespace CAP {
+//______________________________________________________________________________
 void Event::Streamer(TBuffer &R__b)
 {
    // Stream an object of class CAP::Event.
@@ -1644,6 +1876,27 @@ namespace ROOT {
       (static_cast<current_t*>(p))->~current_t();
    }
 } // end of namespace ROOT for class ::CAP::Filter<CAP::Particle>
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_CAPcLcLFilterlEfastjetcLcLPseudoJetgR(void *p) {
+      return  p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) ::CAP::Filter<fastjet::PseudoJet> : new ::CAP::Filter<fastjet::PseudoJet>;
+   }
+   static void *newArray_CAPcLcLFilterlEfastjetcLcLPseudoJetgR(Long_t nElements, void *p) {
+      return p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) ::CAP::Filter<fastjet::PseudoJet>[nElements] : new ::CAP::Filter<fastjet::PseudoJet>[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_CAPcLcLFilterlEfastjetcLcLPseudoJetgR(void *p) {
+      delete (static_cast<::CAP::Filter<fastjet::PseudoJet>*>(p));
+   }
+   static void deleteArray_CAPcLcLFilterlEfastjetcLcLPseudoJetgR(void *p) {
+      delete [] (static_cast<::CAP::Filter<fastjet::PseudoJet>*>(p));
+   }
+   static void destruct_CAPcLcLFilterlEfastjetcLcLPseudoJetgR(void *p) {
+      typedef ::CAP::Filter<fastjet::PseudoJet> current_t;
+      (static_cast<current_t*>(p))->~current_t();
+   }
+} // end of namespace ROOT for class ::CAP::Filter<fastjet::PseudoJet>
 
 namespace CAP {
 //______________________________________________________________________________
@@ -1749,6 +2002,41 @@ namespace ROOT {
       (static_cast<current_t*>(p))->~current_t();
    }
 } // end of namespace ROOT for class ::CAP::EventCountHistos
+
+namespace CAP {
+//______________________________________________________________________________
+void JetFilter::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class CAP::JetFilter.
+
+   if (R__b.IsReading()) {
+      R__b.ReadClassBuffer(CAP::JetFilter::Class(),this);
+   } else {
+      R__b.WriteClassBuffer(CAP::JetFilter::Class(),this);
+   }
+}
+
+} // namespace CAP
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_CAPcLcLJetFilter(void *p) {
+      return  p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) ::CAP::JetFilter : new ::CAP::JetFilter;
+   }
+   static void *newArray_CAPcLcLJetFilter(Long_t nElements, void *p) {
+      return p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) ::CAP::JetFilter[nElements] : new ::CAP::JetFilter[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_CAPcLcLJetFilter(void *p) {
+      delete (static_cast<::CAP::JetFilter*>(p));
+   }
+   static void deleteArray_CAPcLcLJetFilter(void *p) {
+      delete [] (static_cast<::CAP::JetFilter*>(p));
+   }
+   static void destruct_CAPcLcLJetFilter(void *p) {
+      typedef ::CAP::JetFilter current_t;
+      (static_cast<current_t*>(p))->~current_t();
+   }
+} // end of namespace ROOT for class ::CAP::JetFilter
 
 namespace CAP {
 //______________________________________________________________________________
@@ -2010,7 +2298,7 @@ namespace ROOT {
       vector<bool> *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<bool>));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<bool>", -2, "vector", 1813,
+         instance("vector<bool>", -2, "vector", 2055,
                   typeid(vector<bool>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlEboolgR_Dictionary, isa_proxy, 0,
                   sizeof(vector<bool>) );
@@ -2075,7 +2363,7 @@ namespace ROOT {
       vector<TString> *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<TString>));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<TString>", -2, "vector", 387,
+         instance("vector<TString>", -2, "vector", 383,
                   typeid(vector<TString>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlETStringgR_Dictionary, isa_proxy, 0,
                   sizeof(vector<TString>) );
@@ -2140,7 +2428,7 @@ namespace ROOT {
       vector<CAP::ParticleFilter*> *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<CAP::ParticleFilter*>));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<CAP::ParticleFilter*>", -2, "vector", 387,
+         instance("vector<CAP::ParticleFilter*>", -2, "vector", 383,
                   typeid(vector<CAP::ParticleFilter*>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlECAPcLcLParticleFiltermUgR_Dictionary, isa_proxy, 0,
                   sizeof(vector<CAP::ParticleFilter*>) );
@@ -2205,7 +2493,7 @@ namespace ROOT {
       vector<CAP::Particle*> *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<CAP::Particle*>));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<CAP::Particle*>", -2, "vector", 387,
+         instance("vector<CAP::Particle*>", -2, "vector", 383,
                   typeid(vector<CAP::Particle*>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlECAPcLcLParticlemUgR_Dictionary, isa_proxy, 0,
                   sizeof(vector<CAP::Particle*>) );
@@ -2256,6 +2544,71 @@ namespace ROOT {
 } // end of namespace ROOT for class vector<CAP::Particle*>
 
 namespace ROOT {
+   static TClass *vectorlECAPcLcLJetFiltermUgR_Dictionary();
+   static void vectorlECAPcLcLJetFiltermUgR_TClassManip(TClass*);
+   static void *new_vectorlECAPcLcLJetFiltermUgR(void *p = nullptr);
+   static void *newArray_vectorlECAPcLcLJetFiltermUgR(Long_t size, void *p);
+   static void delete_vectorlECAPcLcLJetFiltermUgR(void *p);
+   static void deleteArray_vectorlECAPcLcLJetFiltermUgR(void *p);
+   static void destruct_vectorlECAPcLcLJetFiltermUgR(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const vector<CAP::JetFilter*>*)
+   {
+      vector<CAP::JetFilter*> *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<CAP::JetFilter*>));
+      static ::ROOT::TGenericClassInfo 
+         instance("vector<CAP::JetFilter*>", -2, "vector", 383,
+                  typeid(vector<CAP::JetFilter*>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &vectorlECAPcLcLJetFiltermUgR_Dictionary, isa_proxy, 0,
+                  sizeof(vector<CAP::JetFilter*>) );
+      instance.SetNew(&new_vectorlECAPcLcLJetFiltermUgR);
+      instance.SetNewArray(&newArray_vectorlECAPcLcLJetFiltermUgR);
+      instance.SetDelete(&delete_vectorlECAPcLcLJetFiltermUgR);
+      instance.SetDeleteArray(&deleteArray_vectorlECAPcLcLJetFiltermUgR);
+      instance.SetDestructor(&destruct_vectorlECAPcLcLJetFiltermUgR);
+      instance.AdoptCollectionProxyInfo(TCollectionProxyInfo::Generate(TCollectionProxyInfo::Pushback< vector<CAP::JetFilter*> >()));
+
+      instance.AdoptAlternate(::ROOT::AddClassAlternate("vector<CAP::JetFilter*>","std::__1::vector<CAP::JetFilter*, std::__1::allocator<CAP::JetFilter*>>"));
+      return &instance;
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const vector<CAP::JetFilter*>*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
+
+   // Dictionary for non-ClassDef classes
+   static TClass *vectorlECAPcLcLJetFiltermUgR_Dictionary() {
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal(static_cast<const vector<CAP::JetFilter*>*>(nullptr))->GetClass();
+      vectorlECAPcLcLJetFiltermUgR_TClassManip(theClass);
+   return theClass;
+   }
+
+   static void vectorlECAPcLcLJetFiltermUgR_TClassManip(TClass* ){
+   }
+
+} // end of namespace ROOT
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_vectorlECAPcLcLJetFiltermUgR(void *p) {
+      return  p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) vector<CAP::JetFilter*> : new vector<CAP::JetFilter*>;
+   }
+   static void *newArray_vectorlECAPcLcLJetFiltermUgR(Long_t nElements, void *p) {
+      return p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) vector<CAP::JetFilter*>[nElements] : new vector<CAP::JetFilter*>[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_vectorlECAPcLcLJetFiltermUgR(void *p) {
+      delete (static_cast<vector<CAP::JetFilter*>*>(p));
+   }
+   static void deleteArray_vectorlECAPcLcLJetFiltermUgR(void *p) {
+      delete [] (static_cast<vector<CAP::JetFilter*>*>(p));
+   }
+   static void destruct_vectorlECAPcLcLJetFiltermUgR(void *p) {
+      typedef vector<CAP::JetFilter*> current_t;
+      (static_cast<current_t*>(p))->~current_t();
+   }
+} // end of namespace ROOT for class vector<CAP::JetFilter*>
+
+namespace ROOT {
    static TClass *vectorlECAPcLcLEventFiltermUgR_Dictionary();
    static void vectorlECAPcLcLEventFiltermUgR_TClassManip(TClass*);
    static void *new_vectorlECAPcLcLEventFiltermUgR(void *p = nullptr);
@@ -2270,7 +2623,7 @@ namespace ROOT {
       vector<CAP::EventFilter*> *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<CAP::EventFilter*>));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<CAP::EventFilter*>", -2, "vector", 387,
+         instance("vector<CAP::EventFilter*>", -2, "vector", 383,
                   typeid(vector<CAP::EventFilter*>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlECAPcLcLEventFiltermUgR_Dictionary, isa_proxy, 0,
                   sizeof(vector<CAP::EventFilter*>) );
@@ -2335,7 +2688,7 @@ namespace ROOT {
       vector<CAP::Event*> *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<CAP::Event*>));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<CAP::Event*>", -2, "vector", 387,
+         instance("vector<CAP::Event*>", -2, "vector", 383,
                   typeid(vector<CAP::Event*>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlECAPcLcLEventmUgR_Dictionary, isa_proxy, 0,
                   sizeof(vector<CAP::Event*>) );
@@ -2400,7 +2753,7 @@ namespace ROOT {
       vector<CAP::Condition*> *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<CAP::Condition*>));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<CAP::Condition*>", -2, "vector", 387,
+         instance("vector<CAP::Condition*>", -2, "vector", 383,
                   typeid(vector<CAP::Condition*>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlECAPcLcLConditionmUgR_Dictionary, isa_proxy, 0,
                   sizeof(vector<CAP::Condition*>) );
@@ -2464,38 +2817,39 @@ namespace {
 "ParticleDecayerTask.hpp",
 "ParticleFilter.hpp",
 "ParticlePairFilter.hpp",
+"JetFilter.hpp",
 "RootChainManager.hpp",
 "FilterCreator.hpp",
 nullptr
     };
     static const char* includePaths[] = {
-"/Users/aa7526/opt/root_install/include",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Base",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Math",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Xml",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/ParticleDb",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Particles",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/SubSample",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/CAPPythia",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Global",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Jets",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Spherocity",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/ParticleSingle",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/ParticlePair",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/ParticlePair3D",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/NuDyn",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/PtPt",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Plotting",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Therminator",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Performance",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Exec",
+"/usr/local/Cellar/root/6.32.06/include/root",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Base",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Math",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Xml",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/ParticleDb",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Particles",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/SubSample",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/CAPPythia",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Global",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Jets",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Spherocity",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/ParticleSingle",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/ParticlePair",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/ParticlePair3D",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/NuDyn",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/PtPt",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Plotting",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Therminator",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Performance",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Exec",
 "/include",
 "/Users/aa7526/opt/fastjet-3.4.3/include",
 "/Users/aa7526/opt/Pythia/pythia8307/include",
 "/Users/aa7526/opt/Pythia/pythia8307/include/Pythia8",
-"/Users/aa7526/opt/root_install/include/",
-"/Users/aa7526/Documents/GitHub/CAP6.0/homeBuild/Particles/",
+"/usr/local/Cellar/root/6.32.06/include/root",
+"/Users/aa7526/Documents/GitHub/CAP6.1/homeBuild/Particles/",
 nullptr
     };
     static const char* fwdDeclCode = R"DICTFWDDCLS(
@@ -2512,9 +2866,11 @@ namespace CAP{template <class Event> class __attribute__((annotate("$clingAutolo
 }
 namespace CAP{class __attribute__((annotate("$clingAutoload$EventFilter.hpp")))  EventFilter;}
 namespace CAP{class __attribute__((annotate("$clingAutoload$ParticleFilter.hpp")))  __attribute__((annotate("$clingAutoload$EventCountHistos.hpp")))  ParticleFilter;}
+namespace CAP{class __attribute__((annotate("$clingAutoload$JetFilter.hpp")))  __attribute__((annotate("$clingAutoload$EventTask.hpp")))  JetFilter;}
 namespace CAP{class __attribute__((annotate("$clingAutoload$EventAccountant.hpp")))  EventAccountant;}
 namespace CAP{template <class T> class __attribute__((annotate("$clingAutoload$Filter.hpp")))  __attribute__((annotate("$clingAutoload$EventFilter.hpp")))  Filter;
 }
+namespace fastjet{class __attribute__((annotate("$clingAutoload$fastjet/PseudoJet.hh")))  __attribute__((annotate("$clingAutoload$EventTask.hpp")))  PseudoJet;}
 namespace CAP{class __attribute__((annotate("$clingAutoload$EventCountHistos.hpp")))  EventCountHistos;}
 namespace CAP{class __attribute__((annotate("$clingAutoload$EventTask.hpp")))  EventTask;}
 namespace CAP{class __attribute__((annotate("$clingAutoload$EventIterator.hpp")))  EventIterator;}
@@ -2541,6 +2897,7 @@ namespace CAP{class __attribute__((annotate("$clingAutoload$FilterCreator.hpp"))
 #include "ParticleDecayerTask.hpp"
 #include "ParticleFilter.hpp"
 #include "ParticlePairFilter.hpp"
+#include "JetFilter.hpp"
 #include "RootChainManager.hpp"
 #include "FilterCreator.hpp"
 
@@ -2556,9 +2913,12 @@ namespace CAP{class __attribute__((annotate("$clingAutoload$FilterCreator.hpp"))
 "CAP::Factory<CAP::Particle>", payloadCode, "@",
 "CAP::Filter<CAP::Event>", payloadCode, "@",
 "CAP::Filter<CAP::Particle>", payloadCode, "@",
+"CAP::Filter<fastjet::PseudoJet>", payloadCode, "@",
 "CAP::FilterCreator", payloadCode, "@",
+"CAP::JetFilter", payloadCode, "@",
 "CAP::Manager<CAP::Event>", payloadCode, "@",
 "CAP::Manager<CAP::EventFilter>", payloadCode, "@",
+"CAP::Manager<CAP::JetFilter>", payloadCode, "@",
 "CAP::Manager<CAP::ParticleFilter>", payloadCode, "@",
 "CAP::Particle", payloadCode, "@",
 "CAP::ParticleDecayer", payloadCode, "@",

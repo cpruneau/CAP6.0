@@ -12,7 +12,6 @@
 #ifndef CAP__SpherocityCalculator
 #define CAP__SpherocityCalculator
 #include "EventTask.hpp"
-#include "SpherocityExceptions.hpp"
 
 namespace CAP
 {

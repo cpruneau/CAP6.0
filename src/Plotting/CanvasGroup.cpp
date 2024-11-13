@@ -94,6 +94,8 @@ TCanvas * CanvasGroup::createCanvas(const String & canvasName,
   canvas->SetFillStyle(   configuration.getValueInt("windowFillStyle") );
   canvas->SetBorderSize(  configuration.getValueInt("windowBorderSize") );
   canvas->SetBorderMode(  configuration.getValueInt("windowBorderMode") );
+  canvas->SetTicky(1);
+  canvas->SetTickx(1);
   canvases.push_back(canvas);
   return canvas;
 }

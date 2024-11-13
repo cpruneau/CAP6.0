@@ -14,7 +14,6 @@
 #define CAP__FilterCreator
 #include "EventTask.hpp"
 #include "Event.hpp"
-#include "EventFilter.hpp"
 #include "ParticleType.hpp"
 #include "ParticleDb.hpp"
 
@@ -57,6 +56,16 @@ protected:
                             const vector<double>  & conditionMinima2,
                             const vector<double>  & conditionMaxima2);
 
+  void createJetFilter(const String & name,
+                         const String & title,
+                         const vector<String>  & conditionTypes,
+                         const vector<String>  & conditionSubypes,
+                         const vector<double>  & conditionMinima,
+                         const vector<double>  & conditionMaxima,
+                         const vector<double>  & conditionMinima2,
+                         const vector<double>  & conditionMaxima2);
+  
+  
   ClassDef(FilterCreator,0)
 };
 

@@ -224,15 +224,15 @@ void ParticlePair3DBfHistos::calculateBfHistograms(ParticlePair3DDerivedHistos &
 //  printValue("pair2B1B.h_c2_Qinv",pair21B.h_c2_Qinv->GetXaxis()->GetNbins());
 //  printValue("this.h_B12_Qinv",   h_B12_Qinv->GetXaxis()->GetNbins());
 
-  h_B12_Qinv   ->Add(pair21B.h_c2_Qinv,   pair2B1B.h_c2_Qinv,   1.0,-1.0);
-  h_B12_DeltaPs->Add(pair21B.h_c2_DeltaPs,pair2B1B.h_c2_DeltaPs,1.0,-1.0);
-  h_B12_DeltaPo->Add(pair21B.h_c2_DeltaPo,pair2B1B.h_c2_DeltaPo,1.0,-1.0);
-  h_B12_DeltaPl->Add(pair21B.h_c2_DeltaPl,pair2B1B.h_c2_DeltaPl,1.0,-1.0);
+  h_B12_Qinv   ->Add(pair21B.h_a12_Qinv,   pair2B1B.h_a12_Qinv,   1.0,-1.0);
+  h_B12_DeltaPs->Add(pair21B.h_a12_DeltaPs,pair2B1B.h_a12_DeltaPs,1.0,-1.0);
+  h_B12_DeltaPo->Add(pair21B.h_a12_DeltaPo,pair2B1B.h_a12_DeltaPo,1.0,-1.0);
+  h_B12_DeltaPl->Add(pair21B.h_a12_DeltaPl,pair2B1B.h_a12_DeltaPl,1.0,-1.0);
 
-  h_B21_Qinv   ->Add(pair2B1.h_c2_Qinv,   pair21.h_c2_Qinv,   1.0,-1.0);
-  h_B21_DeltaPs->Add(pair2B1.h_c2_DeltaPs,pair21.h_c2_DeltaPs,1.0,-1.0);
-  h_B21_DeltaPo->Add(pair2B1.h_c2_DeltaPo,pair21.h_c2_DeltaPo,1.0,-1.0);
-  h_B21_DeltaPl->Add(pair2B1.h_c2_DeltaPl,pair21.h_c2_DeltaPl,1.0,-1.0);
+  h_B21_Qinv   ->Add(pair2B1.h_a21_Qinv,   pair21.h_a21_Qinv,   1.0,-1.0);
+  h_B21_DeltaPs->Add(pair2B1.h_a21_DeltaPs,pair21.h_a21_DeltaPs,1.0,-1.0);
+  h_B21_DeltaPo->Add(pair2B1.h_a21_DeltaPo,pair21.h_a21_DeltaPo,1.0,-1.0);
+  h_B21_DeltaPl->Add(pair2B1.h_a21_DeltaPl,pair21.h_a21_DeltaPl,1.0,-1.0);
 
   h_Bs_Qinv    ->Add(h_B12_Qinv,    h_B21_Qinv,      0.5, 0.5);
   h_Bs_DeltaPs ->Add(h_B12_DeltaPs, h_B12_DeltaPs,   0.5, 0.5);

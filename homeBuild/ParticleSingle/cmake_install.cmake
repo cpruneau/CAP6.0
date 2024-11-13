@@ -1,4 +1,4 @@
-# Install script for directory: /Users/aa7526/Documents/GitHub/CAP6.0/src/ParticleSingle
+# Install script for directory: /Users/aa7526/Documents/GitHub/CAP6.1/src/ParticleSingle
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,39 +39,39 @@ endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/Users/aa7526/Documents/GitHub/CAP6.0/lib/libParticleSingle.rootmap;/Users/aa7526/Documents/GitHub/CAP6.0/lib/libParticleSingle_rdict.pcm")
+   "/Users/aa7526/Documents/GitHub/CAP6.1/lib/libParticleSingle.rootmap;/Users/aa7526/Documents/GitHub/CAP6.1/lib/libParticleSingle_rdict.pcm")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "/Users/aa7526/Documents/GitHub/CAP6.0/lib" TYPE FILE FILES
-    "/Users/aa7526/Documents/GitHub/CAP6.0/homeBuild/ParticleSingle/libParticleSingle.rootmap"
-    "/Users/aa7526/Documents/GitHub/CAP6.0/homeBuild/ParticleSingle/libParticleSingle_rdict.pcm"
+  file(INSTALL DESTINATION "/Users/aa7526/Documents/GitHub/CAP6.1/lib" TYPE FILE FILES
+    "/Users/aa7526/Documents/GitHub/CAP6.1/homeBuild/ParticleSingle/libParticleSingle.rootmap"
+    "/Users/aa7526/Documents/GitHub/CAP6.1/homeBuild/ParticleSingle/libParticleSingle_rdict.pcm"
     )
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/Users/aa7526/Documents/GitHub/CAP6.0/lib/libParticleSingle.dylib")
+   "/Users/aa7526/Documents/GitHub/CAP6.1/lib/libParticleSingle.dylib")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "/Users/aa7526/Documents/GitHub/CAP6.0/lib" TYPE SHARED_LIBRARY FILES "/Users/aa7526/Documents/GitHub/CAP6.0/homeBuild/ParticleSingle/libParticleSingle.dylib")
-  if(EXISTS "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.0/lib/libParticleSingle.dylib" AND
-     NOT IS_SYMLINK "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.0/lib/libParticleSingle.dylib")
+  file(INSTALL DESTINATION "/Users/aa7526/Documents/GitHub/CAP6.1/lib" TYPE SHARED_LIBRARY FILES "/Users/aa7526/Documents/GitHub/CAP6.1/homeBuild/ParticleSingle/libParticleSingle.dylib")
+  if(EXISTS "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.1/lib/libParticleSingle.dylib" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.1/lib/libParticleSingle.dylib")
     execute_process(COMMAND /usr/bin/install_name_tool
-      -delete_rpath "/Users/aa7526/opt/root_install/lib"
-      -delete_rpath "/Users/aa7526/Documents/GitHub/CAP6.0/homeBuild/Particles"
-      -delete_rpath "/Users/aa7526/Documents/GitHub/CAP6.0/homeBuild/ParticleDb"
-      -delete_rpath "/Users/aa7526/Documents/GitHub/CAP6.0/homeBuild/Base"
-      "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.0/lib/libParticleSingle.dylib")
+      -delete_rpath "/usr/local/Cellar/root/6.32.06/lib/root"
+      -delete_rpath "/Users/aa7526/Documents/GitHub/CAP6.1/homeBuild/Particles"
+      -delete_rpath "/Users/aa7526/Documents/GitHub/CAP6.1/homeBuild/ParticleDb"
+      -delete_rpath "/Users/aa7526/Documents/GitHub/CAP6.1/homeBuild/Base"
+      "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.1/lib/libParticleSingle.dylib")
     if(CMAKE_INSTALL_DO_STRIP)
-      execute_process(COMMAND "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip" -x "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.0/lib/libParticleSingle.dylib")
+      execute_process(COMMAND "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip" -x "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.1/lib/libParticleSingle.dylib")
     endif()
   endif()
 endif()

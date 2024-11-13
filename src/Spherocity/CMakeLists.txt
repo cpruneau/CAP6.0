@@ -9,7 +9,7 @@ ROOT_GENERATE_DICTIONARY(G__Spherocity SpherocityHistos.hpp  SpherocityAnalyzer.
 # Create a shared library with generated dictionary
 ################################################################################################
 add_compile_options(-Wall -Wextra -pedantic)
-add_library(Spherocity SHARED  SpherocityExceptions.cpp SpherocityHistos.cpp SpherocityAnalyzer.cpp SpherocityCalculator.cpp G__Spherocity.cxx)
+add_library(Spherocity SHARED   SpherocityHistos.cpp SpherocityAnalyzer.cpp SpherocityCalculator.cpp G__Spherocity.cxx)
 
 target_link_libraries(Spherocity Base  Particles  ${ROOT_LIBRARIES} ${EXTRA_LIBS} )
 target_include_directories(Spherocity  PUBLIC Spherocity Base  Particles  ${EXTRA_INCLUDES} )

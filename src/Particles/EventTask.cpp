@@ -25,13 +25,16 @@ Manager<ParticleDb>(),
 Manager<Event>(),
 Manager<EventFilter>(),
 Manager<ParticleFilter>(),
+Manager<JetFilter>(),
 EventAccountant(),
 particleFactory(nullptr),
 particleDb(nullptr),
 nEventFilters(0),
 nParticleFilters(0),
+nJetFilters(0),
 eventFilterAccepted(),
 particleFilterAccepted(),
+jetFilterAccepted(),
 particleFilterCount(),
 particleFilterPtSum(),
 allParticlesAccepted()
@@ -49,6 +52,7 @@ Manager<ParticleDb>(task),
 Manager<Event>(task),
 Manager<EventFilter>(task),
 Manager<ParticleFilter>(task),
+Manager<JetFilter>(task),
 EventAccountant(task),
 particleFactory(task.particleFactory),
 particleDb(nullptr),
@@ -56,6 +60,7 @@ nEventFilters(0),
 nParticleFilters(0),
 eventFilterAccepted(),
 particleFilterAccepted(),
+jetFilterAccepted(),
 particleFilterCount(),
 particleFilterPtSum(),
 allParticlesAccepted()
@@ -64,23 +69,26 @@ allParticlesAccepted()
 EventTask & EventTask::operator=(const EventTask & task)
 {
   if (this!=&task)
-    {
+  {
     HistogramTask::operator=(task);
     Manager<ParticleDb>::operator=(task);
     Manager<Event>::operator=(task);
     Manager<EventFilter>::operator=(task);
     Manager<ParticleFilter>::operator=(task);
+    Manager<JetFilter>::operator=(task);
     EventAccountant::operator=(task);
-    particleFactory      = task.particleFactory;
-    particleDb           = task.particleDb;
-    nEventFilters        = task.nEventFilters;
-    nParticleFilters     = task.nParticleFilters;
-    eventFilterAccepted  = task.eventFilterAccepted;
+    particleFactory        = task.particleFactory;
+    particleDb             = task.particleDb;
+    nEventFilters          = task.nEventFilters;
+    nParticleFilters       = task.nParticleFilters;
+    nJetFilters            = task.nJetFilters;
+    eventFilterAccepted    = task.eventFilterAccepted;
     particleFilterAccepted = task.particleFilterAccepted;
-    particleFilterCount  = task.particleFilterCount;
-    particleFilterPtSum  = task.particleFilterPtSum;
-    allParticlesAccepted = task.allParticlesAccepted;
-    }
+    jetFilterAccepted      = task.jetFilterAccepted;
+    particleFilterCount    = task.particleFilterCount;
+    particleFilterPtSum    = task.particleFilterPtSum;
+    allParticlesAccepted   = task.allParticlesAccepted;
+  }
   return *this;
 }
 
@@ -106,20 +114,23 @@ void EventTask::configure()
 void EventTask::initialize()
 {
   if (reportDebug(__FUNCTION__))
-    { /* no ops */  };
+  { /* no ops */  };
   HistogramTask::initialize();
   TaskAccountant::reset();
   particleFactory = Particle::getFactory();
   particleDb = Manager<ParticleDb>::getObjectAt(0);
   eventFilters     = Manager<EventFilter>::getObjects();
   particleFilters  = Manager<ParticleFilter>::getObjects();
+  jetFilters       = Manager<JetFilter>::getObjects();
   nEventFilters    = eventFilters.size();
   nParticleFilters = particleFilters.size();
+  nJetFilters      = jetFilters.size();
   if (nEventFilters<1) throw TaskException("nEventFilters<1",__FUNCTION__);
   if (nParticleFilters<1) throw TaskException("nParticleFilters<1",__FUNCTION__);
   EventAccountant::initialize(nEventFilters,nParticleFilters);
   eventFilterAccepted.assign(nEventFilters,false);
   particleFilterAccepted.assign(nParticleFilters,false);
+  jetFilterAccepted.assign(nJetFilters,false);
   particleFilterCount.assign(nParticleFilters,0);
   particleFilterPtSum.assign(nParticleFilters,0);
   particleFilterPt2Sum.assign(nParticleFilters,0);
@@ -142,13 +153,13 @@ void EventTask::finalize()
   String exportPath = getHistoExportPath();
   String exportFile = getHistoExportFile();
   if (reportDebug(__FUNCTION__))
-    {
+  {
     printCR();
     printLine();
     printValue("Histos Export Path",exportPath);
     printValue("Histos Export File",exportFile);
     printLine();
-    }
+  }
   if (exportPath.Length()>2) createDirectory(exportPath);
   if (exportFile.Length()<5)
     throw FileException(exportFile,"File name too short. Must have 5 character or more...",__FUNCTION__);
@@ -211,25 +222,25 @@ void EventTask::print(std::ostream & os,int style, int size) const
 //!An array of bools is produced on output which indicates what filters are satisfied by the event.
 //!
 bool EventTask::analyzeThisEvent(Event & event,
-                      std::vector<EventFilter*> & eventFilters,
-                      std::vector<bool> & eventFilterAccepted)
+                                 std::vector<EventFilter*> & eventFilters,
+                                 std::vector<bool> & eventFilterAccepted)
 {
   bool analyzeEvent = false;
   unsigned int iEventFilter=0;
   for (auto & eventFilter : eventFilters)
-    {
+  {
     if (eventFilter->accept(event))
-      {
+    {
       incrementEventsAccepted(iEventFilter);
       eventFilterAccepted[iEventFilter] = true;
       analyzeEvent = true;
-      }
-    else
-      {
-      eventFilterAccepted[iEventFilter] = false;
-      }
-    iEventFilter++;
     }
+    else
+    {
+      eventFilterAccepted[iEventFilter] = false;
+    }
+    iEventFilter++;
+  }
   return analyzeEvent;
 }
 
@@ -238,29 +249,29 @@ bool EventTask::analyzeThisEvent(Event & event,
 //!An array of bools is produced on output which indicates what particles satisfy the particle filters.
 //!
 bool EventTask::analyzeThisEvent(std::vector<Particle*>  & particles,
-                      std::vector<ParticleFilter*> & particleFilters,
-                      std::vector<bool> & particleFilterAccepted,
-                      std::vector< std::vector<Particle*> > & allParticlesAccepted)
+                                 std::vector<ParticleFilter*> & particleFilters,
+                                 std::vector<bool> & particleFilterAccepted,
+                                 std::vector< std::vector<Particle*> > & allParticlesAccepted)
 {
   bool analyzeEvent = false;
   unsigned int iParticleFilter = 0;
   for (auto & particleFilter : particleFilters)
-    {
+  {
     bool useThisFilter = false;
     std::vector<Particle*> & particlesAccepted = allParticlesAccepted[iParticleFilter];
     particlesAccepted.clear();
     for (auto & particle : particles)
-      {
+    {
       if (particleFilter->accept(*particle))
-        {
+      {
         useThisFilter = true; // at least one particle accepted
         particlesAccepted.push_back(particle);
-        }
       }
+    }
     particleFilterAccepted[iParticleFilter] = useThisFilter;
     if (useThisFilter) analyzeEvent = true;
     iParticleFilter++;
-    }
+  }
   return analyzeEvent;
 }
 
@@ -275,16 +286,16 @@ bool EventTask::countParticles(std::vector<Particle*>  & particles,
   bool analyzeEvent = false;
   unsigned int iParticleFilter = 0;
   for (auto & particleFilter : particleFilters)
-    {
+  {
     unsigned int count = 0;
     for (auto & particle : particles)
-      {
+    {
       if (particleFilter->accept(*particle)) count++;
-      }
+    }
     particleFilterCount[iParticleFilter] = count;
     if (count>0) analyzeEvent = true;
     iParticleFilter++;
-    }
+  }
   return analyzeEvent;
 }
 
@@ -304,7 +315,7 @@ bool EventTask::countPtSum(std::vector<Particle*>  & particles,
   bool analyzeEvent = false;
   unsigned int iParticleFilter = 0;
   for (auto & particleFilter : particleFilters)
-    {
+  {
     unsigned int count = 0;
     double pt, pt2, pt3, pt4;
     double ptSum = 0.0;
@@ -312,9 +323,9 @@ bool EventTask::countPtSum(std::vector<Particle*>  & particles,
     double pt3Sum = 0.0;
     double pt4Sum = 0.0;
     for (auto & particle : particles)
+    {
+      if (particleFilter->accept(*particle))
       {
-      if (particleFilter->accept(*particle)) 
-        { 
         count++;
         pt = particle->getMomentum().Pt();
         pt2 = pt*pt;
@@ -324,8 +335,8 @@ bool EventTask::countPtSum(std::vector<Particle*>  & particles,
         pt2Sum += pt2;
         pt3Sum += pt3;
         pt4Sum += pt4;
-        }
       }
+    }
     particleFilterCount[iParticleFilter]  = count;
     particleFilterPtSum[iParticleFilter]  = ptSum;
     particleFilterPt2Sum[iParticleFilter] = pt2Sum;
@@ -333,7 +344,7 @@ bool EventTask::countPtSum(std::vector<Particle*>  & particles,
     particleFilterPt4Sum[iParticleFilter] = pt4Sum;
     if (count>0) analyzeEvent = true;
     iParticleFilter++;
-    }
+  }
   return analyzeEvent;
 }
 

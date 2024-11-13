@@ -22,7 +22,8 @@ Configuration()
 }
 
 
-
+//enum CanvasFormat   { PortraitTight, Portrait, PortraitWide, SquareTight, Square, SquareWide, LandscapeTight, Landscape, LandscapeWide, LandscapeXtop };
+//enum CanvasAxes     { Linear, LogX, LogY, LogZ, LogXY, LogXZ, LogYZ, LogXYZ  };
 CanvasConfiguration::CanvasConfiguration(CanvasFormat format, CanvasAxes axes)
 :
 Configuration()

@@ -144,8 +144,8 @@ void JetPairHistos::fill(PseudoJet&  jet)
     double part1_pt  = sqrt(part1_px*part1_px + part1_py*part1_py);
     double part1_p   = sqrt(part1_pt*part1_pt + part1_pz*part1_pz);
     double part1_z   = part1_p/jet_p;
-    double part1_jt    = 0;
-    double part1_th = 0;
+    double part1_jt  = 0;
+    double part1_th  = 0;
     calculateJtTheta(jet_px,jet_py,jet_pz,jet_p,part1_px,part1_py,part1_pz,part1_p,part1_jt,part1_th);
     for (const auto & part2 : constituents)
       {

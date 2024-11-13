@@ -1,4 +1,4 @@
-# Install script for directory: /Users/aa7526/Documents/GitHub/CAP6.0/src/ParticleDb
+# Install script for directory: /Users/aa7526/Documents/GitHub/CAP6.1/src/ParticleDb
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,37 +39,37 @@ endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/Users/aa7526/Documents/GitHub/CAP6.0/lib/libParticleDb.rootmap;/Users/aa7526/Documents/GitHub/CAP6.0/lib/libParticleDb_rdict.pcm")
+   "/Users/aa7526/Documents/GitHub/CAP6.1/lib/libParticleDb.rootmap;/Users/aa7526/Documents/GitHub/CAP6.1/lib/libParticleDb_rdict.pcm")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "/Users/aa7526/Documents/GitHub/CAP6.0/lib" TYPE FILE FILES
-    "/Users/aa7526/Documents/GitHub/CAP6.0/homeBuild/ParticleDb/libParticleDb.rootmap"
-    "/Users/aa7526/Documents/GitHub/CAP6.0/homeBuild/ParticleDb/libParticleDb_rdict.pcm"
+  file(INSTALL DESTINATION "/Users/aa7526/Documents/GitHub/CAP6.1/lib" TYPE FILE FILES
+    "/Users/aa7526/Documents/GitHub/CAP6.1/homeBuild/ParticleDb/libParticleDb.rootmap"
+    "/Users/aa7526/Documents/GitHub/CAP6.1/homeBuild/ParticleDb/libParticleDb_rdict.pcm"
     )
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/Users/aa7526/Documents/GitHub/CAP6.0/lib/libParticleDb.dylib")
+   "/Users/aa7526/Documents/GitHub/CAP6.1/lib/libParticleDb.dylib")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "/Users/aa7526/Documents/GitHub/CAP6.0/lib" TYPE SHARED_LIBRARY FILES "/Users/aa7526/Documents/GitHub/CAP6.0/homeBuild/ParticleDb/libParticleDb.dylib")
-  if(EXISTS "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.0/lib/libParticleDb.dylib" AND
-     NOT IS_SYMLINK "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.0/lib/libParticleDb.dylib")
+  file(INSTALL DESTINATION "/Users/aa7526/Documents/GitHub/CAP6.1/lib" TYPE SHARED_LIBRARY FILES "/Users/aa7526/Documents/GitHub/CAP6.1/homeBuild/ParticleDb/libParticleDb.dylib")
+  if(EXISTS "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.1/lib/libParticleDb.dylib" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.1/lib/libParticleDb.dylib")
     execute_process(COMMAND /usr/bin/install_name_tool
-      -delete_rpath "/Users/aa7526/opt/root_install/lib"
-      -delete_rpath "/Users/aa7526/Documents/GitHub/CAP6.0/homeBuild/Base"
-      "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.0/lib/libParticleDb.dylib")
+      -delete_rpath "/usr/local/Cellar/root/6.32.06/lib/root"
+      -delete_rpath "/Users/aa7526/Documents/GitHub/CAP6.1/homeBuild/Base"
+      "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.1/lib/libParticleDb.dylib")
     if(CMAKE_INSTALL_DO_STRIP)
-      execute_process(COMMAND "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip" -x "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.0/lib/libParticleDb.dylib")
+      execute_process(COMMAND "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip" -x "$ENV{DESTDIR}/Users/aa7526/Documents/GitHub/CAP6.1/lib/libParticleDb.dylib")
     endif()
   endif()
 endif()

@@ -9,28 +9,11 @@
  * Author: Claude Pruneau,   04/01/2022
  *
  * *********************************************************************/
-
 #ifndef CAP__GraphConfiguration
 #define CAP__GraphConfiguration
-
-
-
-//!
-//!
-//! GraphConfiguration
-//!
-//! Class used to describe a graph configuration
-//!
-//!
-#include <iostream>
-#include "Aliases.hpp"
-#include "TAttMarker.h"
-#include "TAttLine.h"
-#include <vector>
+//#include "Aliases.hpp"
 #include "Configuration.hpp"
-
-using namespace std;
-using std::vector;
+#include <vector>
 
 namespace CAP
 {
@@ -49,43 +32,15 @@ namespace CAP
 class GraphConfiguration : public Configuration
 {
 public:
-
-  //!
-  //!Default CTOR
-  //!
   GraphConfiguration();
-
-  GraphConfiguration(int d=1, int type=1);
-
-  //!
-  //!Copy CTOR
-  //!
-  GraphConfiguration(GraphConfiguration & source);
-
-  //!
-  //!DTOR
-  //!
+  GraphConfiguration(const GraphConfiguration & source);
   virtual ~GraphConfiguration(){}
-
-  //!
-  //!Assignment operator (COPY)
-  //!
-  GraphConfiguration & operator=(GraphConfiguration & source);
+  GraphConfiguration & operator=(const GraphConfiguration & source);
   
-  //!
-  //! Set the default graph configuration
-  //!
   virtual void setDefaultConfiguration();
+  virtual void setPropertiesFor(int dim, int type);
 
-  //!
-  //! Set the graph parameter for dim =1 or  =2 and according to the type.
-  //!
-  void addPropertysWith(int dim, int type);
-
-  //!
-  //! Create a graph configuration palette.
-  //!
-  static vector<GraphConfiguration*> createConfigurationPalette(unsigned int n, int dimension);
+  static std::vector<GraphConfiguration> createConfigurationPalette(unsigned int n, int dimension);
 
   ClassDef(GraphConfiguration,0)
 };

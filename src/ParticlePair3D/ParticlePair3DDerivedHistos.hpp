@@ -92,15 +92,15 @@ public:
   TH1 * h_r2_DeltaPo;
   TH1 * h_r2_DeltaPl;
 
-//  TH1 * h_B12_Qinv;
-//  TH1 * h_B12_DeltaPs;
-//  TH1 * h_B12_DeltaPo;
-//  TH1 * h_B12_DeltaPl;
-//
-//  TH1 * h_B21_Qinv;
-//  TH1 * h_B21_DeltaPs;
-//  TH1 * h_B21_DeltaPo;
-//  TH1 * h_B21_DeltaPl;
+  TH1 * h_a12_Qinv;
+  TH1 * h_a12_DeltaPs;
+  TH1 * h_a12_DeltaPo;
+  TH1 * h_a12_DeltaPl;
+
+  TH1 * h_a21_Qinv;
+  TH1 * h_a21_DeltaPs;
+  TH1 * h_a21_DeltaPo;
+  TH1 * h_a21_DeltaPl;
 
 
   double mass1;

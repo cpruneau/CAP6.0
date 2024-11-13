@@ -113,6 +113,8 @@ namespace ROOT {
 } // end of namespace ROOT
 
 namespace ROOT {
+   static void *new_CAPcLcLGraphConfiguration(void *p = nullptr);
+   static void *newArray_CAPcLcLGraphConfiguration(Long_t size, void *p);
    static void delete_CAPcLcLGraphConfiguration(void *p);
    static void deleteArray_CAPcLcLGraphConfiguration(void *p);
    static void destruct_CAPcLcLGraphConfiguration(void *p);
@@ -123,10 +125,12 @@ namespace ROOT {
       ::CAP::GraphConfiguration *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::CAP::GraphConfiguration >(nullptr);
       static ::ROOT::TGenericClassInfo 
-         instance("CAP::GraphConfiguration", ::CAP::GraphConfiguration::Class_Version(), "GraphConfiguration.hpp", 49,
+         instance("CAP::GraphConfiguration", ::CAP::GraphConfiguration::Class_Version(), "GraphConfiguration.hpp", 32,
                   typeid(::CAP::GraphConfiguration), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::CAP::GraphConfiguration::Dictionary, isa_proxy, 4,
                   sizeof(::CAP::GraphConfiguration) );
+      instance.SetNew(&new_CAPcLcLGraphConfiguration);
+      instance.SetNewArray(&newArray_CAPcLcLGraphConfiguration);
       instance.SetDelete(&delete_CAPcLcLGraphConfiguration);
       instance.SetDeleteArray(&deleteArray_CAPcLcLGraphConfiguration);
       instance.SetDestructor(&destruct_CAPcLcLGraphConfiguration);
@@ -153,7 +157,7 @@ namespace ROOT {
       ::CAP::DataGraph *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::CAP::DataGraph >(nullptr);
       static ::ROOT::TGenericClassInfo 
-         instance("CAP::DataGraph", ::CAP::DataGraph::Class_Version(), "DataGraph.hpp", 35,
+         instance("CAP::DataGraph", ::CAP::DataGraph::Class_Version(), "DataGraph.hpp", 34,
                   typeid(::CAP::DataGraph), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::CAP::DataGraph::Dictionary, isa_proxy, 4,
                   sizeof(::CAP::DataGraph) );
@@ -249,7 +253,7 @@ namespace ROOT {
       ::CAP::Plotter *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::CAP::Plotter >(nullptr);
       static ::ROOT::TGenericClassInfo 
-         instance("CAP::Plotter", ::CAP::Plotter::Class_Version(), "Plotter.hpp", 31,
+         instance("CAP::Plotter", ::CAP::Plotter::Class_Version(), "Plotter.hpp", 32,
                   typeid(::CAP::Plotter), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::CAP::Plotter::Dictionary, isa_proxy, 4,
                   sizeof(::CAP::Plotter) );
@@ -612,6 +616,13 @@ void GraphConfiguration::Streamer(TBuffer &R__b)
 
 } // namespace CAP
 namespace ROOT {
+   // Wrappers around operator new
+   static void *new_CAPcLcLGraphConfiguration(void *p) {
+      return  p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) ::CAP::GraphConfiguration : new ::CAP::GraphConfiguration;
+   }
+   static void *newArray_CAPcLcLGraphConfiguration(Long_t nElements, void *p) {
+      return p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) ::CAP::GraphConfiguration[nElements] : new ::CAP::GraphConfiguration[nElements];
+   }
    // Wrapper around operator delete
    static void delete_CAPcLcLGraphConfiguration(void *p) {
       delete (static_cast<::CAP::GraphConfiguration*>(p));
@@ -779,33 +790,33 @@ namespace {
 nullptr
     };
     static const char* includePaths[] = {
-"/Users/aa7526/opt/root_install/include",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Base",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Math",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Xml",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/ParticleDb",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Particles",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/SubSample",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/CAPPythia",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Global",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Jets",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Spherocity",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/ParticleSingle",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/ParticlePair",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/ParticlePair3D",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/NuDyn",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/PtPt",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Plotting",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Therminator",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Performance",
-"/Users/aa7526/Documents/GitHub/CAP6.0/src/Exec",
+"/usr/local/Cellar/root/6.32.06/include/root",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Base",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Math",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Xml",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/ParticleDb",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Particles",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/SubSample",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/CAPPythia",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Global",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Jets",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Spherocity",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/ParticleSingle",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/ParticlePair",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/ParticlePair3D",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/NuDyn",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/PtPt",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Plotting",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Therminator",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Performance",
+"/Users/aa7526/Documents/GitHub/CAP6.1/src/Exec",
 "/include",
 "/Users/aa7526/opt/fastjet-3.4.3/include",
 "/Users/aa7526/opt/Pythia/pythia8307/include",
 "/Users/aa7526/opt/Pythia/pythia8307/include/Pythia8",
-"/Users/aa7526/opt/root_install/include/",
-"/Users/aa7526/Documents/GitHub/CAP6.0/homeBuild/Plotting/",
+"/usr/local/Cellar/root/6.32.06/include/root",
+"/Users/aa7526/Documents/GitHub/CAP6.1/homeBuild/Plotting/",
 nullptr
     };
     static const char* fwdDeclCode = R"DICTFWDDCLS(

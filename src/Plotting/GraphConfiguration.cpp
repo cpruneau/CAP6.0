@@ -9,23 +9,32 @@
  * Author: Claude Pruneau,   04/01/2022
  *
  * *********************************************************************/
-
 #include "GraphConfiguration.hpp"
-using CAP::GraphConfiguration;
 
-ClassImp(GraphConfiguration);
+ClassImp(CAP::GraphConfiguration);
 
-GraphConfiguration::GraphConfiguration()
+namespace CAP
 {
-  setDefaultConfiguration();
-}
-
-GraphConfiguration::GraphConfiguration(int dim, int type)
+GraphConfiguration::GraphConfiguration()
 :
 Configuration()
 {
   setDefaultConfiguration();
-  addPropertysWith(dim,type);
+}
+
+GraphConfiguration::GraphConfiguration(const GraphConfiguration & source)
+:
+Configuration(source)
+{   }
+
+
+GraphConfiguration & GraphConfiguration::operator=(const GraphConfiguration & source)
+{
+  if (this!=&source)
+    {
+    Configuration::operator=(source);
+    }
+  return *this;
 }
 
 void GraphConfiguration::setDefaultConfiguration()
@@ -49,7 +58,7 @@ void GraphConfiguration::setDefaultConfiguration()
   addProperty("xTitle",       String("x"));
   addProperty("nYDivisions",     5);
   addProperty("yTitleSize",   0.06);
-  addProperty("yTitleOffset",  0.8);
+  addProperty("yTitleOffset",  1.1);
   addProperty("yLabelSize",   0.06);
   addProperty("yLabelOffset", 0.01);
   addProperty("yTitle",        String("y"));
@@ -67,7 +76,7 @@ void GraphConfiguration::setDefaultConfiguration()
   addProperty("systsWidth",1);
 }
 
-void GraphConfiguration::addPropertysWith(int dim, int type)
+void GraphConfiguration::setPropertiesFor(int dim, int type)
 {
   if (dim==1 || dim==0)
     {
@@ -465,33 +474,18 @@ void GraphConfiguration::addPropertysWith(int dim, int type)
     }
 }
 
-GraphConfiguration::GraphConfiguration(GraphConfiguration & source)
-:
-Configuration(source)
+std::vector<GraphConfiguration> GraphConfiguration::createConfigurationPalette(unsigned int n, int dimension)
 {
-  
-}
-
-
-GraphConfiguration & GraphConfiguration::operator=(GraphConfiguration & source)
-{
-  if (this!=&source)
-    {
-    Configuration::operator=(source);
-    }
-  return *this;
-}
-
-
-
-vector<GraphConfiguration*> GraphConfiguration::createConfigurationPalette(unsigned int n, int dimension)
-{
-  vector<GraphConfiguration*> configs;
+  std::vector<GraphConfiguration> configs;
 
   for (unsigned int k=0; k<n; k++)
     {
-    GraphConfiguration * c = new GraphConfiguration(dimension, k);
-    configs.push_back( c );
+    //GraphConfiguration * c = new GraphConfiguration(dimension, k);
+    GraphConfiguration config;
+    config.setPropertiesFor(dimension,n);
+    configs.push_back( config );
     }
   return configs;
 }
+
+} // namespace CAP

@@ -18,6 +18,7 @@
 #include "Event.hpp"
 #include "EventFilter.hpp"
 #include "ParticleFilter.hpp"
+#include "JetFilter.hpp"
 #include "TaskAccountant.hpp"
 #include "EventAccountant.hpp"
 
@@ -31,6 +32,7 @@ public Manager<ParticleDb>,
 public Manager<Event>,
 public Manager<EventFilter>,
 public Manager<ParticleFilter>,
+public Manager<JetFilter>,
 public EventAccountant
 {
 
@@ -89,10 +91,13 @@ protected:
 
   unsigned int nEventFilters;
   unsigned int nParticleFilters;
-  std::vector<EventFilter*>    eventFilters;//    = Manager<EventFilter>::getObjects();
-  std::vector<ParticleFilter*> particleFilters;// = Manager<ParticleFilter>::getObjects();
-  std::vector<bool> eventFilterAccepted;
-  std::vector<bool> particleFilterAccepted;
+  unsigned int nJetFilters;
+  std::vector<EventFilter*>    eventFilters;
+  std::vector<ParticleFilter*> particleFilters;
+  std::vector<JetFilter*>      jetFilters;
+  std::vector<bool>   eventFilterAccepted;
+  std::vector<bool>   particleFilterAccepted;
+  std::vector<bool>   jetFilterAccepted;
   std::vector<double> particleFilterCount;
   std::vector<double> particleFilterPtSum;
   std::vector<double> particleFilterPt2Sum;

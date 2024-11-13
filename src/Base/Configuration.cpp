@@ -13,18 +13,22 @@
 
 ClassImp(CAP::Configuration);
 
-CAP::Configuration::Configuration()
+namespace CAP
+{
+
+
+Configuration::Configuration()
 :
 Properties()
 {  }
 
-CAP::Configuration::Configuration(const CAP::Configuration & _configuration)
+Configuration::Configuration(const Configuration & _configuration)
 :
 Properties(_configuration)
 {  }
 
 
-CAP::Configuration & CAP::Configuration::operator=(const CAP::Configuration & _configuration)
+Configuration & Configuration::operator=(const Configuration & _configuration)
 {
   if (this!= &_configuration)
     {
@@ -35,9 +39,9 @@ CAP::Configuration & CAP::Configuration::operator=(const CAP::Configuration & _c
 
 
 
-void CAP::Configuration::generateKeyValuePairs(const char *  keyBaseName, const char *  defaultValue, int nKeysToGenerate)
+void Configuration::generateKeyValuePairs(const char *  keyBaseName, const char *  defaultValue, int nKeysToGenerate)
 {
-  CAP::String key;
+  String key;
   for (int k=0; k<nKeysToGenerate; k++)
     {
     key = keyBaseName; key += k;
@@ -45,19 +49,19 @@ void CAP::Configuration::generateKeyValuePairs(const char *  keyBaseName, const 
     }
 }
 
-void CAP::Configuration::generateKeyValuePairs(const char *  path, const char *  keyBaseName, const char *  defaultValue, int nKeysToGenerate)
+void Configuration::generateKeyValuePairs(const char *  path, const char *  keyBaseName, const char *  defaultValue, int nKeysToGenerate)
 {
-  CAP::String sPath = path;
-  CAP::String sKeyBaseName = keyBaseName;
+  String sPath = path;
+  String sKeyBaseName = keyBaseName;
   if (sPath.EndsWith(":"))
     generateKeyValuePairs(sPath+sKeyBaseName, defaultValue, nKeysToGenerate);
   else
-    generateKeyValuePairs(sPath+CAP::String(":")+sKeyBaseName, defaultValue, nKeysToGenerate);
+    generateKeyValuePairs(sPath+String(":")+sKeyBaseName, defaultValue, nKeysToGenerate);
 }
 
-std::vector<CAP::String> CAP::Configuration::getSelectedValues(const char *  keyBaseName, const char *  defaultValue) const
+std::vector<String> Configuration::getSelectedValues(const char *  keyBaseName, const char *  defaultValue) const
 {
-  std::vector<CAP::String> selectedValues;
+  std::vector<String> selectedValues;
   for (auto & property : properties)
     {
     if (property.nameContains(keyBaseName) && !property.valueContains(defaultValue))
@@ -66,21 +70,21 @@ std::vector<CAP::String> CAP::Configuration::getSelectedValues(const char *  key
   return selectedValues;
 }
 
-std::vector<CAP::String> CAP::Configuration::getSelectedValues(const char *  path, const char *  keyBaseName, const char *  defaultValue) const
+std::vector<String> Configuration::getSelectedValues(const char *  path, const char *  keyBaseName, const char *  defaultValue) const
 {
-  CAP::String sPath = path;
-  CAP::String sKeyBaseName = keyBaseName;
+  String sPath = path;
+  String sKeyBaseName = keyBaseName;
   if (sPath.EndsWith(":"))
     return getSelectedValues(sPath+sKeyBaseName, defaultValue);
   else
-    return getSelectedValues(sPath+CAP::String(":")+sKeyBaseName, defaultValue);
+    return getSelectedValues(sPath+String(":")+sKeyBaseName, defaultValue);
 }
 
 
-int CAP::Configuration::getNPossibleValues(const char *  keyBaseName)  const
+int Configuration::getNPossibleValues(const char *  keyBaseName)  const
 {
   int nPossible = 0;
-  CAP::String sKeyBaseName = keyBaseName;
+  String sKeyBaseName = keyBaseName;
   for (auto & property : properties)
     {
     if (property.nameContains(keyBaseName))  nPossible++;
@@ -88,21 +92,21 @@ int CAP::Configuration::getNPossibleValues(const char *  keyBaseName)  const
   return nPossible;
 }
 
-int CAP::Configuration::getNPossibleValues(const char *  path, const char *  keyBaseName) const
+int Configuration::getNPossibleValues(const char *  path, const char *  keyBaseName) const
 {
-  CAP::String sPath = path;
-  CAP::String sKeyBaseName = keyBaseName;
+  String sPath = path;
+  String sKeyBaseName = keyBaseName;
   if (sPath.EndsWith(":"))
     return getNPossibleValues(sPath+sKeyBaseName);
   else
-    return getNPossibleValues(sPath+CAP::String(":")+sKeyBaseName);
+    return getNPossibleValues(sPath+String(":")+sKeyBaseName);
 }
 
 
-int CAP::Configuration::getNSelectedValues(const char *  keyBaseName, const char *  defaultValue)  const
+int Configuration::getNSelectedValues(const char *  keyBaseName, const char *  defaultValue)  const
 {
   int nSelected = 0;
-  CAP::String sKeyBaseName = keyBaseName;
+  String sKeyBaseName = keyBaseName;
   for (auto & property : properties)
     {
     if (property.nameContains(keyBaseName) && !property.valueContains(defaultValue) )  nSelected++;
@@ -111,15 +115,19 @@ int CAP::Configuration::getNSelectedValues(const char *  keyBaseName, const char
 }
 
 
-void CAP::Configuration::addSelectedValues(const char *  keyBaseName, const char *  defaultValue, const std::vector<CAP::String> & selectedValues)
+void Configuration::addSelectedValues(const char *  keyBaseName, const char *  defaultValue, const std::vector<String> & selectedValues)
 {
-  CAP::String key;
+  String key;
   int nSelected = getNSelectedValues(keyBaseName,defaultValue);
   for (unsigned int k=0; k<selectedValues.size(); k++)
     {
-      CAP::String key = keyBaseName;
+      String key = keyBaseName;
       int index = nSelected + k;
       key += index;
     Properties::addProperty(key,selectedValues[k]);
     }
 }
+
+
+} // namespace CAP
+

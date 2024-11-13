@@ -10,9 +10,13 @@
  *
  * *********************************************************************/
 #include "DataGraph.hpp"
-using CAP::DataGraph;
+#include "PrintHelpers.hpp"
+#include "Exceptions.hpp"
 
-ClassImp(DataGraph);
+ClassImp(CAP::DataGraph);
+
+namespace CAP
+{
 
 DataGraph::DataGraph(const String _graphName,
                      const String _xTitle,
@@ -225,7 +229,6 @@ void DataGraph::setMinMax(double minY, double maxY)
 
 void DataGraph::setProperties(GraphConfiguration & graphConfig)
 {
-  //cout << "<I> DataGraph::setProperties() Setting properties of graph: " << graphs[0]->GetName() << endl;
   graphs[0]->SetLineColor(  graphConfig.getValueInt(getName(),"lineColor"));
   graphs[0]->SetLineStyle(  graphConfig.getValueInt(getName(),"lineStyle"));
   graphs[0]->SetLineWidth(  graphConfig.getValueInt(getName(),"lineWidth"));
@@ -257,74 +260,92 @@ void DataGraph::setProperties(GraphConfiguration & graphConfig)
   yAxis->SetTitleOffset(graphConfig.getValueDouble("yTitleOffset"));
   yAxis->SetLabelSize(  graphConfig.getValueDouble("yLabelSize"));
   yAxis->SetLabelOffset(graphConfig.getValueDouble("yLabelOffset"));
-  //cout << "<I> DataGraph::setProperties() Completed" << endl;
 }
 
-void DataGraph::printToFile(ostream & output)
+void DataGraph::printDataValue(int k,std::ostream & output)
 {
-  output << "========================================================================================" << endl;
-  output << "   Graph Name:" << GetName() << endl;
-  output << "  Graph Title:" << GetName() << endl;
-  output << "      nPoints:" << nPoints << endl;
-  for (int k=0; k<nPoints; k++)
+  String s;
+  s = "  x:";
+  s += x[k];
+  if (exLow && exHigh)
     {
-
-    output << "x:" << x[k];
-    if (exLow && !exHigh)  output << "+-" << exLow[k];
-    if (exLow && exHigh)   output << "-" << exLow[k];
-    if (exLow && exHigh)   output << "+" << exHigh[k];
-    if (eyLow && !eyHigh)  output << " (stat) +- " << eyLow[k];
-    if (eyLow && eyHigh)   output << " (stat) - " << eyLow[k];
-    if (eeyLow && eyHigh)   output << " (stat) + " << eyHigh[k];
-    if (eeyLow && !eeyHigh)  output << " (sys) +- " << eeyLow[k];
-    if (eeyLow && eeyHigh)   output << " (sys) - " << eeyLow[k];
-    if (eeyLow && eeyHigh)   output << " (sys) + " << eeyHigh[k];
+    s += "+-";
+    s += exHigh[k];
+    s += "/";
+    s += exLow[k];
     }
-  output << "========================================================================================" << endl;
+  else if (exLow)
+    {
+    s += "+-";
+    s += exLow[k];
+    }
+  if (eyLow && eyHigh)
+    {
+    s += " (stat) +-";
+    s += eyHigh[k];
+    s += "/";
+    s += eyLow[k];
+    }
+  else if (eyLow)
+    {
+    s += " (stat) +-";
+    s += eyLow[k];
+    }
+  if (eeyLow && eeyHigh)
+    {
+    s += " (stat) +-";
+    s += eeyHigh[k];
+    s += "/";
+    s += eeyLow[k];
+    }
+  else if (eeyLow)
+    {
+    s += " (syst) +-";
+    s += eyLow[k];
+    }
+  printString(s,output);
+}
+
+void DataGraph::printToFile(std::ostream & output)
+{
+  printCR(output);
+  printLine(output);
+  printValue("Graph Name",GetName(),output);
+  printValue("Graph Title",GetName(),output);
+  printValue("Graph nPoints",nPoints,output);
+  for (int k=0; k<nPoints; k++) printDataValue(k,output);
+  printLine(output);
 }
 
 
 DataGraph *  DataGraph::loadGraph(const String  graphName,
-                          const String  xTitle,
-                          const String  yTitle,
-                          const String  legendText,
-                          double xMin, double xMax,
-                          double yMin, double yMax,
-                          TFile * inputFile, String folderName, String h1Name, String h1e1Name, String h1e2Name, String g1Name )
+                                  const String  xTitle,
+                                  const String  yTitle,
+                                  const String  legendText,
+                                  double xMin, double xMax,
+                                  double yMin, double yMax,
+                                  TFile * inputFile,
+                                  String folderName,
+                                  String h1Name,
+                                  String h1e1Name,
+                                  String h1e2Name,
+                                  String g1Name )
 {
   if (!inputFile) return nullptr;
 
   String name;
   name = folderName; name += "/"; name += h1Name;
   TH1 * h1 = (TH1*)inputFile->Get(name);
-  if (!h1)
-    {
-    cout << "<E> DataGraph::loadGraph() Could not load histogram: " << name << " from file:" << inputFile->GetName() << endl;
-    return nullptr;
-    }
+  if (!h1) throw HistogramException(name,"Could not load histogram",__FUNCTION__);
   name = folderName; name += "/"; name += h1e1Name;
   TH1 * h1e1 = (TH1*)inputFile->Get(name);
-  if (!h1e1)
-    {
-    cout << "<E> DataGraph::loadGraph() Could not load histogram called: " << name << " from file:" << inputFile->GetName() << endl;
-    return nullptr;
-    }
+  if (!h1e1) throw HistogramException(name,"Could not load histogram",__FUNCTION__);
   name = folderName; name += "/"; name += h1e2Name;
   TH1 * h1e2 = (TH1*)inputFile->Get(name);
-  if (!h1e2)
-    {
-    cout << "<E> DataGraph::loadGraph() Could not load histogram called: " << name << " from file:" << inputFile->GetName() << endl;
-    return nullptr;
-    }
+  if (!h1e2) throw HistogramException(name,"Could not load histogram",__FUNCTION__);
   name = folderName; name += "/"; name += g1Name;
   TGraphAsymmErrors* g = (TGraphAsymmErrors*)inputFile->Get(name);
-  if (!g)
-    {
-    cout << "<E> DataGraph::loadGraph() Could not load graph called: " << name << " from file:" << inputFile->GetName() << endl;
-    return nullptr;
-    }
-  //cout << "<I> DataGraph::loadGraph() Data loaded.." << endl;
-
+  if (!g) throw HistogramException(name,"Could not load graph",__FUNCTION__);
   int n = h1->GetNbinsX();
   double * x       = new double[n];
   double * exLow   = new double[n];
@@ -362,19 +383,12 @@ DataGraph * DataGraph::loadGraph(const String graphName,
   String name;
   name = hName;
   TH1 * histo = (TH1*)inputFile->Get(name);
-  if (!histo)
-    {
-    cout << "<E> DataGraph::loadGraph() Could not load histogram: " << name << " from file:" << inputFile->GetName() << endl;
-    return nullptr;
-    }
-
+  if (!histo) throw HistogramException(name,"Could not load histogram",__FUNCTION__);
   if (rebin>1)
     {
     histo->Rebin(rebin);
     histo->Scale(1.0/double(rebin));
     }
-
-
   int n = histo->GetNbinsX();
   double * x       = new double[n];
   double * exLow   = new double[n];
@@ -398,3 +412,5 @@ DataGraph * DataGraph::loadGraph(const String graphName,
                                x, exLow, exHigh,y,eyLow,eyHigh);
   return dg;
 }
+
+} // namespace CAP

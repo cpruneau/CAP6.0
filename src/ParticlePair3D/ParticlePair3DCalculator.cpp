@@ -49,6 +49,7 @@ void ParticlePair3DCalculator::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
   addProperty("HistogramBaseName","Pair3D");
+  addProperty("nMcSimEvents",1000000);
 
   addProperty( "nBins_pt",  100);
   addProperty( "Min_pt",    0.0);

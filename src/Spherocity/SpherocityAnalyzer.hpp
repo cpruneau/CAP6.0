@@ -13,7 +13,6 @@
 #define CAP__SpherocityAnalyzer
 #include "EventTask.hpp"
 #include "SpherocityHistos.hpp"
-#include "SpherocityExceptions.hpp"
 
 namespace CAP
 {

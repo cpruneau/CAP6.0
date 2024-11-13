@@ -39,7 +39,6 @@ TaskCreator::TaskCreator(const TaskCreator & task)
 Task(task)
 {    }
 
-
 TaskCreator & TaskCreator::operator=(const TaskCreator & task)
 {
   if (this!=&task)
@@ -89,6 +88,7 @@ void TaskCreator::configureDbs(Task * task,
       printValue("ParticleDb Name",name);
       printValue("ParticleDb Owner",owner);
       }
+      
     if (owner)
       dynamic_cast<Manager<ParticleDb>*>(task)->create(name);
     else
@@ -120,7 +120,8 @@ void TaskCreator::configureEventsStreams(Task * task,
     if (owner)
       dynamic_cast<Manager<Event>*>(task)->create(name);
     else
-      dynamic_cast<Manager<Event>*>(task)->use(name);      }
+      dynamic_cast<Manager<Event>*>(task)->use(name);
+    }
 }
 
 void TaskCreator::configureEventFilters(Task * _task,
@@ -183,7 +184,10 @@ void TaskCreator::configureJetFilters(Task * _task,
                                       const String  & taskReferenceName,
                                       Configuration & requestedConfiguration)
 {
+  printString("TaskCreator::configureJetFilter() -- 1 -- ");
   int nJetFilters = requestedConfiguration.getValueInt(taskReferenceName+"nJetFilters");
+  printValue("TaskCreator::configureJetFilter() nJetFilters",nJetFilters);
+
   for (int k=0; k<nJetFilters; k++)
     {
     String referenceName = taskReferenceName;
@@ -205,6 +209,8 @@ void TaskCreator::configureJetFilters(Task * _task,
       dynamic_cast<Manager<JetFilter>*>(_task)->create(name);
     else
       dynamic_cast<Manager<JetFilter>*>(_task)->use(name);      }
+
+  printString("TaskCreator::configureJetFilter() -- 2-- ");
 }
 
 
@@ -235,6 +241,10 @@ Task * TaskCreator::createTask(Task * parentTask,
   String severity        = requestedConfiguration.getValueString(taskReferenceName+"Severity");
   requestedConfiguration.addProperty(taskName+":Severity",severity);
 
+  printValue("TaskCreator::createTask() taskName",taskName);
+  printValue("TaskCreator::createTask() taskClassName",taskClassName);
+  printValue("TaskCreator::createTask() severity",severity);
+
   String defaultExportHistograms = getEnvVariable("CAP_HISTOS_EXPORT_PATH");
   bool  importHistograms = requestedConfiguration.getValueBool(taskReferenceName+"ImportHistograms");
   bool  exportHistograms = requestedConfiguration.getValueBool(taskReferenceName+"ExportHistograms");
@@ -245,12 +255,6 @@ Task * TaskCreator::createTask(Task * parentTask,
     String histogramsImportFile = requestedConfiguration.getValueString(taskReferenceName+"HistogramsImportFile");
     requestedConfiguration.addProperty(taskName+":HistogramsImportPath",histogramsImportPath);
     requestedConfiguration.addProperty(taskName+":HistogramsImportFile",histogramsImportFile);
-    }
-  if (taskName.EqualTo("GlobalCalculator"))
-    {
-    cout << "FOund global calculator " << endl;
-    cout << " HistogramsImportFile : " << requestedConfiguration.getValueString("GlobalCalculator:HistogramsImportFile") << endl;
-   // exit(1);
     }
   if (exportHistograms)
     {
@@ -266,19 +270,20 @@ Task * TaskCreator::createTask(Task * parentTask,
   task->setName(taskName);
   task->setRequestedConfiguration(requestedConfiguration);
   task->configure();
-//  if (taskName.EqualTo("GlobalCalculator"))
-//    {
-//    Configuration & conf = task->getConfiguration();
-//    cout << " HistogramsImportFile : " << conf.getValueString("GlobalCalculator:HistogramsImportFile") << endl;
-//    exit(1);
-//    }
 
-
+  printString("TaskCreator::createTask() --- 1 ----");
   configureDbs(task,taskReferenceName,requestedConfiguration);
+  printString("TaskCreator::createTask() --- 2 ----");
   configureEventsStreams(task,taskReferenceName,requestedConfiguration);
+  printString("TaskCreator::createTask() --- 3 ----");
   configureEventFilters(task,taskReferenceName,requestedConfiguration);
+  printString("TaskCreator::createTask() --- 4 ----");
   configureParticleFilters(task,taskReferenceName,requestedConfiguration);
+  printString("TaskCreator::createTask() --- 5 ----");
+  configureJetFilters(task,taskReferenceName,requestedConfiguration);
+  printString("TaskCreator::createTask() --- 6 ----");
   configureSubtasks(task,taskReferenceName,requestedConfiguration);
+  printString("TaskCreator::createTask() --- 7 ----");
   return task;
 }
 

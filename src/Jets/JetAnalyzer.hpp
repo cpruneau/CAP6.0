@@ -12,13 +12,11 @@
 #ifndef CAP__JetAnalyzer
 #define CAP__JetAnalyzer
 #include "EventTask.hpp"
-#include "JetFilter.hpp"
-#include "Manager.hpp"
 
 namespace CAP
 {
 
-class JetAnalyzer : public EventTask, Manager<JetFilter>
+class JetAnalyzer : public EventTask
 {
 public:
 
@@ -38,9 +36,6 @@ protected:
   double jetRadius;
 
   ParticleDb * particleDb;
-  unsigned int nJetFilters;
-  std::vector<JetFilter*> jetFilters;// = Manager<ParticleFilter>::getObjects();
-
 
   ClassDef(JetAnalyzer,0)
 };
