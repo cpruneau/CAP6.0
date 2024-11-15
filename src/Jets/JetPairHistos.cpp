@@ -11,7 +11,6 @@ namespace CAP
 JetPairHistos::JetPairHistos()
 :
 HistogramGroup(),
-h_jet_n2_pp(nullptr),
 h_jet_n2_ptpt(nullptr),
 h_jet_n2_phiphi(nullptr),
 h_jet_n2_etaeta(nullptr),
@@ -26,7 +25,6 @@ h_jet_n2_zz(nullptr)
 JetPairHistos::JetPairHistos(const JetPairHistos & group)
 :
 HistogramGroup(group),
-h_jet_n2_pp(nullptr),
 h_jet_n2_ptpt(nullptr),
 h_jet_n2_phiphi(nullptr),
 h_jet_n2_etaeta(nullptr),
@@ -102,7 +100,6 @@ void JetPairHistos::createHistograms()
     printLine();
     printCR();
     }
-  h_jet_n2_pp      = createHistogram(createName(bn,"jet_n2_pp"),  nBins_p,min_p,max_p,    nBins_p,min_p,max_p,"p_{1}","p_{2}","N");
   h_jet_n2_ptpt    = createHistogram(createName(bn,"jet_n2_ptpt"),nBins_pt,min_pt,max_pt, nBins_pt,min_pt,max_pt,"p_{T,1}","p_{T,2}","N");
   h_jet_n2_phiphi  = createHistogram(createName(bn,"jet_n2_phiphi"),nBins_phi,min_phi,max_phi, nBins_phi,min_phi,max_phi,"#varphi_{1}","#varphi_{2}","N");
   h_jet_n2_etaeta  = createHistogram(createName(bn,"jet_n2_etaeta"),nBins_eta,min_eta,max_eta, nBins_eta,min_eta,max_eta,"#eta_{1}","#eta_{2}","N");
@@ -116,7 +113,6 @@ void JetPairHistos::importHistograms(TFile & inputFile)
   if (reportStart(__FUNCTION__)) { /* noops*/ };
   const String & bn  = getName();
   const String & ptn = getParentName();
-  h_jet_n2_pp      = loadH2(inputFile,createName(bn,"jet_n2_pp"));
   h_jet_n2_ptpt    = loadH2(inputFile,createName(bn,"jet_n2_ptpt"));
   h_jet_n2_phiphi  = loadH2(inputFile,createName(bn,"jet_n2_phiphi"));
   h_jet_n2_etaeta  = loadH2(inputFile,createName(bn,"jet_n2_etaeta"));
@@ -127,41 +123,32 @@ void JetPairHistos::importHistograms(TFile & inputFile)
 
 void JetPairHistos::fill(PseudoJet&  jet)
 {
-  double jet_px = jet.px();
-  double jet_py = jet.py();
-  double jet_pz = jet.pz();
-  double jet_p  = sqrt(jet_px*jet_px + jet_py*jet_py + jet_pz*jet_pz);
+  double jet_phi = jet.phi();
+  double jet_pt  = jet.perp();
+  double jet_eta = jet.pseudorapidity();
 
   // Constituents of the passed Jet
   const std::vector<PseudoJet> & constituents = jet.constituents();
   for (const auto & part1 : constituents)
     {
-    double part1_px  = part1.px();
-    double part1_py  = part1.py();
-    double part1_pz  = part1.pz();
-    double part1_eta = part1.eta();
-    double part1_phi = atan2(part1_py,part1_px);
-    double part1_pt  = sqrt(part1_px*part1_px + part1_py*part1_py);
-    double part1_p   = sqrt(part1_pt*part1_pt + part1_pz*part1_pz);
-    double part1_z   = part1_p/jet_p;
+    double part1_phi = part1.phi();
+    double part1_pt  = part1.perp();
+    double part1_eta = part1.pseudorapidity();
+    double part1_z   = part1_pt/jet_pt;
     double part1_jt  = 0;
     double part1_th  = 0;
-    calculateJtTheta(jet_px,jet_py,jet_pz,jet_p,part1_px,part1_py,part1_pz,part1_p,part1_jt,part1_th);
+    //calculateJtTheta(jet_px,jet_py,jet_pz,jet_p,part1_px,part1_py,part1_pz,part1_p,part1_jt,part1_th);
     for (const auto & part2 : constituents)
       {
-      double part2_px  = part2.px();
-      double part2_py  = part2.py();
-      double part2_pz  = part2.pz();
-      double part2_eta = part2.eta();
-      double part2_phi = atan2(part2_py,part2_px);
-      double part2_pt  = sqrt(part2_px*part2_px + part2_py*part2_py);
-      double part2_p   = sqrt(part2_pt*part2_pt + part2_pz*part2_pz);
-      double part2_z   = part2_p/jet_p;
+      if (part1==part2) continue;
+      double part2_phi = part2.phi();
+      double part2_pt  = part2.perp();
+      double part2_eta = part2.pseudorapidity();
+      double part2_z   = part2_pt/jet_pt;
       double part2_jt  = 0;
       double part2_th  = 0;
-      calculateJtTheta(jet_px,jet_py,jet_pz,jet_p,part1_px,part2_py,part2_pz,part2_p,part2_jt,part2_th);
+      //calculateJtTheta(jet_px,jet_py,jet_pz,jet_p,part1_px,part2_py,part2_pz,part2_p,part2_jt,part2_th);
 
-      h_jet_n2_pp->Fill(part1_p,part2_p);
       h_jet_n2_ptpt->Fill(part1_pt,part2_pt);
       h_jet_n2_phiphi->Fill(part1_phi,part2_phi);
       h_jet_n2_etaeta->Fill(part1_eta,part2_eta);

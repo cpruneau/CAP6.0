@@ -23,13 +23,12 @@ public:
 
 protected:
 
-  TH2 *h_jet_n2_pp;     // momentum of jets of the selected type
   TH2 *h_jet_n2_ptpt;    // pt
-  TH2 *h_jet_n2_phiphi;   // phi - azimuth relative to z axis
-  TH2 *h_jet_n2_etaeta;   // rapidity or eta
-  TH2 *h_jet_n2_thth; // angle relative to jet axis
+  TH2 *h_jet_n2_phiphi;  // phi - azimuth relative to z axis
+  TH2 *h_jet_n2_etaeta;  // rapidity or eta
+  TH2 *h_jet_n2_thth;    // angle relative to jet axis
   TH2 *h_jet_n2_jtjt;    // particle momentum perp to jet axis.
-  TH2 *h_jet_n2_zz;     // part_p/jet_p
+  TH2 *h_jet_n2_zz;      // part_p/jet_p
 
   ClassDef(JetPairHistos,0)
 

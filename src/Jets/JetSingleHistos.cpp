@@ -135,34 +135,29 @@ void JetSingleHistos::importHistograms(TFile & inputFile)
 
 void JetSingleHistos::fill(PseudoJet&  jet)
 {
-  double jet_px = jet.px();
-  double jet_py = jet.py();
-  double jet_pz = jet.pz();
-  double jet_p  = sqrt(jet_px*jet_px + jet_py*jet_py + jet_pz*jet_pz);
+  double jet_phi = jet.phi();
+  double jet_pt  = jet.perp();
+  double jet_eta = jet.pseudorapidity();
 
   // Constituents of the passed Jet
   const std::vector<PseudoJet> & constituents = jet.constituents();
   for (const auto & part : constituents)
     {
-    double part_px  = part.px();
-    double part_py  = part.py();
-    double part_pz  = part.pz();
-    double part_phi = atan2(part_py,part_px);
-    double part_pt  = sqrt(part_px*part_px + part_py*part_py);
-    double part_p   = sqrt(part_pt*part_pt + part_pz*part_pz);
-    double part_z   = part_p/jet_p;
+    double part_phi = part.phi();
+    double part_pt  = part.perp();
+    double part_eta = part.pseudorapidity();
+
+    double part_z   = part_pt/jet_pt;
     double part_jt  = 0;
     double part_th  = 0;
-    double part_eta = part.eta();
-    calculateJtTheta(jet_px,jet_py,jet_pz,jet_p,part_px,part_py,part_pz,part_p,part_jt,part_th);
-    h_jet_n1_p->Fill(part_p);
+    //calculateJtTheta(jet_px,jet_py,jet_pz,jet_p,part_px,part_py,part_pz,part_p,part_jt,part_th);
     h_jet_n1_pt->Fill(part_pt);
     h_jet_n1_phi->Fill(part_phi);
     h_jet_n1_eta->Fill(part_eta);
     h_jet_n1_th->Fill(part_th);
     h_jet_n1_jt->Fill(part_jt);
     h_jet_n1_z->Fill(part_z);
-    h_jet_n1_etaPt->Fill(part_eta,part_phi);
+    h_jet_n1_etaPt->Fill(part_eta,part_pt);
     }
 }
 
