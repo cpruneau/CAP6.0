@@ -39,7 +39,6 @@ protected:
   // jet global properties
   //
   TH1 *h_jet_mult; // number of jets of the selected type
-  TH1 *h_jet_p;    // momentum of jets of the selected type
   TH1 *h_jet_pt;   // pt
   TH1 *h_jet_phi;  // phi
   TH1 *h_jet_eta;   // rapidity or eta

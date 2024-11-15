@@ -184,7 +184,6 @@ void TaskCreator::configureJetFilters(Task * _task,
                                       const String  & taskReferenceName,
                                       Configuration & requestedConfiguration)
 {
-  printString("TaskCreator::configureJetFilter() -- 1 -- ");
   int nJetFilters = requestedConfiguration.getValueInt(taskReferenceName+"nJetFilters");
   printValue("TaskCreator::configureJetFilter() nJetFilters",nJetFilters);
 
@@ -209,8 +208,6 @@ void TaskCreator::configureJetFilters(Task * _task,
       dynamic_cast<Manager<JetFilter>*>(_task)->create(name);
     else
       dynamic_cast<Manager<JetFilter>*>(_task)->use(name);      }
-
-  printString("TaskCreator::configureJetFilter() -- 2-- ");
 }
 
 
@@ -271,19 +268,12 @@ Task * TaskCreator::createTask(Task * parentTask,
   task->setRequestedConfiguration(requestedConfiguration);
   task->configure();
 
-  printString("TaskCreator::createTask() --- 1 ----");
   configureDbs(task,taskReferenceName,requestedConfiguration);
-  printString("TaskCreator::createTask() --- 2 ----");
   configureEventsStreams(task,taskReferenceName,requestedConfiguration);
-  printString("TaskCreator::createTask() --- 3 ----");
   configureEventFilters(task,taskReferenceName,requestedConfiguration);
-  printString("TaskCreator::createTask() --- 4 ----");
   configureParticleFilters(task,taskReferenceName,requestedConfiguration);
-  printString("TaskCreator::createTask() --- 5 ----");
   configureJetFilters(task,taskReferenceName,requestedConfiguration);
-  printString("TaskCreator::createTask() --- 6 ----");
   configureSubtasks(task,taskReferenceName,requestedConfiguration);
-  printString("TaskCreator::createTask() --- 7 ----");
   return task;
 }
 

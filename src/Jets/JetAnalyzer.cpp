@@ -51,6 +51,8 @@ void JetAnalyzer::setDefaultConfiguration()
   EventTask::setDefaultConfiguration();
   addProperty("HistogramBaseName","Jet");
 
+  addProperty("JetRadius",      0.4);
+  addProperty("JetPtMin",       10.0);
   addProperty("nBins_jet_n1",   100);
   addProperty("min_jet_n1",     0.0);
   addProperty("max_jet_n1",     100.0);
@@ -115,7 +117,9 @@ void JetAnalyzer::initialize()
 void JetAnalyzer::createHistograms()
 {
   if (reportStart(__FUNCTION__)) {/* no ops */};
-  String bn = getValueString( "HistogramBaseName");
+  String bn = getValueString("HistogramBaseName");
+  jetRadius = getValueDouble("JetRadius");
+  jetPtMin  = getValueDouble("JetPtMin");
   JetHistos * jetHistos;
   JetSingleHistos * jetSingleHistos;
   JetPairHistos * jetPairHistos;
@@ -160,22 +164,49 @@ void JetAnalyzer::execute()
   if (!analyzeThisEvent(event,eventFilters,eventFilterAccepted)) return;
   std::vector<PseudoJet> pseudoJetsInput;
   pseudoJetsInput.clear();
+
+//  printCR;
+//  printLine();
+//  printString("New Event");
+//  printValue("particles.size()",particles.size());
+  //int k=0;
   for (auto & particle : particles)
     {
     int pid = particle->getType().getPdgCode();
     LorentzVector & momentum = particle->getMomentum();
+//    printValue("k",k);
+//    printValue("px",momentum.Px());
+//    printValue("py",momentum.Py());
+//    printValue("pz",momentum.Pz());
+//    printValue("e",momentum.E());
+//    printValue("pid",pid);
     PseudoJet pseudoJet (momentum.Px(),momentum.Px(),momentum.Px(),momentum.E());
     pseudoJet.set_user_index(pid);
     pseudoJetsInput.push_back(pseudoJet);
+    //k++;
     }
+//  printValue("jetRadius",jetRadius);
+//  printValue("jetPtMin",jetPtMin);
 
   JetDefinition jetDef(antikt_algorithm,jetRadius);
   ClusterSequence * clusterSequence = new ClusterSequence(pseudoJetsInput, jetDef);
-  std::vector<PseudoJet> clusteredJets = sorted_by_pt( clusterSequence->inclusive_jets() );
+  std::vector<PseudoJet> clusteredJets = sorted_by_pt( clusterSequence->inclusive_jets(jetPtMin) );
+//printJets (clusteredJets);
+//  printValue("jetRadius",jetRadius);
+//  printValue("clusteredJets.size()",clusteredJets.size());
+
+
   unsigned int iEventFilter = 0;
   for (auto accepted : eventFilterAccepted)
     {
-    if (!accepted) continue;
+    if (!accepted)
+      {
+      printString("EVENT NOT ACCEPTED");
+      continue;
+      }
+    //printString("EVENT ACCEPTED");
+
+
     unsigned int  baseSingle   = iEventFilter*nJetFilters;
     for (unsigned int iJetFilter=0; iJetFilter<nJetFilters;iJetFilter++)
       {
@@ -238,6 +269,27 @@ void JetAnalyzer::scaleHistograms()
 //      }
 //    }
   if (reportEnd(__FUNCTION__)) {/* no ops */};
+}
+
+void JetAnalyzer::printJets (const vector<fastjet::PseudoJet> & jets)
+{
+  // sort jets into increasing pt
+  vector<fastjet::PseudoJet> sorted_jets = sorted_by_pt(jets);
+
+  // label the columns
+  printf("%5s %15s %15s %15s %15s\n","jet #", "rapidity",
+         "phi", "pt", "n constituents");
+
+  // print out the details for each jet
+  for (unsigned int i = 0; i < sorted_jets.size(); i++)
+    {
+    // the following is not super efficient since it creates an
+    // intermediate constituents vector
+    int n_constituents = sorted_jets[i].constituents().size();
+    printf("%5u %15.8f %15.8f %15.8f %8u\n",
+           i, sorted_jets[i].rap(), sorted_jets[i].phi(),
+           sorted_jets[i].perp(), n_constituents);
+  }
 }
 
 } // namespace CAP

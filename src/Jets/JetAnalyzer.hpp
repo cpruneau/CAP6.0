@@ -30,10 +30,12 @@ public:
   virtual void execute();
   virtual void createHistograms();
   virtual void scaleHistograms();
+  virtual void printJets (const vector<fastjet::PseudoJet> & jets);
 
 protected:
 
   double jetRadius;
+  double jetPtMin;
 
   ParticleDb * particleDb;
 

@@ -32,7 +32,7 @@ void loadLibraries(const TString & includeBasePath);
 
 
 int RunAna(TString configFile="Pythia/pp_13.7TeV/RunAna3D.ini",
-           TString histogramPath="pythiaTest3D/",
+           TString histogramPath="pythiaTest3DNew/",
            long seed=1121331)
 //TString configFile="Pythia/pp_13.7TeV/RunAnaJets.ini",
 //           TString histogramPath="pythiaTest3D/",
