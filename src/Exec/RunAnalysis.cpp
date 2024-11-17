@@ -10,34 +10,34 @@
  *
  * *********************************************************************/
 #include "RunAnalysis.hpp"
-#include "ParticleDbTask.hpp"
-#include "FilterCreator.hpp"
-#include "EventIterator.hpp"
-#include "FileIterator.hpp"
-#include "DerivedHistoIterator.hpp"
-#include "BalanceFunctionCalculator.hpp"
-#include "SubSampleStatCalculator.hpp"
-#include "ParticleDbTask.hpp"
-#include "ClosureIterator.hpp"
-#include "ClosureCalculator.hpp"
-#include "PythiaEventGenerator.hpp"
-#include "PythiaEventReader.hpp"
-//#include "AmptEventReader.hpp"
-#include "TherminatorGenerator.hpp"
-//#include "ResonanceGenerator.hpp"
-#include "MeasurementSimulator.hpp"
-#include "PerformanceAnalyzer.hpp"
-#include "GlobalAnalyzer.hpp"
-#include "GlobalCalculator.hpp"
-#include "SpherocityAnalyzer.hpp"
-#include "SpherocityCalculator.hpp"
-#include "ParticleSingleAnalyzer.hpp"
-#include "ParticleSingleCalculator.hpp"
-#include "ParticlePairAnalyzer.hpp"
-#include "ParticlePairCalculator.hpp"
-#include "NuDynAnalyzer.hpp"
-#include "NuDynCalculator.hpp"
-#include "PtPtAnalyzer.hpp"
+//#include "ParticleDbTask.hpp"
+//#include "FilterCreator.hpp"
+//#include "EventIterator.hpp"
+//#include "FileIterator.hpp"
+//#include "DerivedHistoIterator.hpp"
+//#include "BalanceFunctionCalculator.hpp"
+//#include "SubSampleStatCalculator.hpp"
+//#include "ParticleDbTask.hpp"
+//#include "ClosureIterator.hpp"
+//#include "ClosureCalculator.hpp"
+//#include "PythiaEventGenerator.hpp"
+//#include "PythiaEventReader.hpp"
+////#include "AmptEventReader.hpp"
+//#include "TherminatorGenerator.hpp"
+////#include "ResonanceGenerator.hpp"
+//#include "MeasurementSimulator.hpp"
+//#include "PerformanceAnalyzer.hpp"
+//#include "GlobalAnalyzer.hpp"
+//#include "GlobalCalculator.hpp"
+//#include "SpherocityAnalyzer.hpp"
+//#include "SpherocityCalculator.hpp"
+//#include "ParticleSingleAnalyzer.hpp"
+//#include "ParticleSingleCalculator.hpp"
+//#include "ParticlePairAnalyzer.hpp"
+//#include "ParticlePairCalculator.hpp"
+//#include "NuDynAnalyzer.hpp"
+//#include "NuDynCalculator.hpp"
+//#include "PtPtAnalyzer.hpp"
 #include "PtPtCalculator.hpp"
 #include "Exceptions.hpp"
 #include "MathExceptions.hpp"
@@ -201,9 +201,9 @@ void RunAnalysis::execute()
 void RunAnalysis::finalize()
 {
   try {
-    printString("RunAnalysis::finalize() starting");
+    //printString("RunAnalysis::finalize() starting");
     finalizeSubTasks();
-    printString("RunAnalysis::finalize() done");
+    //printString("RunAnalysis::finalize() done");
   }
   catch (TaskException & te)
   {

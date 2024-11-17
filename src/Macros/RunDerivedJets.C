@@ -12,25 +12,16 @@
 #include <iostream>
 #include <fstream>
 #include <TStyle.h>
+#include <TSystem.h>
 #include <TROOT.h>
-#include <TRandom.h>
 
 void loadLibraries(const TString & includeBasePath);
 
-//!
-//! Run generic data analysis based on the configuration listed in 'configFile'
-//!
-//! configFile     :  configuration file (.ini) describing the task(s) to be done
-//! outputPath   :  output path used for all files created
-//! seed            :  provided by slurm (grid job engine) or directly by user
-//! isGrid          :   must be true for jobs running on grid
-//! nEventsPerSubbunch : number of events to run per bunch  (actual on grid or simulated on a single node)
-//! nSubbunchesPerBunch : number of sub-bunches  (must be 1 on grid)
-//! nBunches :  number of bunches  (must be 1 on grid)
-//!
-int RunAnaJets(TString configFile="Pythia/pp_13.7TeV/RunAnaJets.ini",
-               TString histogramPath="pythiaTestJets/",
-               long seed=1121331)
+
+int RunDerivedJets(TString configFile="Pythia/pp_13.7TeV/RunAnaJets.ini",
+                   TString histogramPath="pythiaTestJets/",
+                   int nLevels = 0,
+                   long seed=12312231)
 {
   TString includeBasePath = getenv("CAP_SRC_PATH");
   loadLibraries(includeBasePath);
@@ -42,11 +33,12 @@ int RunAnaJets(TString configFile="Pythia/pp_13.7TeV/RunAnaJets.ini",
   TString configurationFile = configFile;
   CAP::printCR();
   CAP::printLine();
-  CAP::printString("RunAna()");
+  CAP::printString("RunDerived(Jets)");
   CAP::printLine();
   CAP::printValue("Configuration path",configurationPath);
   CAP::printValue("Configuration file",configurationFile);
   configuration.importProperties(configurationPath,configurationFile);
+  configuration.addProperty("FileIterator:nLevels",nLevels);
 
   String histoBasePath;
   if (histogramPath.BeginsWith("/"))
@@ -65,21 +57,19 @@ int RunAnaJets(TString configFile="Pythia/pp_13.7TeV/RunAnaJets.ini",
   setenv("CAP_HISTOS_IMPORT_PATH",histoBasePath,1);
   setenv("CAP_HISTOS_EXPORT_PATH",histoBasePath,1);
 
-  CAP::printLine();
-  CAP::printString("Instantiate TaskCreator");
   CAP::TaskCreator * creatorTask = new CAP::TaskCreator();
-  creatorTask->setTargetTaskName("RunAnalysis");
+  creatorTask->setTargetTaskName("RunDerived");
   creatorTask->setRequestedConfiguration(configuration);
   creatorTask->configure();
   creatorTask->execute();
-  CAP::Task * ana = creatorTask->getCreatedTask();
-  ana->initialize();
-  ana->execute();
-  ana->finalize();
-  delete ana;
+  CAP::Task * workTask = creatorTask->getCreatedTask();
+  workTask->initialize();
+  workTask->execute();
+  workTask->finalize();
+  //delete workTask;
   delete creatorTask;
   CAP::printLine();
-  CAP::printString("RunAna completed successfully");
+  CAP::printString("RunDerived completed successfully");
   CAP::printLine();
   return 0;
   }
@@ -91,11 +81,10 @@ int RunAnaJets(TString configFile="Pythia/pp_13.7TeV/RunAnaJets.ini",
   {
   exception.print();
   }
-  catch (CAP::IncompatibleHistogramException   & exception)
+  catch (CAP::PropertyException  & exception)
   {
   exception.print();
   }
-
   CAP::printLine();
   CAP::printString("RunAna FAILED");
   CAP::printLine();
@@ -288,15 +277,6 @@ void loadTherminator(const TString & includeBasePath)
   gSystem->Load("libTherminator.dylib");
 }
 
-void loadJets(const TString & includeBasePath)
-{
-  TString includePath = includeBasePath + "/Jets/";
-  gSystem->Load(includePath+"JetAnalyzer.hpp");
-  gSystem->Load(includePath+"JetFilterCreator.hpp");
-  gSystem->Load("libJets.dylib");
-}
-
-
 void loadLibraries(const TString & includeBasePath)
 {
   loadBase(includeBasePath);
@@ -311,7 +291,6 @@ void loadLibraries(const TString & includeBasePath)
   loadSubSample(includeBasePath);
   loadPythia(includeBasePath);
   loadTherminator(includeBasePath);
-  loadJets(includeBasePath);
 //  loadAmpt(includeBasePath)
 //  loadEpos(includeBasePath)
 //  loadHijing(includeBasePath)

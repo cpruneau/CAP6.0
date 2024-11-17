@@ -9,39 +9,34 @@
  * Author: Claude Pruneau, Akash Raj,  Nov 2024
  *
  * *********************************************************************/
-#ifndef CAP__JetAnalyzer
-#define CAP__JetAnalyzer
+#ifndef CAP__JetCalculator
+#define CAP__JetCalculator
 #include "EventTask.hpp"
 
 namespace CAP
 {
 
-class JetAnalyzer : public EventTask
+class JetCalculator : public EventTask
 {
 public:
 
-  JetAnalyzer();
-  JetAnalyzer(const JetAnalyzer & task);
-  JetAnalyzer & operator=(const JetAnalyzer & task);
-  virtual ~JetAnalyzer() {}
+  JetCalculator();
+  JetCalculator(const JetCalculator & task);
+  JetCalculator & operator=(const JetCalculator & task);
+  virtual ~JetCalculator() {}
   virtual void setDefaultConfiguration();
   virtual void configure();
   virtual void initialize();
   virtual void execute();
   virtual void createHistograms();
+  virtual void importHistograms(TFile & inputFile);
   virtual void scaleHistograms();
-  virtual void printJets (const vector<fastjet::PseudoJet> & jets);
 
 protected:
 
-  double jetRadius;
-  double jetPtMin;
-
-  ParticleDb * particleDb;
-
-  ClassDef(JetAnalyzer,0)
+  ClassDef(JetCalculator,0)
 };
 
 } // namespace CAP
 
-#endif /* CAP__JetAnalyzer */
+#endif /* CAP__JetCalculator */

@@ -254,8 +254,9 @@ void PythiaEventGenerator::execute()
 
 void PythiaEventGenerator::finalize()
 {
-  if (reportInfo(__FUNCTION__) && getValueBool("Print:Statistics"))
+  if (reportDebug(__FUNCTION__))
     {
+    //&& getValueBool("Print:Statistics")
     printCR();
     printLine();
     pythia->stat();

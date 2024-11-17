@@ -39,6 +39,9 @@
 #include "JetSingleHistos.hpp"
 #include "JetPairHistos.hpp"
 #include "JetAnalyzer.hpp"
+#include "JetHistosDerived.hpp"
+#include "JetPairHistosDerived.hpp"
+#include "JetCalculator.cpp"
 
 // Header files passed via #pragma extra_include
 
@@ -58,7 +61,7 @@ namespace ROOT {
       ::CAP::JetHistos *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::CAP::JetHistos >(nullptr);
       static ::ROOT::TGenericClassInfo 
-         instance("CAP::JetHistos", ::CAP::JetHistos::Class_Version(), "JetHistos.hpp", 16,
+         instance("CAP::JetHistos", ::CAP::JetHistos::Class_Version(), "JetHistos.hpp", 27,
                   typeid(::CAP::JetHistos), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::CAP::JetHistos::Dictionary, isa_proxy, 4,
                   sizeof(::CAP::JetHistos) );
@@ -90,7 +93,7 @@ namespace ROOT {
       ::CAP::JetSingleHistos *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::CAP::JetSingleHistos >(nullptr);
       static ::ROOT::TGenericClassInfo 
-         instance("CAP::JetSingleHistos", ::CAP::JetSingleHistos::Class_Version(), "JetSingleHistos.hpp", 15,
+         instance("CAP::JetSingleHistos", ::CAP::JetSingleHistos::Class_Version(), "JetSingleHistos.hpp", 26,
                   typeid(::CAP::JetSingleHistos), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::CAP::JetSingleHistos::Dictionary, isa_proxy, 4,
                   sizeof(::CAP::JetSingleHistos) );
@@ -122,7 +125,7 @@ namespace ROOT {
       ::CAP::JetPairHistos *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::CAP::JetPairHistos >(nullptr);
       static ::ROOT::TGenericClassInfo 
-         instance("CAP::JetPairHistos", ::CAP::JetPairHistos::Class_Version(), "JetPairHistos.hpp", 13,
+         instance("CAP::JetPairHistos", ::CAP::JetPairHistos::Class_Version(), "JetPairHistos.hpp", 24,
                   typeid(::CAP::JetPairHistos), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::CAP::JetPairHistos::Dictionary, isa_proxy, 4,
                   sizeof(::CAP::JetPairHistos) );
@@ -171,6 +174,102 @@ namespace ROOT {
    }
    // Static variable to force the class initialization
    static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::CAP::JetAnalyzer*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
+} // end of namespace ROOT
+
+namespace ROOT {
+   static void *new_CAPcLcLJetHistosDerived(void *p = nullptr);
+   static void *newArray_CAPcLcLJetHistosDerived(Long_t size, void *p);
+   static void delete_CAPcLcLJetHistosDerived(void *p);
+   static void deleteArray_CAPcLcLJetHistosDerived(void *p);
+   static void destruct_CAPcLcLJetHistosDerived(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::CAP::JetHistosDerived*)
+   {
+      ::CAP::JetHistosDerived *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::CAP::JetHistosDerived >(nullptr);
+      static ::ROOT::TGenericClassInfo 
+         instance("CAP::JetHistosDerived", ::CAP::JetHistosDerived::Class_Version(), "JetHistosDerived.hpp", 27,
+                  typeid(::CAP::JetHistosDerived), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &::CAP::JetHistosDerived::Dictionary, isa_proxy, 4,
+                  sizeof(::CAP::JetHistosDerived) );
+      instance.SetNew(&new_CAPcLcLJetHistosDerived);
+      instance.SetNewArray(&newArray_CAPcLcLJetHistosDerived);
+      instance.SetDelete(&delete_CAPcLcLJetHistosDerived);
+      instance.SetDeleteArray(&deleteArray_CAPcLcLJetHistosDerived);
+      instance.SetDestructor(&destruct_CAPcLcLJetHistosDerived);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::CAP::JetHistosDerived*)
+   {
+      return GenerateInitInstanceLocal(static_cast<::CAP::JetHistosDerived*>(nullptr));
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::CAP::JetHistosDerived*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
+} // end of namespace ROOT
+
+namespace ROOT {
+   static void *new_CAPcLcLJetPairHistosDerived(void *p = nullptr);
+   static void *newArray_CAPcLcLJetPairHistosDerived(Long_t size, void *p);
+   static void delete_CAPcLcLJetPairHistosDerived(void *p);
+   static void deleteArray_CAPcLcLJetPairHistosDerived(void *p);
+   static void destruct_CAPcLcLJetPairHistosDerived(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::CAP::JetPairHistosDerived*)
+   {
+      ::CAP::JetPairHistosDerived *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::CAP::JetPairHistosDerived >(nullptr);
+      static ::ROOT::TGenericClassInfo 
+         instance("CAP::JetPairHistosDerived", ::CAP::JetPairHistosDerived::Class_Version(), "JetPairHistosDerived.hpp", 24,
+                  typeid(::CAP::JetPairHistosDerived), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &::CAP::JetPairHistosDerived::Dictionary, isa_proxy, 4,
+                  sizeof(::CAP::JetPairHistosDerived) );
+      instance.SetNew(&new_CAPcLcLJetPairHistosDerived);
+      instance.SetNewArray(&newArray_CAPcLcLJetPairHistosDerived);
+      instance.SetDelete(&delete_CAPcLcLJetPairHistosDerived);
+      instance.SetDeleteArray(&deleteArray_CAPcLcLJetPairHistosDerived);
+      instance.SetDestructor(&destruct_CAPcLcLJetPairHistosDerived);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::CAP::JetPairHistosDerived*)
+   {
+      return GenerateInitInstanceLocal(static_cast<::CAP::JetPairHistosDerived*>(nullptr));
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::CAP::JetPairHistosDerived*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
+} // end of namespace ROOT
+
+namespace ROOT {
+   static void *new_CAPcLcLJetCalculator(void *p = nullptr);
+   static void *newArray_CAPcLcLJetCalculator(Long_t size, void *p);
+   static void delete_CAPcLcLJetCalculator(void *p);
+   static void deleteArray_CAPcLcLJetCalculator(void *p);
+   static void destruct_CAPcLcLJetCalculator(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::CAP::JetCalculator*)
+   {
+      ::CAP::JetCalculator *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::CAP::JetCalculator >(nullptr);
+      static ::ROOT::TGenericClassInfo 
+         instance("CAP::JetCalculator", ::CAP::JetCalculator::Class_Version(), "JetCalculator.hpp", 19,
+                  typeid(::CAP::JetCalculator), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &::CAP::JetCalculator::Dictionary, isa_proxy, 4,
+                  sizeof(::CAP::JetCalculator) );
+      instance.SetNew(&new_CAPcLcLJetCalculator);
+      instance.SetNewArray(&newArray_CAPcLcLJetCalculator);
+      instance.SetDelete(&delete_CAPcLcLJetCalculator);
+      instance.SetDeleteArray(&deleteArray_CAPcLcLJetCalculator);
+      instance.SetDestructor(&destruct_CAPcLcLJetCalculator);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::CAP::JetCalculator*)
+   {
+      return GenerateInitInstanceLocal(static_cast<::CAP::JetCalculator*>(nullptr));
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::CAP::JetCalculator*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
 } // end of namespace ROOT
 
 namespace CAP {
@@ -323,6 +422,117 @@ TClass *JetAnalyzer::Class()
 } // namespace CAP
 namespace CAP {
 //______________________________________________________________________________
+atomic_TClass_ptr JetHistosDerived::fgIsA(nullptr);  // static to hold class pointer
+
+//______________________________________________________________________________
+const char *JetHistosDerived::Class_Name()
+{
+   return "CAP::JetHistosDerived";
+}
+
+//______________________________________________________________________________
+const char *JetHistosDerived::ImplFileName()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetHistosDerived*)nullptr)->GetImplFileName();
+}
+
+//______________________________________________________________________________
+int JetHistosDerived::ImplFileLine()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetHistosDerived*)nullptr)->GetImplFileLine();
+}
+
+//______________________________________________________________________________
+TClass *JetHistosDerived::Dictionary()
+{
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetHistosDerived*)nullptr)->GetClass();
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+TClass *JetHistosDerived::Class()
+{
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetHistosDerived*)nullptr)->GetClass(); }
+   return fgIsA;
+}
+
+} // namespace CAP
+namespace CAP {
+//______________________________________________________________________________
+atomic_TClass_ptr JetPairHistosDerived::fgIsA(nullptr);  // static to hold class pointer
+
+//______________________________________________________________________________
+const char *JetPairHistosDerived::Class_Name()
+{
+   return "CAP::JetPairHistosDerived";
+}
+
+//______________________________________________________________________________
+const char *JetPairHistosDerived::ImplFileName()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetPairHistosDerived*)nullptr)->GetImplFileName();
+}
+
+//______________________________________________________________________________
+int JetPairHistosDerived::ImplFileLine()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetPairHistosDerived*)nullptr)->GetImplFileLine();
+}
+
+//______________________________________________________________________________
+TClass *JetPairHistosDerived::Dictionary()
+{
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetPairHistosDerived*)nullptr)->GetClass();
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+TClass *JetPairHistosDerived::Class()
+{
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetPairHistosDerived*)nullptr)->GetClass(); }
+   return fgIsA;
+}
+
+} // namespace CAP
+namespace CAP {
+//______________________________________________________________________________
+atomic_TClass_ptr JetCalculator::fgIsA(nullptr);  // static to hold class pointer
+
+//______________________________________________________________________________
+const char *JetCalculator::Class_Name()
+{
+   return "CAP::JetCalculator";
+}
+
+//______________________________________________________________________________
+const char *JetCalculator::ImplFileName()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetCalculator*)nullptr)->GetImplFileName();
+}
+
+//______________________________________________________________________________
+int JetCalculator::ImplFileLine()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetCalculator*)nullptr)->GetImplFileLine();
+}
+
+//______________________________________________________________________________
+TClass *JetCalculator::Dictionary()
+{
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetCalculator*)nullptr)->GetClass();
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+TClass *JetCalculator::Class()
+{
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::CAP::JetCalculator*)nullptr)->GetClass(); }
+   return fgIsA;
+}
+
+} // namespace CAP
+namespace CAP {
+//______________________________________________________________________________
 void JetHistos::Streamer(TBuffer &R__b)
 {
    // Stream an object of class CAP::JetHistos.
@@ -461,6 +671,111 @@ namespace ROOT {
    }
 } // end of namespace ROOT for class ::CAP::JetAnalyzer
 
+namespace CAP {
+//______________________________________________________________________________
+void JetHistosDerived::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class CAP::JetHistosDerived.
+
+   if (R__b.IsReading()) {
+      R__b.ReadClassBuffer(CAP::JetHistosDerived::Class(),this);
+   } else {
+      R__b.WriteClassBuffer(CAP::JetHistosDerived::Class(),this);
+   }
+}
+
+} // namespace CAP
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_CAPcLcLJetHistosDerived(void *p) {
+      return  p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) ::CAP::JetHistosDerived : new ::CAP::JetHistosDerived;
+   }
+   static void *newArray_CAPcLcLJetHistosDerived(Long_t nElements, void *p) {
+      return p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) ::CAP::JetHistosDerived[nElements] : new ::CAP::JetHistosDerived[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_CAPcLcLJetHistosDerived(void *p) {
+      delete (static_cast<::CAP::JetHistosDerived*>(p));
+   }
+   static void deleteArray_CAPcLcLJetHistosDerived(void *p) {
+      delete [] (static_cast<::CAP::JetHistosDerived*>(p));
+   }
+   static void destruct_CAPcLcLJetHistosDerived(void *p) {
+      typedef ::CAP::JetHistosDerived current_t;
+      (static_cast<current_t*>(p))->~current_t();
+   }
+} // end of namespace ROOT for class ::CAP::JetHistosDerived
+
+namespace CAP {
+//______________________________________________________________________________
+void JetPairHistosDerived::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class CAP::JetPairHistosDerived.
+
+   if (R__b.IsReading()) {
+      R__b.ReadClassBuffer(CAP::JetPairHistosDerived::Class(),this);
+   } else {
+      R__b.WriteClassBuffer(CAP::JetPairHistosDerived::Class(),this);
+   }
+}
+
+} // namespace CAP
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_CAPcLcLJetPairHistosDerived(void *p) {
+      return  p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) ::CAP::JetPairHistosDerived : new ::CAP::JetPairHistosDerived;
+   }
+   static void *newArray_CAPcLcLJetPairHistosDerived(Long_t nElements, void *p) {
+      return p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) ::CAP::JetPairHistosDerived[nElements] : new ::CAP::JetPairHistosDerived[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_CAPcLcLJetPairHistosDerived(void *p) {
+      delete (static_cast<::CAP::JetPairHistosDerived*>(p));
+   }
+   static void deleteArray_CAPcLcLJetPairHistosDerived(void *p) {
+      delete [] (static_cast<::CAP::JetPairHistosDerived*>(p));
+   }
+   static void destruct_CAPcLcLJetPairHistosDerived(void *p) {
+      typedef ::CAP::JetPairHistosDerived current_t;
+      (static_cast<current_t*>(p))->~current_t();
+   }
+} // end of namespace ROOT for class ::CAP::JetPairHistosDerived
+
+namespace CAP {
+//______________________________________________________________________________
+void JetCalculator::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class CAP::JetCalculator.
+
+   if (R__b.IsReading()) {
+      R__b.ReadClassBuffer(CAP::JetCalculator::Class(),this);
+   } else {
+      R__b.WriteClassBuffer(CAP::JetCalculator::Class(),this);
+   }
+}
+
+} // namespace CAP
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_CAPcLcLJetCalculator(void *p) {
+      return  p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) ::CAP::JetCalculator : new ::CAP::JetCalculator;
+   }
+   static void *newArray_CAPcLcLJetCalculator(Long_t nElements, void *p) {
+      return p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) ::CAP::JetCalculator[nElements] : new ::CAP::JetCalculator[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_CAPcLcLJetCalculator(void *p) {
+      delete (static_cast<::CAP::JetCalculator*>(p));
+   }
+   static void deleteArray_CAPcLcLJetCalculator(void *p) {
+      delete [] (static_cast<::CAP::JetCalculator*>(p));
+   }
+   static void destruct_CAPcLcLJetCalculator(void *p) {
+      typedef ::CAP::JetCalculator current_t;
+      (static_cast<current_t*>(p))->~current_t();
+   }
+} // end of namespace ROOT for class ::CAP::JetCalculator
+
 namespace {
   void TriggerDictionaryInitialization_libJets_Impl() {
     static const char* headers[] = {
@@ -468,6 +783,9 @@ namespace {
 "JetSingleHistos.hpp",
 "JetPairHistos.hpp",
 "JetAnalyzer.hpp",
+"JetHistosDerived.hpp",
+"JetPairHistosDerived.hpp",
+"JetCalculator.cpp",
 nullptr
     };
     static const char* includePaths[] = {
@@ -510,6 +828,9 @@ namespace CAP{class __attribute__((annotate("$clingAutoload$JetHistos.hpp")))  J
 namespace CAP{class __attribute__((annotate("$clingAutoload$JetSingleHistos.hpp")))  JetSingleHistos;}
 namespace CAP{class __attribute__((annotate("$clingAutoload$JetPairHistos.hpp")))  JetPairHistos;}
 namespace CAP{class __attribute__((annotate("$clingAutoload$JetAnalyzer.hpp")))  JetAnalyzer;}
+namespace CAP{class __attribute__((annotate("$clingAutoload$JetHistosDerived.hpp")))  JetHistosDerived;}
+namespace CAP{class __attribute__((annotate("$clingAutoload$JetPairHistosDerived.hpp")))  JetPairHistosDerived;}
+namespace CAP{class __attribute__((annotate("$clingAutoload$JetCalculator.hpp")))  __attribute__((annotate("$clingAutoload$JetCalculator.cpp")))  JetCalculator;}
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
 #line 1 "libJets dictionary payload"
@@ -521,13 +842,19 @@ namespace CAP{class __attribute__((annotate("$clingAutoload$JetAnalyzer.hpp"))) 
 #include "JetSingleHistos.hpp"
 #include "JetPairHistos.hpp"
 #include "JetAnalyzer.hpp"
+#include "JetHistosDerived.hpp"
+#include "JetPairHistosDerived.hpp"
+#include "JetCalculator.cpp"
 
 #undef  _BACKWARD_BACKWARD_WARNING_H
 )DICTPAYLOAD";
     static const char* classesHeaders[] = {
 "CAP::JetAnalyzer", payloadCode, "@",
+"CAP::JetCalculator", payloadCode, "@",
 "CAP::JetHistos", payloadCode, "@",
+"CAP::JetHistosDerived", payloadCode, "@",
 "CAP::JetPairHistos", payloadCode, "@",
+"CAP::JetPairHistosDerived", payloadCode, "@",
 "CAP::JetSingleHistos", payloadCode, "@",
 nullptr
 };

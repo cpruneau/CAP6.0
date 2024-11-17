@@ -13,6 +13,7 @@
 #include <fstream>
 #include <TStyle.h>
 #include <TROOT.h>
+#include <TRandom.h>
 
 void loadLibraries(const TString & includeBasePath);
 
@@ -39,6 +40,8 @@ int RunAna(TString configFile="Pythia/pp_13.7TeV/RunAna3D.ini",
 //           long seed=1121331)
 {
   TString includeBasePath = getenv("CAP_SRC_PATH");
+  loadLibraries(includeBasePath);
+
   if (seed!=0)  gRandom->SetSeed(seed);
   try
   {

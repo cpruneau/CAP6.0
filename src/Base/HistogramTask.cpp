@@ -314,8 +314,11 @@ void HistogramTask::exportHistograms(TFile & outputFile)
 {
   if (reportStart(__FUNCTION__)) { /* no ops */ };
   outputFile.cd();
-  if (reportInfo(__FUNCTION__))
+  if (reportDebug(__FUNCTION__))
+    {
+    printCR();
     printValue("histogramSets.size()",histogramSets.size());
+    }
   for (auto & set : histogramSets) set->exportHistograms(outputFile);
   if (reportEnd(__FUNCTION__)) { /* no ops */ };
 }

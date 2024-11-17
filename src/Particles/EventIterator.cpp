@@ -88,18 +88,18 @@ void EventIterator::execute()
     if (iEvent%nEventsReport == 0) printValue("iEvent",iEvent);
     }
   stop();
-//  finalize();
-//  clear(); // should delete everything..
+  printCR();
+  printLine();
+  printLine();
+  printTimeInfo(cout);
+  printLine();
+  printLine();
+  printCR();
 }
 
 void EventIterator::initialize()
 {
   initializeSubTasks();
-//  for (auto & subtask : subTasks)
-//    {
-//    String analyzerName = subtask->getName();
-//    analyzerName += ":";
-//    }
 }
 
 

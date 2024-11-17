@@ -1,3 +1,14 @@
+/* **********************************************************************
+ * Copyright (C) 2019-2024, Claude Pruneau, Akash Raj
+ * All rights reserved.
+ *
+ * Based on the ROOT package and environment
+ *
+ * For the licensing terms see LICENSE.
+ *
+ * Author: Claude Pruneau, Akash Raj,  Nov 2024
+ *
+ * *********************************************************************/
 #ifndef CAP__JetHistos
 #define CAP__JetHistos
 #include "HistogramGroup.hpp"
@@ -10,12 +21,15 @@ using namespace fastjet;
 namespace CAP
 {
 
+//class JetHistoDerived;
+
 //!
 //!Single particle histograms of particles within jets.
 //!
 class JetHistos : public HistogramGroup
 {
 public:
+
   JetHistos();
   JetHistos(const JetHistos & group);
   JetHistos & operator=(const JetHistos & group);
@@ -24,21 +38,22 @@ public:
   virtual void createHistograms();
   virtual void importHistograms(TFile & inputFile);
   virtual void fill(PseudoJet&  J);
-  virtual void scale();
+  virtual void scaleHistograms(double value);
+  virtual double getAcceptedJets() const;
 
   void setParticleDb(ParticleDb * selectedParticleDb)
   {
   particleDb = selectedParticleDb;
   }
 
-protected:
+//protected:
 
   ParticleDb * particleDb;
 
   //
   // jet global properties
   //
-  TH1 *h_jet_mult; // number of jets of the selected type
+  TH1 *h_jet_count; // number of jets of the selected type
   TH1 *h_jet_pt;   // pt
   TH1 *h_jet_phi;  // phi
   TH1 *h_jet_eta;   // rapidity or eta

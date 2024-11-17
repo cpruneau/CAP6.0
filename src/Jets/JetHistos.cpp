@@ -1,3 +1,14 @@
+/* **********************************************************************
+ * Copyright (C) 2019-2024, Claude Pruneau, Akash Raj
+ * All rights reserved.
+ *
+ * Based on the ROOT package and environment
+ *
+ * For the licensing terms see LICENSE.
+ *
+ * Author: Claude Pruneau, Akash Raj,  Nov 2024
+ *
+ * *********************************************************************/
 #include "JetHistos.hpp"
 #include "JetHelpers.hpp"
 #include "PrintHelpers.hpp"
@@ -11,7 +22,8 @@ namespace CAP
 JetHistos::JetHistos()
 :
 HistogramGroup(),
-h_jet_mult(nullptr),
+particleDb(nullptr),
+h_jet_count(nullptr),
 h_jet_pt(nullptr),
 h_jet_eta(nullptr),
 h_jet_etaPt(nullptr),
@@ -41,7 +53,8 @@ p_jet_netQSq(nullptr)
 JetHistos::JetHistos(const JetHistos & group)
 :
 HistogramGroup(group),
-h_jet_mult(nullptr),
+particleDb(nullptr),
+h_jet_count(nullptr),
 h_jet_pt(nullptr),
 h_jet_eta(nullptr),
 h_jet_etaPt(nullptr),
@@ -67,9 +80,10 @@ p_jet_netQSq(nullptr)
 JetHistos & JetHistos::operator=(const JetHistos & group)
 {
   if (this!=&group)
-    {
+  {
     HistogramGroup::operator=(group);
-    }
+    particleDb = group.particleDb;
+  }
   return *this;
 }
 
@@ -79,7 +93,7 @@ void JetHistos::createHistograms()
   if (reportStart(__FUNCTION__)) { /* noops*/ };
   const String & bn  = getName();
   const String & ptn = getParentName();
-
+  
   int nBins_jet_n1   = configuration.getValueInt(ptn,"nBins_jet_n1");
   double min_jet_n1  = configuration.getValueDouble(ptn,"min_jet_n1");
   double max_jet_n1  = configuration.getValueDouble(ptn,"max_jet_n1");
@@ -98,9 +112,9 @@ void JetHistos::createHistograms()
   int nBins_jet_netQ = configuration.getValueInt(ptn,"nBins_jet_netQ");
   double min_jet_netQ = configuration.getValueDouble(ptn,"min_jet_netQ");
   double max_jet_netQ = configuration.getValueDouble(ptn,"max_jet_netQ");
-
+  
   if (reportDebug(__FUNCTION__))
-    {
+  {
     printCR();
     printLine();
     printValue("Parent Task Name",   ptn);
@@ -128,9 +142,9 @@ void JetHistos::createHistograms()
     printValue("max_jet_netQ",   max_jet_netQ);
     printLine();
     printCR();
-    }
-
-  h_jet_mult   = createHistogram(createName(bn,"jet_mult"),   1,  0.0,  2.0,  "mult","N");
+  }
+  
+  h_jet_count  = createHistogram(createName(bn,"jet_count"),   1,  0.0,  2.0,  "jet","Count");
   h_jet_pt     = createHistogram(createName(bn,"jet_pt"),     nBins_jet_pt, min_jet_pt, max_jet_pt,  "pt (GeV/c)","N");
   h_jet_phi    = createHistogram(createName(bn,"jet_phi"),    nBins_jet_phi,min_jet_phi,max_jet_phi, "#varphi","N");
   h_jet_eta    = createHistogram(createName(bn,"jet_eta"),    nBins_jet_eta,min_jet_eta,max_jet_eta, "#eta","N");
@@ -140,18 +154,18 @@ void JetHistos::createHistograms()
   h_jet_nm     = createHistogram(createName(bn,"jet_nm"),     nBins_jet_n1, min_jet_n1, max_jet_n1,  "n_{-}","N");
   h_jet_n0     = createHistogram(createName(bn,"jet_n0"),     nBins_jet_n1, min_jet_n1, max_jet_n1,  "n_{0}","N");
   h_jet_netQ   = createHistogram(createName(bn,"jet_netQ"),   nBins_jet_n1, min_jet_netQ, min_jet_netQ,  "Q","N");
-  p_jet_n      = createProfile(createName(bn,"jet_n_p"),      nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p (GeV/c)","<n_{part}>");
-  p_jet_np     = createProfile(createName(bn,"jet_np_p"),     nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p (GeV/c)","<n_{+}>");
-  p_jet_nm     = createProfile(createName(bn,"jet_nm_p"),     nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p (GeV/c)","<n_{-}>");
-  p_jet_n0     = createProfile(createName(bn,"jet_n0_p"),     nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p (GeV/c)","<n_{0}>");
-  p_jet_npSq   = createProfile(createName(bn,"jet_npSq_p"),   nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p (GeV/c)","<n_{+}(n_{+}-1)>");
-  p_jet_nmSq   = createProfile(createName(bn,"jet_nmSq_p"),   nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p (GeV/c)","<n_{-}(n_{-}-1)>");
-  p_jet_n0Sq   = createProfile(createName(bn,"jet_n0Sq_p"),   nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p (GeV/c)","<n_{0}(n_{0}-1)>");
-  p_jet_npnm   = createProfile(createName(bn,"jet_npnm_p"),   nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p (GeV/c)","<n_{p}n_{m}>");
-  p_jet_npn0   = createProfile(createName(bn,"jet_npn0_p"),   nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p (GeV/c)","<n_{p}n_{0}>");
-  p_jet_nmn0   = createProfile(createName(bn,"jet_nmn0_p"),   nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p (GeV/c)","<n_{m}n_{0}>");
-  p_jet_netQ   = createProfile(createName(bn,"jet_netQ_p"),   nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p (GeV/c)","<Q>");
-  p_jet_netQSq = createProfile(createName(bn,"jet_netQSq_p"), nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p (GeV/c)","<Q^2>");
+  p_jet_n      = createProfile(createName(bn,"jet_n_p"),      nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p_{T} (GeV/c)","<n_{part}>");
+  p_jet_np     = createProfile(createName(bn,"jet_np_p"),     nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p_{T} (GeV/c)","<n_{+}>");
+  p_jet_nm     = createProfile(createName(bn,"jet_nm_p"),     nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p_{T} (GeV/c)","<n_{-}>");
+  p_jet_n0     = createProfile(createName(bn,"jet_n0_p"),     nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p_{T} (GeV/c)","<n_{0}>");
+  p_jet_npSq   = createProfile(createName(bn,"jet_npSq_p"),   nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p_{T} (GeV/c)","<n_{+}(n_{+}-1)>");
+  p_jet_nmSq   = createProfile(createName(bn,"jet_nmSq_p"),   nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p_{T} (GeV/c)","<n_{-}(n_{-}-1)>");
+  p_jet_n0Sq   = createProfile(createName(bn,"jet_n0Sq_p"),   nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p_{T} (GeV/c)","<n_{0}(n_{0}-1)>");
+  p_jet_npnm   = createProfile(createName(bn,"jet_npnm_p"),   nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p_{T} (GeV/c)","<n_{p}n_{m}>");
+  p_jet_npn0   = createProfile(createName(bn,"jet_npn0_p"),   nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p_{T} (GeV/c)","<n_{p}n_{0}>");
+  p_jet_nmn0   = createProfile(createName(bn,"jet_nmn0_p"),   nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p_{T} (GeV/c)","<n_{m}n_{0}>");
+  p_jet_netQ   = createProfile(createName(bn,"jet_netQ_p"),   nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p_{T} (GeV/c)","<Q>");
+  p_jet_netQSq = createProfile(createName(bn,"jet_netQSq_p"), nBins_jet_pt,  min_jet_pt,  max_jet_pt,   "p_{T} (GeV/c)","<Q^2>");
 }
 
 void JetHistos::importHistograms(TFile & inputFile)
@@ -159,7 +173,7 @@ void JetHistos::importHistograms(TFile & inputFile)
   if (reportStart(__FUNCTION__)) { /* noops*/ };
   const String & bn  = getName();
   const String & ptn = getParentName();
-  h_jet_mult   = loadH1(inputFile,createName(bn,"jet_mult"));
+  h_jet_count  = loadH1(inputFile,createName(bn,"jet_count"));
   h_jet_pt     = loadH1(inputFile,createName(bn,"jet_pt"));
   h_jet_phi    = loadH1(inputFile,createName(bn,"jet_phi"));
   h_jet_eta    = loadH1(inputFile,createName(bn,"jet_eta"));
@@ -188,19 +202,19 @@ void JetHistos::fill(PseudoJet& jet)
   double jet_phi = jet.phi();
   double jet_pt  = jet.perp();
   double jet_eta = jet.pseudorapidity();
-
-//  printCR();
-//  printLine();
-//  printValue("jet_pt",jet_pt);
-//  printValue("jet_phi",jet_phi);
-//  printValue("jet_eta",jet_eta);
-
-  h_jet_mult->Fill(1.0);
+  
+  //  printCR();
+  //  printLine();
+  //  printValue("jet_pt",jet_pt);
+  //  printValue("jet_phi",jet_phi);
+  //  printValue("jet_eta",jet_eta);
+  
+  h_jet_count->Fill(1.0);
   h_jet_pt->Fill(jet_pt);
   h_jet_phi->Fill(jet_phi);
   h_jet_eta->Fill(jet_eta);
   h_jet_etaPt->Fill(jet_eta, jet_pt);
-
+  
   double n  = 0;
   double np = 0;
   double nm = 0;
@@ -208,12 +222,12 @@ void JetHistos::fill(PseudoJet& jet)
   double netQ = 0;
   double q;
   int pdgId;
-
+  
   // Constituents of the passed Jet
   vector<PseudoJet> constituents = jet.constituents();
   n = jet.constituents().size();
   for (const auto & constituent : constituents)
-    {
+  {
     pdgId = constituent.user_index();
     ParticleType * type = particleDb->findPdgCode(pdgId);
     q = type->getCharge();
@@ -221,8 +235,8 @@ void JetHistos::fill(PseudoJet& jet)
     if (q>0) np += 1.0;
     else if (q<0) nm += 1.0;
     else n0 += 1.0;
-    }
-
+  }
+  
   h_jet_n->Fill(n);
   h_jet_np->Fill(np);
   h_jet_nm->Fill(nm);
@@ -240,32 +254,36 @@ void JetHistos::fill(PseudoJet& jet)
   p_jet_nmn0->Fill(jet_pt,nm*n0);
   p_jet_netQ->Fill(jet_pt,netQ);
   p_jet_netQSq->Fill(jet_pt,netQ*netQ);
-
-//  printValue("jet_n",n);
-//  printValue("jet_np",np);
-//  printValue("jet_nm",nm);
-//  printValue("jet_n0",n0);
-//  printValue("np*(np-1.0)",np*(np-1.0));
-//  printValue("nm*(nm-1.0)",nm*(nm-1.0));
-//  printValue("n0*(n0-1.0)",n0*(n0-1.0));
-//  printValue("nm*np",nm*np);
-//  printValue("netQ",netQ);
-//  printValue("netQSq",netQ*netQ);
-
+  
+  //  printValue("jet_n",n);
+  //  printValue("jet_np",np);
+  //  printValue("jet_nm",nm);
+  //  printValue("jet_n0",n0);
+  //  printValue("np*(np-1.0)",np*(np-1.0));
+  //  printValue("nm*(nm-1.0)",nm*(nm-1.0));
+  //  printValue("n0*(n0-1.0)",n0*(n0-1.0));
+  //  printValue("nm*np",nm*np);
+  //  printValue("netQ",netQ);
+  //  printValue("netQSq",netQ*netQ);
+  
 }
 
-void JetHistos::scale()
+double JetHistos::getAcceptedJets() const
 {
-  double counts = h_jet_mult->GetBinContent(1);
-  if (counts>0)
-    {
-    double scale = 1.0/counts;
-    h_jet_n->Scale(scale);
-    h_jet_np->Scale(scale);
-    h_jet_nm->Scale(scale);
-    h_jet_n0->Scale(scale);
-    h_jet_netQ->Scale(scale);
-    }
+  return h_jet_count->GetBinContent(1);
+}
+
+void JetHistos::scaleHistograms(double scale)
+{
+  h_jet_pt->Scale(scale);
+  h_jet_phi->Scale(scale);
+  h_jet_eta->Scale(scale);
+  h_jet_etaPt->Scale(scale);
+  h_jet_n->Scale(scale);
+  h_jet_np->Scale(scale);
+  h_jet_nm->Scale(scale);
+  h_jet_n0->Scale(scale);
+  h_jet_netQ->Scale(scale);
 }
 
 } // namespace CAP

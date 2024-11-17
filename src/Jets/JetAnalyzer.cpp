@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Akash Raj
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau, Akash Raj,  Nov 2024
  *
  * *********************************************************************/
 #include "JetAnalyzer.hpp"
@@ -26,7 +26,7 @@ JetAnalyzer::JetAnalyzer()
 EventTask()
 {
   appendClassName("JetAnalyzer");
-  setInstanceName("Pair");
+  setInstanceName("JetAnalyzer");
   setName("JetAnalyzer");
   setTitle("JetAnalyzer");
 }
@@ -50,7 +50,6 @@ void JetAnalyzer::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
   addProperty("HistogramBaseName","Jet");
-
   addProperty("JetRadius",      0.4);
   addProperty("JetPtMin",       10.0);
   addProperty("nBins_jet_n1",   100);
@@ -144,6 +143,7 @@ void JetAnalyzer::createHistograms()
       jetSingleHistos->setConfiguration(configuration);
       jetSingleHistos->setParentTask(this);
       jetSingleHistos->createHistograms();
+      jetSingleHistos->setParticleDb(getParticleDb());
       addGroupInSet(1,jetSingleHistos);
 
       jetPairHistos = new JetPairHistos();
@@ -151,6 +151,7 @@ void JetAnalyzer::createHistograms()
       jetPairHistos->setConfiguration(configuration);
       jetPairHistos->setParentTask(this);
       jetPairHistos->createHistograms();
+      jetPairHistos->setParticleDb(getParticleDb());
       addGroupInSet(2,jetPairHistos);
       }
     }
@@ -230,44 +231,33 @@ void JetAnalyzer::execute()
   delete clusterSequence;
 }
 
+//!
+//!Jet histograms are scaled by the number of jets accepted - instead of the number of events accepted.
+//!
 void JetAnalyzer::scaleHistograms()
 {
   if (reportStart(__FUNCTION__)) { /* no ops */ };
-//  std::vector<long> & counts = getFilteredEventCounts();
-//  std::vector<double> factors;
-//  for (auto count : counts)
-//    {
-//    if (count>0)
-//      {
-//      double f = 1.0/double(count);
-//      printValue("Count",count);
-//      printValue("Scaling factor",f);
-//      factors.push_back(f);
-//      }
-//    else
-//      factors.push_back(1.0);
-//    }
-//  unsigned int nEventFilters = Manager<EventFilter>::getNObjects();
-//  unsigned int nJetFilters   = Manager<JetFilter>::getNObjects();
-//  unsigned int index;
-//  unsigned int baseSingle;
-//  unsigned int basePair;
-//
-//  for (unsigned int iEventFilter=0; iEventFilter< nEventFilters; iEventFilter++)
-//    {
-//    baseSingle = iEventFilter*nJetFilters;
-//    basePair   = iEventFilter*nJetFilters*nJetFilters;
-//    for (unsigned int iJetFilter1=0; iJetFilter1< nJetFilters; iJetFilter1++)
-//      {
-//      index = baseSingle + iJetFilter1;
-//      getGroupAt(0,index).scaleHistograms(factors[iEventFilter]);
-//      for (unsigned int iJetFilter2=0; iJetFilter2<nJetFilters; iJetFilter2++ )
-//        {
-//        index = basePair + iJetFilter1*nJetFilters + iJetFilter2;
-//        getGroupAt(1,index).scaleHistograms(factors[iEventFilter]);
-//        }
-//      }
-//    }
+
+  int nEventFilters = eventFilters.size();
+  int nJetFilters   = jetFilters.size();
+  for (int iEventFilter=0; iEventFilter<nEventFilters; iEventFilter++)
+  {
+    unsigned int  baseSingle   = iEventFilter*nJetFilters;
+    for (int iJetFilter=0; iJetFilter<nJetFilters; iJetFilter++)
+    {
+      int index = baseSingle+iJetFilter;
+      JetHistos & jetHistos = (JetHistos &) getGroupAt(0,index);
+      double jetAccepted = jetHistos.getAcceptedJets();
+      double scale = 1.0;
+      if (jetAccepted>1)
+        scale = 1.0/jetAccepted;
+      jetHistos.scaleHistograms(scale);
+      JetSingleHistos & jetSingleHistos = (JetSingleHistos &) getGroupAt(1,index);
+      jetSingleHistos.scaleHistograms(scale);
+      JetPairHistos & jetPairHistos     = (JetPairHistos &) getGroupAt(2,index);
+      jetPairHistos.scaleHistograms(scale);
+    }
+  }
   if (reportEnd(__FUNCTION__)) {/* no ops */};
 }
 

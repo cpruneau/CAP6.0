@@ -126,7 +126,7 @@ void HistogramSet::importHistograms(TFile & file)
 //!
 void HistogramSet::exportHistograms(TFile & file)
 {
-  printValue("HistogramSet::exportHistograms(TFile & file) groups.size()", groups.size());
+  //printValue("HistogramSet::exportHistograms(TFile & file) groups.size()", groups.size());
   for (auto & group : groups) group->exportHistograms(file);
 }
 
