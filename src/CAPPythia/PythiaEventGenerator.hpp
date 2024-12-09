@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #ifndef CAP__PythiaEventGenerator
@@ -34,6 +34,12 @@ public:
 protected:
   
   Pythia8::Pythia * pythia;
+
+  bool saveFinalOnly;
+  bool savePhotons;
+  bool saveNeutrinos;
+  bool saveQuarks;
+  bool saveGaugeBosons;
 
   ClassDef(PythiaEventGenerator,0)
 };

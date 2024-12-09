@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #include "PythiaEventReader.hpp"
@@ -19,13 +19,49 @@ namespace CAP
 PythiaEventReader::PythiaEventReader()
 :
 EventTask(),
-RootChainManager()
+RootChainManager(),
+saveFinalOnly(true),
+savePhotons(false),
+saveNeutrinos(false),
+saveQuarks(false),
+saveGaugeBosons(false)
 {
   appendClassName("PythiaEventReader");
   setName("Pythia");
   setTitle("Pythia");
   setVersion("1.0");
 }
+
+PythiaEventReader::PythiaEventReader(const PythiaEventReader & task)
+:
+EventTask(task),
+RootChainManager(task),
+saveFinalOnly(task.saveFinalOnly),
+savePhotons(task.savePhotons),
+saveNeutrinos(task.saveNeutrinos),
+saveQuarks(task.saveQuarks),
+saveGaugeBosons(task.saveGaugeBosons)
+{
+  appendClassName("PythiaEventReader");
+  setName("Pythia");
+  setTitle("Pythia");
+}
+
+PythiaEventReader & PythiaEventReader::operator=(const PythiaEventReader & task)
+{
+  if (this!=&task)
+    {
+    EventTask::operator=(task);
+    RootChainManager::operator=(task);
+    saveFinalOnly    = task.saveFinalOnly;
+    savePhotons      = task.savePhotons;
+    saveNeutrinos    = task.saveNeutrinos;
+    saveQuarks       = task.saveQuarks;
+    saveGaugeBosons  = task.saveGaugeBosons;
+    }
+  return *this;
+}
+
 
 void PythiaEventReader::configure()
 {
@@ -36,6 +72,11 @@ void PythiaEventReader::configure()
 void PythiaEventReader::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
+  addProperty("SaveFinalOnly",    true);
+  addProperty("SavePhotons",      false);
+  addProperty("SaveNeutrinos",    false);
+  addProperty("SaveQuarks",       false);
+  addProperty("SaveGaugeBosons",  false);
 }
 
 //!
@@ -49,47 +90,28 @@ void PythiaEventReader::execute()
   event.reset();
   particleFactory->reset();
   bool seekingEvent = true;
-  //if (reportDebug("PythiaEventReader",getName(),"execute()")) cout << "Start seek loop" << endl;
   while (seekingEvent)
     {
-    //if (reportDebug("PythiaEventReader",getName(),"execute()")) cout << "jentry:" << entryIndex << endl;
-    // load another event from the root file/TTree
     Long64_t ientry = LoadTree(entryIndex++);
-    //if (reportDebug("PythiaEventReader",getName(),"execute()")) cout << "ientry:" << ientry << endl;
-    // returning a null point is an indication that
-    // there are no more events in the file or stack of files.
-    if (ientry < 0)
-      {
-  //    postTaskEod(); // end of data
-      return;
-      }
+    if (ientry < 0) return;
     nb = GetEntry(entryIndex);   nBytes += nb;
     if (reportDebug(__FUNCTION__)) cout << " nb:" << nb << " nParticles:" <<  nParticles << endl;
     if (nParticles>2) seekingEvent = false;
     }
-  
-//  int thePid;
-//  double charge;
-//  double baryonNumber;
-  double mass;
-//  double p_x, p_y, p_z, p_e;
   ParticleType * type;
   Particle * particle;
-//  int particleAccepted = 0;
-//  int particleCounted = 0;
-  
+
   for (int iParticle = 0; iParticle < nParticles; iParticle++)
     {
-    //  if (reportDebug("PythiaEventReader",getName(),"execute()")) cout << "iParticle: " << iParticle << endl;
-    
     int ist = tracks_fStatusCode[iParticle];
-    if (ist <= 0) continue;
+    if (saveFinalOnly    && ist <= 0) continue;
     int pdg = tracks_fPdgCode[iParticle];
+    if (!saveQuarks      && abs(pdg)<10) continue; // skip quarks, gluons, etc
+    if (!saveNeutrinos   && (abs(pdg)==12 || abs(pdg)==14  || abs(pdg)==16 || abs(pdg)==18)) continue;
+    if (!savePhotons     && pdg==22) continue;
+    if (!saveGaugeBosons && (abs(pdg)>22 && abs(pdg)<40)) continue;
     type = particleDb->findPdgCode(pdg);
     if (type==nullptr) continue;
-    mass = type->getMass();
-    if (mass<0.002) continue;  // no photons, electrons..
-    //charge = type->getCharge();
     double px = tracks_fPx[iParticle];
     double py = tracks_fPy[iParticle];
     double pz = tracks_fPz[iParticle];
@@ -111,31 +133,14 @@ void PythiaEventReader::execute()
 
 void PythiaEventReader::initialize()
 {
+  saveFinalOnly   = getValueBool("SaveFinalOnly");
+  savePhotons     = getValueBool("SavePhotons");
+  saveNeutrinos   = getValueBool("SaveNeutrinos");
+  saveQuarks      = getValueBool("SaveQuarks");
+  saveGaugeBosons = getValueBool("SaveGaugeBosons");
+
   TTree * tree = getChain();
   tree->SetMakeClass(1);
-
-//  tree->SetBranchAddress("particles", &nParticles, &b_particles_);
-//  tree->SetBranchAddress("particles.fUniqueID", particles_fUniqueID, &b_particles_fUniqueID);
-//  tree->SetBranchAddress("particles.fBits", particles_fBits, &b_particles_fBits);
-//  tree->SetBranchAddress("particles.fLineColor", particles_fLineColor, &b_particles_fLineColor);
-//  tree->SetBranchAddress("particles.fLineStyle", particles_fLineStyle, &b_particles_fLineStyle);
-//  tree->SetBranchAddress("particles.fLineWidth", particles_fLineWidth, &b_particles_fLineWidth);
-//  tree->SetBranchAddress("particles.fPdgCode", particles_fPdgCode, &b_particles_fPdgCode);
-//  tree->SetBranchAddress("particles.fStatusCode", particles_fStatusCode, &b_particles_fStatusCode);
-//  tree->SetBranchAddress("particles.fMother[2]", particles_fMother, &b_particles_fMother);
-//  tree->SetBranchAddress("particles.fDaughter[2]", particles_fDaughter, &b_particles_fDaughter);
-//  tree->SetBranchAddress("particles.fWeight", particles_fWeight, &b_particles_fWeight);
-//  tree->SetBranchAddress("particles.fCalcMass", particles_fCalcMass, &b_particles_fCalcMass);
-//  tree->SetBranchAddress("particles.fPx", particles_fPx, &b_particles_fPx);
-//  tree->SetBranchAddress("particles.fPy", particles_fPy, &b_particles_fPy);
-//  tree->SetBranchAddress("particles.fPz", particles_fPz, &b_particles_fPz);
-//  tree->SetBranchAddress("particles.fE", particles_fE, &b_particles_fE);
-//  tree->SetBranchAddress("particles.fVx", particles_fVx, &b_particles_fVx);
-//  tree->SetBranchAddress("particles.fVy", particles_fVy, &b_particles_fVy);
-//  tree->SetBranchAddress("particles.fVz", particles_fVz, &b_particles_fVz);
-//  tree->SetBranchAddress("particles.fVt", particles_fVt, &b_particles_fVt);
-//  tree->SetBranchAddress("particles.fPolarTheta", particles_fPolarTheta, &b_particles_fPolarTheta);
-//  tree->SetBranchAddress("particles.fPolarPhi", particles_fPolarPhi, &b_particles_fPolarPhi);
 
   tree->SetBranchAddress("tracks", &nParticles, &b_tracks_);
   tree->SetBranchAddress("tracks.fUniqueID", tracks_fUniqueID, &b_tracks_fUniqueID);
@@ -175,8 +180,6 @@ void PythiaEventReader::initialize()
   tree->SetBranchAddress("HP_Kick2", &HP_Kick2, &b_HP_Kick2);
   tree->SetBranchAddress("HP_Kick3", &HP_Kick3, &b_HP_Kick3);
   tree->SetBranchAddress("HP_Kick4", &HP_Kick4, &b_HP_Kick4);
-
-
 }
 
 

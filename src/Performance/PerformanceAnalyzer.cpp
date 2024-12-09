@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #include "PerformanceAnalyzer.hpp"
@@ -26,8 +26,22 @@ fillY(false)
   appendClassName("PerformanceAnalyzer");
   setName("PerformanceAnalyzer");
   setTitle("PerformanceAnalyzer");
-  setVersion("1.0");
 }
+
+PerformanceAnalyzer::PerformanceAnalyzer(const PerformanceAnalyzer & analyzer)
+:
+EventTask(analyzer)
+{   }
+
+PerformanceAnalyzer  & PerformanceAnalyzer::operator=(const PerformanceAnalyzer & analyzer)
+{
+  if (this!=&analyzer)
+    {
+    EventTask::operator=(analyzer);
+    }
+  return *this;
+}
+
 
 void PerformanceAnalyzer::setDefaultConfiguration()
 {
@@ -57,16 +71,29 @@ void PerformanceAnalyzer::setDefaultConfiguration()
   addProperty("nBins_dy", 100);
   addProperty("Min_dy",  -1.0);
   addProperty("Max_dy",   1.0);
-  addProperty("FillEta",  fillEta);
-  addProperty("FillY",    fillY);
 }
+
+void PerformanceAnalyzer::configure()
+{
+  EventTask::configure();
+}
+
+void PerformanceAnalyzer::initialize()
+{
+  if (reportStart(__FUNCTION__)) { /* noops*/ };
+  EventTask::initialize();
+  clearSets();
+  addSet("Performance");
+  createHistograms();
+  if (reportEnd(__FUNCTION__)) { /* noops*/ };
+}
+
 
 void PerformanceAnalyzer::createHistograms()
 {
-  if (reportStart(__FUNCTION__)) {/* */};
   String bn = getValueString( "HistogramBaseName");
-  fillEta = getValueBool("FillEta");
-  fillY   = getValueBool("FillY");
+  std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
+  std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
   if (reportInfo(__FUNCTION__))
     {
     printCR();
@@ -75,36 +102,26 @@ void PerformanceAnalyzer::createHistograms()
     printValue("nEventFilters",nEventFilters);
     printValue("nParticleFilters",nParticleFilters);
     }
-  clearSets();
-  addSet("Performance");
   for (auto & eventFilter : eventFilters)
    {
     String efn = eventFilter->getName();
    for (auto & particleFilter : particleFilters)
       {
       String pfn = particleFilter->getName();
-      String histoName  = bn;
-      histoName += "_";
-      histoName += efn;
-      histoName += "_";
-      histoName += pfn;
       ParticlePerformanceHistos * histos = new ParticlePerformanceHistos();
+      histos->setName(createName(bn,efn,pfn));
       histos->setConfiguration(configuration);
       histos->setParentTask(this);
       histos->createHistograms();
       addGroupInSet(0,histos);
       }
     }
-  if (reportEnd(__FUNCTION__)){/* */};
 }
 
 
 void PerformanceAnalyzer::importHistograms(TFile & inputFile)
 {
-  if (reportStart(__FUNCTION__)) {/* */};
   String bn = getValueString( "HistogramBaseName");
-  fillEta = getValueBool("FillEta");
-  fillY   = getValueBool("FillY");
   addSet("Performance");
   for (auto & eventFilter : eventFilters)
     {
@@ -147,5 +164,41 @@ void PerformanceAnalyzer::execute()
     iEventFilter++;
     }
 }
+
+void PerformanceAnalyzer::scaleHistograms()
+{
+  if (reportStart(__FUNCTION__)) { /* no ops */ };
+  std::vector<long> & counts = getFilteredEventCounts();
+  std::vector<double> factors;
+  for (auto count : counts)
+    {
+    if (count>0)
+      {
+      double f = 1.0/double(count);
+      printValue("Count",count);
+      printValue("Scaling factor",f);
+      factors.push_back(f);
+      }
+    else
+      factors.push_back(1.0);
+    }
+  unsigned int nEventFilters    = Manager<EventFilter>::getNObjects();
+  unsigned int nParticleFilters = Manager<ParticleFilter>::getNObjects();
+  int index = 0;
+  for (unsigned int iEventFilter=0; iEventFilter< nEventFilters; iEventFilter++)
+    {
+    for (unsigned int iParticleFilter=0; iParticleFilter< nParticleFilters; iParticleFilter++)
+      {
+      ParticlePerformanceHistos & group = (ParticlePerformanceHistos&) getGroupAt(0,index);
+      printValue("Scaling factor",factors[iEventFilter]);
+
+      group.scaleHistograms(factors[iEventFilter]);
+      index++;
+      }
+    }
+  if (reportEnd(__FUNCTION__)) { /* no ops */ };
+}
+
+
 
 } // namespace CAP

@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez     
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #include "Properties.hpp"
@@ -76,36 +76,85 @@ Property & Properties::getProperty(const char* keyword)
   throw PropertyException(keyword,"Property not found!!!!!",__FUNCTION__);
 }
 
-bool  Properties::getValueBool(const char* keyword) const
+bool  Properties::getValueBool(const char* keyword, bool useDefault, bool defaultValue) const
 {
+  try
+  {
   const Property & property = getProperty(keyword);
   return property.getBool();
+  }
+  catch (PropertyException & e )
+  {
+  if (useDefault)
+    return defaultValue;
+  else
+    throw e;
+  }
 }
 
 
-int Properties::getValueInt(const char* keyword) const
+int Properties::getValueInt(const char* keyword,  bool useDefault, int defaultValue) const
 {
+  try
+  {
   const Property & property = getProperty(keyword);
   return property.getInt();
+  }
+  catch (PropertyException & e )
+  {
+  if (useDefault)
+    return defaultValue;
+  else
+    throw e;
+  }
 }
 
-long Properties::getValueLong(const char* keyword) const
+long Properties::getValueLong(const char* keyword,  bool useDefault, long defaultValue) const
 {
+  try
+  {
   const Property & property = getProperty(keyword);
   return property.getLong();
+  }
+  catch (PropertyException & e )
+  {
+  if (useDefault)
+    return defaultValue;
+  else
+    throw e;
+  }
 }
 
-double Properties::getValueDouble (const char* keyword) const
+double Properties::getValueDouble (const char* keyword,  bool useDefault, double defaultValue) const
 {
+  try
+  {
   const Property & property = getProperty(keyword);
   return property.getDouble();
+  }
+  catch (PropertyException & e )
+  {
+  if (useDefault)
+    return defaultValue;
+  else
+    throw e;
+  }
 }
 
-
-String Properties::getValueString (const char* keyword) const
+String Properties::getValueString (const char* keyword,  bool useDefault, const String defaultValue) const
 {
+  try
+  {
   const Property & property = getProperty(keyword);
   return property.getString();
+  }
+  catch (PropertyException & e )
+  {
+  if (useDefault)
+    return defaultValue;
+  else
+    throw e;
+  }
 }
 
 bool    Properties::getValueBool(  const char * path, const char* keyword) const

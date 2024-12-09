@@ -1,15 +1,12 @@
 ################################################################################################
 # Project CAP/ParticleDb
 ################################################################################################
-
 #include(${ROOT_USE_FILE})
 #include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
 #add_definitions(${ROOT_CXX_FLAGS})
 
 ROOT_GENERATE_DICTIONARY(G__ParticleDb  ParticleType.hpp  ParticleDb.hpp ParticleDbParser.hpp ParticleDbParser_CS.hpp ParticleDbTask.hpp ParticleDecayMode.hpp
 LINKDEF ParticleDbLinkDef.h)
-
-#ParticleDigit.hpp
 
 ################################################################################################
 # Create a shared library with geneated dictionary

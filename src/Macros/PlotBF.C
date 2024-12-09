@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 void loadBase(const TString & includeBasePath);
@@ -77,7 +77,154 @@ TH1 * computeHistoSum(const vector<TH1*> & histos, const TString & name)
   return histoSum;
 }
 
-int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/",
+void plotPionSingles(CAP::Plotter * plotter, vector<TFile*> & inputFiles)
+{
+  int linear = 0;
+  int logY   = 1;
+  double fontSize = 0.05;
+  vector<TH1*>    histos;
+
+  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiP_n1_pt") );
+  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiM_n1_pt"));
+  histos[0]->GetYaxis()->SetTitle("#rho_{1}(pT)");
+  histos[0]->SetTitle("#rho_{1}^{#pi^{+}}");
+  histos[1]->SetTitle("#rho_{1}^{#pi^{-}}");
+  plotter->plot("Pair3D_ALL_Pi_rho1_pT",histos,
+                TString("p_{T}"), 0.0, 10.0,
+                TString("#rho_{1}(pT)"),1.0E-7, 1.99,
+                true, 0.5, 0.7, 0.6, 0.8, fontSize,logY);
+  histos.clear();
+
+  histos.push_back( cumulativeSum(*inputFiles[0],"Pair3D_ALL_PiP_n1_pt"));
+  histos.push_back( cumulativeSum(*inputFiles[0],"Pair3D_ALL_PiM_n1_pt"));
+  histos[0]->GetYaxis()->SetTitle("#int #rho_{1}^{#pi^{+}}");
+  histos[0]->SetTitle("#rho_{1}^{#pi^{+}}");
+  histos[1]->SetTitle("#rho_{1}^{#pi^{-}}");
+  plotter->plot("Pair3D_ALL_Pi_int_rho1_pT",histos,
+                TString("p_{T}"), 0.0, 10.0,
+                TString("#rho_{1}(pT)"),-0.05, 29.99,
+                true, 0.5, 0.7, 0.2, 0.45, fontSize);
+  histos.clear();
+
+  histos.push_back( cloneLoadH2(*inputFiles[0],"Pair3D_ALL_PiP_PiM_n1_1_ptY"));
+  histos[0]->GetYaxis()->SetTitle("#int #rho_{1}^{#pi^{+}}");
+  histos[0]->SetTitle("#rho_{1}^{#pi^{+}}");
+  plotter->plot("Pair3D_ALL_Pi_int_rho1_ptY",histos,
+                TString("p_{T}"), 0.0, 10.0,
+                TString("#rho_{1}(pT)"),-0.05, 29.99,
+                true, 0.5, 0.7, 0.2, 0.45, fontSize);
+  histos.clear();
+
+  return;
+  histos.push_back( cloneLoadH2(*inputFiles[1],"Pair3D_ALL_PiP_PiM_n1r_1_ptY_mc"));
+  histos[0]->GetYaxis()->SetTitle("#int #rho_{1}^{#pi^{+}}");
+  histos[0]->SetTitle("#rho_{1}^{#pi^{+}}");
+  plotter->plot("Pair3D_ALL_Pi_int_rho1_ptY_ratio",histos,
+                TString("p_{T}"), 0.0, 10.0,
+                TString("#rho_{1}(pT)"),-0.05, 29.99,
+                true, 0.5, 0.7, 0.2, 0.45, fontSize);
+  histos.clear();
+
+}
+
+void plotSinglesKaons(CAP::Plotter * plotter, vector<TFile*> & inputFiles)
+{
+  int linear = 0;
+  int logY   = 1;
+  double fontSize = 0.05;
+  vector<TH1*>    histos;
+
+  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiP_n1_pt") );
+  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiM_n1_pt"));
+  histos[0]->GetYaxis()->SetTitle("#rho_{1}(pT)");
+  histos[0]->SetTitle("#rho_{1}^{#pi^{+}}");
+  histos[1]->SetTitle("#rho_{1}^{#pi^{-}}");
+  plotter->plot("Pair3D_ALL_Pi_rho1_pT",histos,
+                TString("p_{T}"), 0.0, 10.0,
+                TString("#rho_{1}(pT)"),1.0E-7, 1.99,
+                true, 0.5, 0.7, 0.6, 0.8, fontSize,logY);
+  histos.clear();
+
+  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_KP_n1_pt") );
+  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_KM_n1_pt"));
+  histos[0]->GetYaxis()->SetTitle("#rho_{1}(pT)");
+  histos[0]->SetTitle("#rho_{1}^{K^{+}}");
+  histos[1]->SetTitle("#rho_{1}^{K^{-}}");
+  plotter->plot("Pair3D_ALL_K_rho1_pT",histos,
+                TString("p_{T}"), 0.0, 10.0,
+                TString("#rho_{1}(pT)"),1.0E-7, 1.99,
+                true, 0.5, 0.7, 0.5, 0.7, fontSize,logY);
+  histos.clear();
+
+  histos.push_back( cumulativeSum(*inputFiles[0],"Pair3D_ALL_PiP_n1_pt"));
+  histos.push_back( cumulativeSum(*inputFiles[0],"Pair3D_ALL_PiM_n1_pt"));
+  histos[0]->GetYaxis()->SetTitle("#int #rho_{1}^{#pi^{+}}");
+  histos[0]->SetTitle("#rho_{1}^{#pi^{+}}");
+  histos[1]->SetTitle("#rho_{1}^{#pi^{-}}");
+  plotter->plot("Pair3D_ALL_Pi_int_rho1_pT",histos,
+                TString("p_{T}"), 0.0, 10.0,
+                TString("#rho_{1}(pT)"),-0.05, 29.99,
+                true, 0.5, 0.7, 0.2, 0.45, fontSize);
+  histos.clear();
+
+
+
+
+
+  histos.push_back( cumulativeSum(*inputFiles[0],"Pair3D_ALL_KP_n1_pt"));
+  histos.push_back( cumulativeSum(*inputFiles[0],"Pair3D_ALL_KM_n1_pt"));
+  histos[0]->GetYaxis()->SetTitle("#int #rho_{1}^{#pi^{+}}");
+  histos[0]->SetTitle("#rho_{1}^{K^{+}}");
+  histos[1]->SetTitle("#rho_{1}^{K^{-}}");
+  plotter->plot("Pair3D_ALL_K_int_rho1_pT",histos,
+                TString("p_{T}"), 0.0, 10.0,
+                TString("#rho_{1}(pT)"),-0.05, 29.99,
+                true, 0.5, 0.7, 0.2, 0.45, fontSize);
+  histos.clear();
+
+  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PP_n1_pt") );
+  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PM_n1_pt"));
+  histos[0]->GetYaxis()->SetTitle("#rho_{1}(pT)");
+  histos[0]->SetTitle("#rho_{1}^{P^{+}}");
+  histos[1]->SetTitle("#rho_{1}^{P^{-}}");
+  plotter->plot("Pair3D_ALL_P_rho1_pT",histos,
+                TString("p_{T}"), 0.0, 10.0,
+                TString("#rho_{1}(pT)"),1.0E-7, 1.99,
+                true, 0.5, 0.7, 0.5, 0.7, fontSize,logY);
+  histos.clear();
+
+  histos.push_back( cumulativeSum(*inputFiles[0],"Pair3D_ALL_PP_n1_pt"));
+  histos.push_back( cumulativeSum(*inputFiles[0],"Pair3D_ALL_PM_n1_pt"));
+  histos[0]->GetYaxis()->SetTitle("#int #rho_{1}^{K^{#pm}}");
+  histos[0]->SetTitle("#rho_{1}^{P^{+}}");
+  histos[1]->SetTitle("#rho_{1}^{P^{-}}");
+  plotter->plot("Pair3D_ALL_P_int_rho1_pT",histos,
+                TString("p_{T}"), 0.0, 10.0,
+                TString("#rho_{1}(pT)"),-0.05, 29.99,
+                true, 0.5, 0.7, 0.5, 0.7, fontSize,logY);
+  histos.clear();
+
+  histos.push_back( cumulativeSum(*inputFiles[0],"Pair3D_ALL_PiP_n1_pt"));
+  histos.push_back( cumulativeSum(*inputFiles[0],"Pair3D_ALL_KP_n1_pt"));
+  histos.push_back( cumulativeSum(*inputFiles[0],"Pair3D_ALL_PP_n1_pt"));
+  histos[0]->GetYaxis()->SetTitle("#int #rho_{1}^{#pi^{+},K^{+},P^{+}}");
+  histos[0]->SetTitle("#rho_{1}^{#pi^{+}}");
+  histos[1]->SetTitle("#rho_{1}^{K^{+}}");
+  histos[2]->SetTitle("#rho_{1}^{P^{+}}");
+  plotter->plot("Pair3D_ALL_PiKP_rho1_pT",histos,
+                TString("p_{T}"), 0.0, 10.0,
+                TString("#rho_{1}(pT)"),-0.05, 29.99,
+                true, 0.5, 0.7, 0.2, 0.5, fontSize,logY);
+  histos.clear();
+
+
+
+}
+
+
+
+
+int PlotBF(const TString & path="/Users/aa7526/Documents/GitHub/CAP6.1/Data/",
            const TString & fileName0="Pair3DGen.root",
            const TString & fileName1="Pair3DGenDerived.root",
            const TString & fileName2="Pair3DGenBF.root")
@@ -110,41 +257,55 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
   TString inputFileName0 = path+fileName0;
   TString inputFileName1 = path+fileName1;
   TString inputFileName2 = path+fileName2;
-  TFile * inputFile0 =  new TFile(inputFileName0,"OLD");
-  TFile * inputFile1 =  new TFile(inputFileName1,"OLD");
-  TFile * inputFile2 =  new TFile(inputFileName2,"OLD");
+  vector<TFile*> inputFiles;
+  inputFiles.push_back( new TFile(inputFileName0,"OLD") );
+  inputFiles.push_back( new TFile(inputFileName1,"OLD") );
+  inputFiles.push_back( new TFile(inputFileName2,"OLD") );
 
   ROOT::RBrowser * b = new ROOT::RBrowser();
   vector<TH1*>    histos;
   double legendSize = 0.3;
 
-//  histos.push_back( cloneLoadH1(*inputFile0,"Pair3D_ALL_PiP_n1_pt") );
-//  histos.push_back( cloneLoadH1(*inputFile0,"Pair3D_ALL_PiM_n1_pt"));
-//  histos[0]->GetYaxis()->SetTitle("#rho_{1}(pT)");
-//  histos[0]->SetTitle("#rho_{1}^{#pi^{+}}");
-//  histos[1]->SetTitle("#rho_{1}^{#pi^{+}}");
-//  plotter->plot("Pair3D_ALL_Pi_rho1_pT",histos,
-//                TString("p_{T}"), 0.0, 8.0,
-//                TString("#rho_{1}(pT)"),1.0E-7, 1.99,
-//                true, 0.5, 0.7, 0.5, 0.7, 0.05,logY);
-//  histos.clear();
+ plotPionSingles(plotter,inputFiles);
+
+
+//  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiP_PiP_n2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiP_PiM_n2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiM_PiP_n2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiM_PiM_n2_Qinv"));
+
+//  TH1 * pippip = cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiP_PiP_n2_Qinv");
+//  TH1 * pimpip = cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiM_PiP_n2_Qinv");
+//  TH1 * pippim = cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiP_PiM_n2_Qinv");
+//  TH1 * pimpim = cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiM_PiM_n2_Qinv");
+//  TH1 * piRatio = cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiM_PiM_n2_Qinv");
+//  pimpip->Add(pippip,-0.96);
+//  pippim->Add(pimpim,-1.0);
+//  piRatio->Reset();
+//  piRatio->Divide(pippim,pimpip);
 //
-//  histos.push_back( cumulativeSum(*inputFile0,"Pair3D_ALL_PiP_n1_pt"));
-//  histos.push_back( cumulativeSum(*inputFile0,"Pair3D_ALL_PiM_n1_pt"));
-//  histos[0]->GetYaxis()->SetTitle("#int #rho_{1}^{#pi^{+}}");
-//  histos[0]->SetTitle("#rho_{1}^{#pi^{+}}");
-//  histos[1]->SetTitle("#rho_{1}^{#pi^{-}}");
-//  plotter->plot("Pair3D_ALL_Pi_int_rho1_pT",histos,
-//                TString("p_{T}"), 0.0, 8.0,
-//                TString("#rho_{1}(pT)"),-0.05, 29.99,
-//                true, 0.5, 0.7, 0.2, 0.45, 0.05);
-//  histos.clear();
+//  histos.push_back( pimpip);
+//  histos.push_back( pippim);
+//  histos.push_back( piRatio);
 //
+//  histos[0]->GetYaxis()->SetTitle("n_{2}(Q_{INV})");
+//  histos[0]->SetTitle("n_{2}^{#pi^{+}#pi^{+}}");
+////  histos[1]->SetTitle("n_{2}^{#pi^{+}#pi^{-}}");
+////  histos[2]->SetTitle("n_{2}^{#pi^{-}#pi^{+}}");
+////  histos[3]->SetTitle("n_{2}^{#pi^{-}#pi^{-}}");
+//  histos[0]->SetTitle("n_{2}^{#pi^{-}#pi^{+}}-n_{2}^{#pi^{+}#pi^{+}} ");
+//  histos[1]->SetTitle("n_{2}^{#pi^{+}#pi^{-}}-n_{2}^{#pi^{-}#pi^{-}} ");
+//  histos[2]->SetTitle("Ratio ");
+//  plotter->plot("Pair3D_ALL_Pi_Pi_n2_Qinv",histos,
+//                TString("Q_{inv}"), 0.0, 5.0,
+//                TString("n_{2}"),-0.5, 3.99,
+//                true, 0.5, 0.7, 0.6, 0.8, 0.05);
+//  histos.clear();
 
 //
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PP_PP_B21_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PP_PP_B12_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PP_PP_Bs_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PP_PP_B21_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PP_PP_B12_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PP_PP_Bs_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("B(Q_{INV})");
 //  histos[0]->SetTitle(" B^{21}(P,P)");
 //  histos[1]->SetTitle(" B^{12}(P,P)");
@@ -155,9 +316,9 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //  histos.clear();
 //
 //
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_KP_PiP_B21_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_KP_PiP_B12_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_KP_PiP_Bs_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_KP_PiP_B21_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_KP_PiP_B12_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_KP_PiP_Bs_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("B(Q_{INV})");
 //  histos[0]->SetTitle(" B^{21}(K,#pi)");
 //  histos[1]->SetTitle(" B^{12}(K,#pi)");
@@ -167,9 +328,9 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //                true, 0.5, 0.7, 0.4, 0.7, 0.5);
 //  histos.clear();
 //
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PP_PiP_B21_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PP_PiP_B12_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PP_PiP_Bs_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PP_PiP_B21_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PP_PiP_B12_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PP_PiP_Bs_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("B(Q_{INV})");
 //  histos[0]->SetTitle(" B^{21}(P,#pi)");
 //  histos[1]->SetTitle(" B^{12}(P,#pi)");
@@ -179,9 +340,9 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //                true, 0.5, 0.7, 0.4, 0.7, 0.5);
 //  histos.clear();
 //
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PP_KP_B21_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PP_KP_B12_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PP_KP_Bs_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PP_KP_B21_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PP_KP_B12_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PP_KP_Bs_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("B(Q_{INV})");
 //  histos[0]->SetTitle(" B^{21}(P,K)");
 //  histos[1]->SetTitle(" B^{12}(P,K)");
@@ -192,9 +353,9 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //  histos.clear();
 //
 //
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PiP_PiP_Bs_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_KP_PiP_Bs_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PP_PiP_Bs_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PiP_PiP_Bs_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_KP_PiP_Bs_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PP_PiP_Bs_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("B(Q_{INV})");
 //  histos[0]->SetTitle(" B^{s}(#pi,#pi)");
 //  histos[1]->SetTitle(" B^{s}(K,#pi)");
@@ -205,9 +366,9 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //                true, 0.5, 0.7, 0.4, 0.7, 0.5);
 //  histos.clear();
 //
-//  histos.push_back( cumulativeSum(*inputFile2,"Pair3D_ALL_PiP_PiP_Bs_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile2,"Pair3D_ALL_PiP_KP_Bs_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile2,"Pair3D_ALL_PiP_PP_Bs_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[2],"Pair3D_ALL_PiP_PiP_Bs_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[2],"Pair3D_ALL_PiP_KP_Bs_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[2],"Pair3D_ALL_PiP_PP_Bs_Qinv"));
 //  histos.push_back( computeHistoSum(histos,"Pair3D_ALL_PiP_All_Bs_Qinv"));
 //
 //  histos[0]->GetYaxis()->SetTitle("I(Q_{INV})");
@@ -222,9 +383,9 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //  histos.clear();
 //
 //
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PiP_KP_Bs_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_KP_KP_Bs_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PP_KP_Bs_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PiP_KP_Bs_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_KP_KP_Bs_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PP_KP_Bs_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("B(Q_{INV})");
 //  histos[0]->SetTitle(" B^{s}(#pi,K)");
 //  histos[1]->SetTitle(" B^{s}(K,K)");
@@ -235,9 +396,9 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //                true, 0.5, 0.7, 0.4, 0.7, 0.5);
 //  histos.clear();
 //
-//  histos.push_back( cumulativeSum(*inputFile2,"Pair3D_ALL_KP_PiP_Bs_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile2,"Pair3D_ALL_KP_KP_Bs_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile2,"Pair3D_ALL_KP_PP_Bs_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[2],"Pair3D_ALL_KP_PiP_Bs_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[2],"Pair3D_ALL_KP_KP_Bs_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[2],"Pair3D_ALL_KP_PP_Bs_Qinv"));
 //  histos.push_back( computeHistoSum(histos,"Pair3D_ALL_KP_All_Bs_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("I(Q_{INV})");
 //  histos[0]->SetTitle(" I^{s}(#pi,K)");
@@ -250,9 +411,9 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //                true, 0.5, 0.7, 0.4, 0.7, 0.5);
 //  histos.clear();
 //
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PiP_PP_Bs_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_KP_PP_Bs_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PP_PP_Bs_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PiP_PP_Bs_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_KP_PP_Bs_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PP_PP_Bs_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("B(Q_{INV})");
 //  histos[0]->SetTitle(" B^{s}(#pi,P)");
 //  histos[1]->SetTitle(" B^{s}(K,P)");
@@ -263,9 +424,9 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //                true, 0.5, 0.7, 0.4, 0.7, 0.5);
 //  histos.clear();
 //
-//  histos.push_back( cumulativeSum(*inputFile2,"Pair3D_ALL_PiP_PP_Bs_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile2,"Pair3D_ALL_KP_PP_Bs_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile2,"Pair3D_ALL_PP_PP_Bs_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[2],"Pair3D_ALL_PiP_PP_Bs_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[2],"Pair3D_ALL_KP_PP_Bs_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[2],"Pair3D_ALL_PP_PP_Bs_Qinv"));
 //  histos.push_back( computeHistoSum(histos,"Pair3D_ALL_PP_All_Bs_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("I(Q_{INV})");
 //  histos[0]->SetTitle(" I^{s}(#pi,P)");
@@ -279,14 +440,14 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //  histos.clear();
 //
 
-//  histos.push_back( cloneLoadH1(*inputFile0,"Pair3D_ALL_PiM_PiM_n2_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile0,"Pair3D_ALL_PiP_PiM_n2_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile0,"Pair3D_ALL_PiM_PiP_n2_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile0,"Pair3D_ALL_PiP_PiP_n2_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_PiM_PiM_n1n1_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_PiP_PiM_n1n1_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_PiM_PiP_n1n1_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_PiP_PiP_n1n1_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiM_PiM_n2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiP_PiM_n2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiM_PiP_n2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiP_PiP_n2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiM_PiM_n1n1_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiP_PiM_n1n1_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiM_PiP_n1n1_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiP_PiP_n1n1_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("#rho_{2}(Q_{INV})");
 //  histos[0]->SetTitle(" #rho_{2}(#pi^{-},#pi^{-})");
 //  histos[1]->SetTitle(" #rho_{2}(#pi^{+},#pi^{-})");
@@ -297,19 +458,19 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //  histos[6]->SetTitle(" #rho_{1}#otimes #rho_{1}(#pi^{-},#pi^{+})");
 //  histos[7]->SetTitle(" #rho_{1}#otimes #rho_{1}(#pi^{+},#pi^{+})");
 //  plotter->plot("Pair3D_ALL_Pi_RHO2_Qinv",histos,
-//                TString("Q_{inv}"), 0.0, 4.0,
+//                TString("Q_{inv}"), 0.0, 10.0,
 //                TString("#rho_{2}"),-0.05, 5.99,
 //                true, 0.6, 0.8,  0.4, 0.9, 0.2);
 //  histos.clear();
 //
-//  histos.push_back( cloneLoadH1(*inputFile0,"Pair3D_ALL_KM_KM_n2_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile0,"Pair3D_ALL_KP_KM_n2_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile0,"Pair3D_ALL_KM_KP_n2_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile0,"Pair3D_ALL_KP_KP_n2_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_KM_KM_n1n1_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_KP_KM_n1n1_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_KM_KP_n1n1_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_KP_KP_n1n1_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_KM_KM_n2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_KP_KM_n2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_KM_KP_n2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_KP_KP_n2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_KM_KM_n1n1_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_KP_KM_n1n1_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_KM_KP_n1n1_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_KP_KP_n1n1_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("#rho_{2}(Q_{INV})");
 //  histos[0]->SetTitle(" #rho_{2}(K^{-},K^{-})");
 //  histos[1]->SetTitle(" #rho_{2}(K^{+},K^{-})");
@@ -327,12 +488,12 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 
 
 //
-//  histos.push_back( cumulativeSum(*inputFile0,"Pair3D_ALL_PiP_PiP_n2_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile0,"Pair3D_ALL_PiP_PiM_n2_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile0,"Pair3D_ALL_PiM_PiM_n2_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile1,"Pair3D_ALL_PiP_PiP_n1n1_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile1,"Pair3D_ALL_PiP_PiM_n1n1_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile1,"Pair3D_ALL_PiM_PiM_n1n1_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[0],"Pair3D_ALL_PiP_PiP_n2_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[0],"Pair3D_ALL_PiP_PiM_n2_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[0],"Pair3D_ALL_PiM_PiM_n2_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[1],"Pair3D_ALL_PiP_PiP_n1n1_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[1],"Pair3D_ALL_PiP_PiM_n1n1_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[1],"Pair3D_ALL_PiM_PiM_n1n1_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("#int f(Q_{INV})");
 //  histos[0]->SetTitle("#rho_{2}(#pi^{+},#pi^{+})");
 //  histos[1]->SetTitle("#rho_{2}(#pi^{+},#pi^{-})");
@@ -345,13 +506,13 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //                TString("#rho_{2}"),-0.05, 499.99,
 //                true, 0.5, 0.7, 0.2, 0.4, 0.3);
 //  histos.clear();
+
+
 //
-
-
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_PiM_PiM_c2_Qinv") );
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_PiP_PiM_c2_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_PiM_PiP_c2_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_PiP_PiP_c2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiM_PiM_c2_Qinv") );
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiP_PiM_c2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiM_PiP_c2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiP_PiP_c2_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("C_{2}(Q_{INV})");
 //  histos[0]->SetTitle("C_{2}(#pi^{-},#pi^{-})");
 //  histos[1]->SetTitle("C_{2}(#pi^{+},#pi^{-})");
@@ -359,15 +520,15 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //  histos[3]->SetTitle("C_{2}(#pi^{+},#pi^{+})");
 //  plotter->plot("Pair3D_ALL_Pi_Pi_C2_Qinv",histos,
 //                TString("Q_{inv}"), 0.0, 3.0,
-//                TString("B"),-0.05, 3.99,
+//                TString("B"),-0.05, 12.99,
 //                true, 0.5, 0.7, 0.5, 0.7, 0.2);
 //  histos.clear();
-//
-//
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_KM_KM_c2_Qinv") );
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_KP_KM_c2_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_KP_KP_c2_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_KP_KP_c2_Qinv"));
+
+
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_KM_KM_c2_Qinv") );
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_KP_KM_c2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_KP_KP_c2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_KP_KP_c2_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("C_{2}(Q_{INV})");
 //  histos[0]->SetTitle("C_{2}(K^{-},K^{-})");
 //  histos[1]->SetTitle("C_{2}(K^{+},K^{-})");
@@ -380,10 +541,10 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //  histos.clear();
 
 //
-//  histos.push_back( cumulativeSum(*inputFile1,"Pair3D_ALL_PiM_PiM_c2_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile1,"Pair3D_ALL_PiP_PiM_c2_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile1,"Pair3D_ALL_PiM_PiP_c2_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile1,"Pair3D_ALL_PiP_PiP_c2_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[1],"Pair3D_ALL_PiM_PiM_c2_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[1],"Pair3D_ALL_PiP_PiM_c2_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[1],"Pair3D_ALL_PiM_PiP_c2_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[1],"Pair3D_ALL_PiP_PiP_c2_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("#int C_{2}(Q_{INV})");
 //  histos[0]->SetTitle("C_{2}(#pi^{-},#pi^{-})");
 //  histos[1]->SetTitle("C_{2}(#pi^{+},#pi^{-})");
@@ -395,10 +556,10 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //                true, 0.5, 0.7, 0.4, 0.7, 0.2);
 //  histos.clear();
 
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_PiM_PiM_A12_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_PiP_PiM_A12_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_PiM_PiP_A12_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_PiP_PiP_A21_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiM_PiM_A12_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiP_PiM_A12_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiM_PiP_A12_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiP_PiP_A21_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("A_{12}(Q_{INV})");
 //  histos[0]->SetTitle("A_{12}(#pi^{-},#pi^{-})");
 //  histos[1]->SetTitle("A_{12}(#pi^{+}#pi^{-})");
@@ -406,14 +567,15 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //  histos[3]->SetTitle("A_{21}(#pi^{+},#pi^{+})");
 //  plotter->plot("Pair3D_Pi_Pi_A12_Qinv",histos,
 //                TString("Q_{inv}"), 0.0, 3.0,
-//                TString("B"),-0.02, 0.20,
+//                TString("B"),-0.05, 0.80,
 //                true, 0.5, 0.7, 0.5, 0.75, 0.2);
 //  histos.clear();
+
 //
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_KM_KM_A12_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_KP_KM_A12_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_KM_KP_A12_Qinv"));
-//  histos.push_back( cloneLoadH1(*inputFile1,"Pair3D_ALL_KP_KP_A21_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_KM_KM_A12_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_KP_KM_A12_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_KM_KP_A12_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_KP_KP_A21_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("A_{12}(Q_{INV})");
 //  histos[0]->SetTitle("A_{12}(K^{-},K^{-})");
 //  histos[1]->SetTitle("A_{12}(K^{+},K^{-})");
@@ -425,10 +587,10 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //                true, 0.5, 0.7, 0.5, 0.75, 0.2);
 //  histos.clear();
 
-//  histos.push_back( cumulativeSum(*inputFile1,"Pair3D_ALL_PiM_PiM_A12_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile1,"Pair3D_ALL_PiP_PiM_A12_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile1,"Pair3D_ALL_PiM_PiP_A12_Qinv"));
-//  histos.push_back( cumulativeSum(*inputFile1,"Pair3D_ALL_PiP_PiP_A21_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[1],"Pair3D_ALL_PiM_PiM_A12_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[1],"Pair3D_ALL_PiP_PiM_A12_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[1],"Pair3D_ALL_PiM_PiP_A12_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[1],"Pair3D_ALL_PiP_PiP_A21_Qinv"));
 //  histos[0]->GetYaxis()->SetTitle("A_{12}(Q_{INV})");
 //  histos[0]->SetTitle("A_{12}(#pi^{-},#pi^{-})");
 //  histos[1]->SetTitle("A_{12}(#pi^{+}#pi^{-})");
@@ -440,62 +602,57 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/"
 //                true, 0.5, 0.7, 0.3, 0.6, 0.2);
 //  histos.clear();
 
-
-//
-//  plotter->printAllCanvas(path);
-
-
-//    histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PiP_PiP_B21_Qinv") );
-//    histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PiP_PiP_B12_Qinv"));
-//    histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_PiP_PiP_Bs_Qinv"));
+//    histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PiP_PiP_B21_Qinv") );
+//    histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PiP_PiP_B12_Qinv"));
+//    histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_PiP_PiP_Bs_Qinv"));
 //    histos[0]->GetYaxis()->SetTitle("B(Q_{INV})");
 //    histos[0]->SetTitle(" B^{21}(#pi,#pi)");
 //    histos[1]->SetTitle(" B^{12}(#pi,#pi)");
 //    histos[2]->SetTitle(" B^{s}(#pi,#pi)");
 //    plotter->plot("Pair3D_ALL_Pi_Pi_B_Qinv",histos,
 //                  TString("Q_{inv}"), 0.0, 5.0,
+//                  TString("B"),-0.1, 0.1,
+//                  true, 0.5, 0.7, 0.4, 0.7, 0.5);
+//    histos.clear();
+//
+//  histos.push_back( cumulativeSum(*inputFiles[2],"Pair3D_ALL_PiP_PiP_B12_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[2],"Pair3D_ALL_PiP_PiP_B21_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[2],"Pair3D_ALL_PiP_PiP_Bs_Qinv"));
+//  histos[0]->GetYaxis()->SetTitle("#int B(Q_{INV})");
+//  histos[0]->SetTitle(" B^{21}(#pi,#pi)");
+//  histos[1]->SetTitle(" B^{12}(#pi,#pi)");
+//  histos[2]->SetTitle(" B^{s}(#pi,#pi)");
+//  plotter->plot("Pair3D_Pi_Pi_B_Qinv_INT",histos,
+//                TString("Q_{inv}"), 0.0, 10.0,
+//                TString("B"),-0.05, 1.80,
+//                true, 0.5, 0.7, 0.5, 0.8, 0.2);
+//  histos.clear();
+//
+//    histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_KP_KP_B21_Qinv"));
+//    histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_KP_KP_B12_Qinv"));
+//    histos.push_back( cloneLoadH1(*inputFiles[2],"Pair3D_ALL_KP_KP_Bs_Qinv"));
+//    histos[0]->GetYaxis()->SetTitle("B(Q_{INV})");
+//    histos[0]->SetTitle(" B^{21}(K,K)");
+//    histos[1]->SetTitle(" B^{12}(K,K)");
+//    histos[2]->SetTitle(" B^{s}(K,K)");
+//    plotter->plot("Pair3D_ALL_K_K_B_Qinv",histos,
+//                  TString("Q_{inv}"), 0.0, 5.0,
 //                  TString("B"),-0.005, 0.03,
 //                  true, 0.5, 0.7, 0.4, 0.7, 0.5);
 //    histos.clear();
-
-  histos.push_back( cumulativeSum(*inputFile2,"Pair3D_ALL_PiP_PiP_B12_Qinv"));
-  histos.push_back( cumulativeSum(*inputFile2,"Pair3D_ALL_PiP_PiP_B21_Qinv"));
-  histos.push_back( cumulativeSum(*inputFile2,"Pair3D_ALL_PiP_PiP_Bs_Qinv"));
-  histos[0]->GetYaxis()->SetTitle("#int B(Q_{INV})");
-  histos[0]->SetTitle(" B^{21}(#pi,#pi)");
-  histos[1]->SetTitle(" B^{12}(#pi,#pi)");
-  histos[2]->SetTitle(" B^{s}(#pi,#pi)");
-  plotter->plot("Pair3D_Pi_Pi_B_Qinv_INT",histos,
-                TString("Q_{inv}"), 0.0, 10.0,
-                TString("B"),-0.05, 1.80,
-                true, 0.5, 0.7, 0.5, 0.8, 0.2);
-  histos.clear();
-
-    histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_KP_KP_B21_Qinv"));
-    histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_KP_KP_B12_Qinv"));
-    histos.push_back( cloneLoadH1(*inputFile2,"Pair3D_ALL_KP_KP_Bs_Qinv"));
-    histos[0]->GetYaxis()->SetTitle("B(Q_{INV})");
-    histos[0]->SetTitle(" B^{21}(K,K)");
-    histos[1]->SetTitle(" B^{12}(K,K)");
-    histos[2]->SetTitle(" B^{s}(K,K)");
-    plotter->plot("Pair3D_ALL_K_K_B_Qinv",histos,
-                  TString("Q_{inv}"), 0.0, 5.0,
-                  TString("B"),-0.005, 0.03,
-                  true, 0.5, 0.7, 0.4, 0.7, 0.5);
-    histos.clear();
-
-  histos.push_back( cumulativeSum(*inputFile2,"Pair3D_ALL_KP_KP_B12_Qinv"));
-  histos.push_back( cumulativeSum(*inputFile2,"Pair3D_ALL_KP_KP_B21_Qinv"));
-  histos.push_back( cumulativeSum(*inputFile2,"Pair3D_ALL_KP_KP_Bs_Qinv"));
-  histos[0]->GetYaxis()->SetTitle("#int B(Q_{INV})");
-  histos[0]->SetTitle(" B^{21}(K,K)");
-  histos[1]->SetTitle(" B^{12}(K,K)");
-  histos[2]->SetTitle(" B^{s}(K,K)");
-  plotter->plot("Pair3D_K_K_B_Qinv_INT",histos,
-                TString("Q_{inv}"), 0.0, 10.0,
-                TString("B"),-0.05, 1.10,
-                true, 0.5, 0.7, 0.6, 0.8, 0.2);
-  histos.clear();
+//
+//  histos.push_back( cumulativeSum(*inputFiles[2],"Pair3D_ALL_KP_KP_B12_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[2],"Pair3D_ALL_KP_KP_B21_Qinv"));
+//  histos.push_back( cumulativeSum(*inputFiles[2],"Pair3D_ALL_KP_KP_Bs_Qinv"));
+//  histos[0]->GetYaxis()->SetTitle("#int B(Q_{INV})");
+//  histos[0]->SetTitle(" B^{21}(K,K)");
+//  histos[1]->SetTitle(" B^{12}(K,K)");
+//  histos[2]->SetTitle(" B^{s}(K,K)");
+//  plotter->plot("Pair3D_K_K_B_Qinv_INT",histos,
+//                TString("Q_{inv}"), 0.0, 10.0,
+//                TString("B"),-0.05, 1.10,
+//                true, 0.5, 0.7, 0.6, 0.8, 0.2);
+//  histos.clear();
 
 
   plotter->printAllCanvas(path);

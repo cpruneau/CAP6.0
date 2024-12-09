@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #ifndef CAP__ResolutionFunction
@@ -20,40 +20,24 @@ class ResolutionFunction
 {
 public:
    
-  ResolutionFunction(int    _option,
-                     double _aInvPtBias,
-                     double _a0Bias,
-                     double _a1PtBias,
-                     double _a2PtBias,
-                     double _a1EtaBias,
-                     double _a2EtaBias,
-                     double _aInvPtRms,
-                     double _a0Rms,
-                     double _a1PtRms,
-                     double _a2PtRms,
-                     double _a1EtaRms,
-                     double _a2EtaRms);
+  ResolutionFunction();
   ResolutionFunction(const ResolutionFunction & f);
-  ResolutionFunction operator=(const ResolutionFunction & f);
+  ResolutionFunction operator=(const ResolutionFunction & rf);
   ~ResolutionFunction() {}
+  void setCoefficients(int _option,
+                       const std::vector<double> & _biasVsPt,
+                       const std::vector<double> & _biasVsEta,
+                       const std::vector<double> & _rmsVsPt,
+                       const std::vector<double> & _rmsVsEta);
   double smear(double pt, double eta, double phi, double & output);
 
 protected:
 
   int option;
-  double aInvPtBias;
-  double a0Bias;
-  double a1PtBias;
-  double a2PtBias;
-  double a1EtaBias;
-  double a2EtaBias;
-
-  double aInvPtRms;
-  double a0Rms;
-  double a1PtRms;
-  double a2PtRms;
-  double a1EtaRms;
-  double a2EtaRms;
+  std::vector<double> biasVsPt;
+  std::vector<double> biasVsEta;
+  std::vector<double> rmsVsPt;
+  std::vector<double> rmsVsEta;
 };
 
 } // namespace CAP

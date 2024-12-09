@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #include "ParticleSingleHistos.hpp"
@@ -230,31 +230,31 @@ void ParticleSingleHistos::createHistograms()
     printLine();
     printCR();
     }
-  h_n1         = createHistogram(createName(bn,"n1"),           nBins_n1,  min_n1,  max_n1,  "n_1","N");
-  h_n1_eTotal  = createHistogram(createName(bn,"n1_eTotal"),    nBins_n1,  min_n1,  10.0*max_n1,  "n1_eTotal","N");
-  h_n1_pt      = createHistogram(createName(bn,"n1_pt"),        nBins_pt,  min_pt,  max_pt,  "p_{T}","N");
-  h_n1_ptXS    = createHistogram(createName(bn,"n1_ptXS"),      nBins_pt,  min_pt,  max_pt,  "p_{T}","1/p_{T} dN/p_{T}");
+  h_n1         = createHistogram(createName(bn,"n1"),           nBins_n1,  min_n1,  max_n1,  "n_1","N",2);
+  h_n1_eTotal  = createHistogram(createName(bn,"n1_eTotal"),    nBins_n1,  min_n1,  10.0*max_n1,  "n1_eTotal","N",2);
+  h_n1_pt      = createHistogram(createName(bn,"n1_pt"),        nBins_pt,  min_pt,  max_pt,  "p_{T}","N",2);
+  h_n1_ptXS    = createHistogram(createName(bn,"n1_ptXS"),      nBins_pt,  min_pt,  max_pt,  "p_{T}","1/p_{T} dN/p_{T}",2);
 
   if (fillEta)
     {
-    h_n1_phiEta  = createHistogram(createName(bn,"n1_phiEta"),  nBins_eta, min_eta, max_eta, nBins_phi, min_phi, max_phi, "#eta", "#varphi","N");
+    h_n1_phiEta  = createHistogram(createName(bn,"n1_phiEta"),  nBins_eta, min_eta, max_eta, nBins_phi, min_phi, max_phi, "#eta", "#varphi","N",2);
     if (fillP2)
       {
-      h_spt_phiEta  = createHistogram(createName(bn,"spt_phiEta"),  nBins_eta, min_eta, max_eta, nBins_phi, min_phi, max_phi, "#eta", "#varphi","N");
+      h_spt_phiEta  = createHistogram(createName(bn,"spt_phiEta"),  nBins_eta, min_eta, max_eta, nBins_phi, min_phi, max_phi, "#eta", "#varphi","N",2);
       }
     }
   if (fillY)
     {
-    h_n1_phiY  = createHistogram(createName(bn,"n1_phiY"),     nBins_y,   min_y,   max_y, nBins_phi, min_phi, max_phi, "y", "#varphi","N");
+    h_n1_phiY  = createHistogram(createName(bn,"n1_phiY"),     nBins_y,   min_y,   max_y, nBins_phi, min_phi, max_phi, "y", "#varphi","N",2);
     if (fillP2)
       {
-      h_spt_phiY  = createHistogram(createName(bn,"spt_phiY"),  nBins_y,   min_y,   max_y, nBins_phi, min_phi, max_phi, "y", "#varphi","N");
+      h_spt_phiY  = createHistogram(createName(bn,"spt_phiY"),  nBins_y,   min_y,   max_y, nBins_phi, min_phi, max_phi, "y", "#varphi","N",2);
       }
     }
 
   if (fillPtvsY)
     {
-    h_n1_ptY  = createHistogram(createName(bn,"n1_ptY"),     nBins_y,   min_y,   max_y, nBins_pt, min_pt, max_pt, "y", "p_{T}","N");
+    h_n1_ptY  = createHistogram(createName(bn,"n1_ptY"),     nBins_y,   min_y,   max_y, nBins_pt, min_pt, max_pt, "y", "p_{T}","N",2);
     }
 
 

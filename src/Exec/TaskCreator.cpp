@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #include "TaskCreator.hpp"
@@ -15,6 +15,7 @@
 #include "Event.hpp"
 #include "EventFilter.hpp"
 #include "ParticleFilter.hpp"
+#include "EfficiencyFilter.hpp"
 #include "JetFilter.hpp"
 
 ClassImp(CAP::TaskCreator);
@@ -81,13 +82,13 @@ void TaskCreator::configureDbs(Task * task,
     referenceName += "ParticleDbOwner";
     referenceName += k;
     bool owner = requestedConfiguration.getValueBool(referenceName);
-    if (reportDebug(__FUNCTION__))
-      {
-      printCR();
-      printValue("ParticleDb Index",k);
-      printValue("ParticleDb Name",name);
-      printValue("ParticleDb Owner",owner);
-      }
+//    if (reportDebug(__FUNCTION__))
+//      {
+//      printCR();
+//      printValue("ParticleDb Index",k);
+//      printValue("ParticleDb Name",name);
+//      printValue("ParticleDb Owner",owner);
+//      }
       
     if (owner)
       dynamic_cast<Manager<ParticleDb>*>(task)->create(name);
@@ -110,13 +111,11 @@ void TaskCreator::configureEventsStreams(Task * task,
     referenceName += "StreamOwner";
     referenceName += k;
     bool owner = requestedConfiguration.getValueBool(referenceName);
-    if (reportDebug(__FUNCTION__))
-      {
-      printCR();
-      printValue("Stream Index",k);
-      printValue("Stream Name",name);
-      printValue("Stream Owner",owner);
-      }
+
+//      printCR();
+//      printValue("Stream Index",k);
+//      printValue("Stream Name",name);
+//      printValue("Stream Owner",owner);
     if (owner)
       dynamic_cast<Manager<Event>*>(task)->create(name);
     else
@@ -139,12 +138,12 @@ void TaskCreator::configureEventFilters(Task * _task,
     referenceName += "EventFilterOwner";
     referenceName += k;
     bool owner = requestedConfiguration.getValueBool(referenceName);
-    if (reportDebug(__FUNCTION__))
-      {
-      printCR(); printValue("EventFilter Index",k);
-      printValue("EventFilter Name",name);
-      printValue("EventFilter Owner",owner);
-      }
+//    if (reportDebug(__FUNCTION__))
+//      {
+//      printCR(); printValue("EventFilter Index",k);
+//      printValue("EventFilter Name",name);
+//      printValue("EventFilter Owner",owner);
+//      }
     if (owner)
       dynamic_cast<Manager<EventFilter>*>(_task)->create(name);
     else
@@ -167,18 +166,47 @@ void TaskCreator::configureParticleFilters(Task * _task,
     referenceName += "ParticleFilterOwner";
     referenceName += k;
     bool owner = requestedConfiguration.getValueBool(referenceName);
-    if (reportDebug(__FUNCTION__))
-      {
-      printCR();
-      printValue("ParticleFilter Index",k);
-      printValue("ParticleFilter Name",name);
-      printValue("ParticleFilter Owner",owner);
-      }
+//    if (reportDebug(__FUNCTION__))
+//      {
+//      printCR();
+//      printValue("ParticleFilter Index",k);
+//      printValue("ParticleFilter Name",name);
+//      printValue("ParticleFilter Owner",owner);
+//      }
     if (owner)
       dynamic_cast<Manager<ParticleFilter>*>(_task)->create(name);
     else
       dynamic_cast<Manager<ParticleFilter>*>(_task)->use(name);      }
 }
+
+void TaskCreator::configureEfficiencyFilters(Task * _task,
+                                           const String  & taskReferenceName,
+                                           Configuration & requestedConfiguration)
+{
+  int nEfficiencyFilters = requestedConfiguration.getValueInt(taskReferenceName+"nEfficiencyFilters");
+  for (int k=0; k<nEfficiencyFilters; k++)
+    {
+    String referenceName = taskReferenceName;
+    referenceName += "EfficiencyFilterName";
+    referenceName += k;
+    String name = requestedConfiguration.getValueString(referenceName);
+    referenceName = taskReferenceName;
+    referenceName += "EfficiencyFilterOwner";
+    referenceName += k;
+    bool owner = requestedConfiguration.getValueBool(referenceName);
+//    if (reportDebug(__FUNCTION__))
+//      {
+//      printCR();
+//      printValue("EfficiencyFilter Index",k);
+//      printValue("EfficiencyFilter Name",name);
+//      printValue("EfficiencyFilter Owner",owner);
+//      }
+    if (owner)
+      dynamic_cast<Manager<EfficiencyFilter>*>(_task)->create(name);
+    else
+      dynamic_cast<Manager<EfficiencyFilter>*>(_task)->use(name);      }
+}
+
 
 void TaskCreator::configureJetFilters(Task * _task,
                                       const String  & taskReferenceName,
@@ -197,13 +225,13 @@ void TaskCreator::configureJetFilters(Task * _task,
     referenceName += "JetFilterOwner";
     referenceName += k;
     bool owner = requestedConfiguration.getValueBool(referenceName);
-    if (reportDebug(__FUNCTION__))
-      {
-      printCR();
-      printValue("JetFilter Index",k);
-      printValue("JetFilter Name",name);
-      printValue("JetFilter Owner",owner);
-      }
+//    if (reportDebug(__FUNCTION__))
+//      {
+//      printCR();
+//      printValue("JetFilter Index",k);
+//      printValue("JetFilter Name",name);
+//      printValue("JetFilter Owner",owner);
+//      }
     if (owner)
       dynamic_cast<Manager<JetFilter>*>(_task)->create(name);
     else
@@ -238,9 +266,12 @@ Task * TaskCreator::createTask(Task * parentTask,
   String severity        = requestedConfiguration.getValueString(taskReferenceName+"Severity");
   requestedConfiguration.addProperty(taskName+":Severity",severity);
 
-  printValue("TaskCreator::createTask() taskName",taskName);
-  printValue("TaskCreator::createTask() taskClassName",taskClassName);
-  printValue("TaskCreator::createTask() severity",severity);
+//  printCR();
+//  printCR();
+//  printLine();
+//  printValue("TaskCreator::createTask() taskName",taskName);
+//  printValue("TaskCreator::createTask() taskClassName",taskClassName);
+//  printValue("TaskCreator::createTask() severity",severity);
 
   String defaultExportHistograms = getEnvVariable("CAP_HISTOS_EXPORT_PATH");
   bool  importHistograms = requestedConfiguration.getValueBool(taskReferenceName+"ImportHistograms");
@@ -272,6 +303,7 @@ Task * TaskCreator::createTask(Task * parentTask,
   configureEventsStreams(task,taskReferenceName,requestedConfiguration);
   configureEventFilters(task,taskReferenceName,requestedConfiguration);
   configureParticleFilters(task,taskReferenceName,requestedConfiguration);
+  configureEfficiencyFilters(task,taskReferenceName,requestedConfiguration);
   configureJetFilters(task,taskReferenceName,requestedConfiguration);
   configureSubtasks(task,taskReferenceName,requestedConfiguration);
   return task;

@@ -5,9 +5,6 @@
 #pragma link C++ class CAP::PerformanceAnalyzer+;
 #pragma link C++ class CAP::ParticlePerformanceHistos+;
 #pragma link C++ class CAP::ResolutionFunction+;
-#pragma link C++ class CAP::EfficiencyFunction+;
-//#pragma link C++ class CAP::PidFunction+;
-#pragma link C++ class CAP::ParticleSimulator+;
 #pragma link C++ class CAP::MeasurementSimulator+;
 #pragma link C++ class CAP::ClosureCalculator+;
 #pragma link C++ class CAP::ClosureIterator+;

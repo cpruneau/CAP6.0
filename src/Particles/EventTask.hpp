@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #ifndef CAP__EventTask
@@ -18,6 +18,7 @@
 #include "Event.hpp"
 #include "EventFilter.hpp"
 #include "ParticleFilter.hpp"
+#include "EfficiencyFilter.hpp"
 #include "JetFilter.hpp"
 #include "TaskAccountant.hpp"
 #include "EventAccountant.hpp"
@@ -32,6 +33,7 @@ public Manager<ParticleDb>,
 public Manager<Event>,
 public Manager<EventFilter>,
 public Manager<ParticleFilter>,
+public Manager<EfficiencyFilter>,
 public Manager<JetFilter>,
 public EventAccountant
 {
@@ -68,6 +70,12 @@ public:
                         std::vector<bool> & particleFilterAccepted,
                         std::vector< std::vector<Particle*> > & allParticlesAccepted);
 
+  bool analyzeThisEvent(std::vector<Particle*>  & particles,
+                        std::vector<EfficiencyFilter*> & efficiencyFilters,
+                        std::vector<bool> & efficiencyFilterAccepted,
+                        std::vector< std::vector<Particle*> > & allParticlesAccepted);
+
+
   bool countParticles(std::vector<Particle*>  & particles,
                       std::vector<ParticleFilter*> & particleFilters,
                       std::vector<double> & particleFilterAccepted);
@@ -91,12 +99,15 @@ protected:
 
   unsigned int nEventFilters;
   unsigned int nParticleFilters;
+  unsigned int nEfficiencyFilters;
   unsigned int nJetFilters;
-  std::vector<EventFilter*>    eventFilters;
-  std::vector<ParticleFilter*> particleFilters;
-  std::vector<JetFilter*>      jetFilters;
+  std::vector<EventFilter*>      eventFilters;
+  std::vector<ParticleFilter*>   particleFilters;
+  std::vector<EfficiencyFilter*> efficiencyFilters;
+  std::vector<JetFilter*>        jetFilters;
   std::vector<bool>   eventFilterAccepted;
   std::vector<bool>   particleFilterAccepted;
+  std::vector<bool>   efficiencyFilterAccepted;
   std::vector<bool>   jetFilterAccepted;
   std::vector<double> particleFilterCount;
   std::vector<double> particleFilterPtSum;

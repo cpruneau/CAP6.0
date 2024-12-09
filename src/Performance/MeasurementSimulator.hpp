@@ -1,19 +1,18 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #ifndef CAP__MeasurementSimulator
 #define CAP__MeasurementSimulator
 #include "EventTask.hpp"
-#include "ParticleSingleHistos.hpp"
-#include "ParticleSimulator.hpp"
+#include "ResolutionFunction.hpp"
 
 namespace CAP
 {
@@ -40,16 +39,24 @@ class MeasurementSimulator : public EventTask
 public:
   
   MeasurementSimulator();
+  MeasurementSimulator(const MeasurementSimulator & task);
+  MeasurementSimulator & operator=(const MeasurementSimulator & task);
   virtual ~MeasurementSimulator() {}
   virtual void setDefaultConfiguration();
   virtual void configure();
   virtual void initialize();
   virtual void execute();
-  virtual void createSmearers();
+  virtual void smearMomentum(const LorentzVector &in, LorentzVector & out);
+  virtual void scaleHistograms();
+
 protected:
-  
-  int   resolutionOption;
-  int   efficiencyOption;
+
+ 
+
+  ResolutionFunction ptFunction;
+  ResolutionFunction etaFunction;
+  ResolutionFunction phiFunction;
+
   ClassDef(MeasurementSimulator,0)
 };
 

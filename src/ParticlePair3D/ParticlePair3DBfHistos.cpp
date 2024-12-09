@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 
@@ -215,25 +215,26 @@ void ParticlePair3DBfHistos::importHistograms(TFile & inputFile)
 //!
 //! HistogramGroup from ParticlePair3DBfHistos must be normalized "per event" before calling this function
 //!
-void ParticlePair3DBfHistos::calculateBfHistograms(ParticlePair3DDerivedHistos & pair21B,
-                                                   ParticlePair3DDerivedHistos & pair2B1B,
-                                                   ParticlePair3DDerivedHistos & pair2B1,
-                                                   ParticlePair3DDerivedHistos & pair21)
+//!  calculateBfHistograms(pair12, pair12B,pair1B2,pair1B2B);  // ++, +-, -+, --
+//!
+void ParticlePair3DBfHistos::calculateBfHistograms(ParticlePair3DDerivedHistos & pair12,
+                                                   ParticlePair3DDerivedHistos & pair12B,
+                                                   ParticlePair3DDerivedHistos & pair1B2,
+                                                   ParticlePair3DDerivedHistos & pair1B2B)
 {
-//  printValue("pair21B.h_c2_Qinv", pair21B.h_c2_Qinv->GetXaxis()->GetNbins());
-//  printValue("pair2B1B.h_c2_Qinv",pair21B.h_c2_Qinv->GetXaxis()->GetNbins());
-//  printValue("this.h_B12_Qinv",   h_B12_Qinv->GetXaxis()->GetNbins());
+  // (-+) - (++)
+  h_B12_Qinv   ->Add(pair1B2.h_a12_Qinv,   pair12.h_a12_Qinv,   1.0,-1.0);
+  h_B12_DeltaPs->Add(pair1B2.h_a12_DeltaPs,pair12.h_a12_DeltaPs,1.0,-1.0);
+  h_B12_DeltaPo->Add(pair1B2.h_a12_DeltaPo,pair12.h_a12_DeltaPo,1.0,-1.0);
+  h_B12_DeltaPl->Add(pair1B2.h_a12_DeltaPl,pair12.h_a12_DeltaPl,1.0,-1.0);
 
-  h_B12_Qinv   ->Add(pair21B.h_a12_Qinv,   pair2B1B.h_a12_Qinv,   1.0,-1.0);
-  h_B12_DeltaPs->Add(pair21B.h_a12_DeltaPs,pair2B1B.h_a12_DeltaPs,1.0,-1.0);
-  h_B12_DeltaPo->Add(pair21B.h_a12_DeltaPo,pair2B1B.h_a12_DeltaPo,1.0,-1.0);
-  h_B12_DeltaPl->Add(pair21B.h_a12_DeltaPl,pair2B1B.h_a12_DeltaPl,1.0,-1.0);
+  // (+-) - (--)
+  h_B21_Qinv   ->Add(pair12B.h_a21_Qinv,   pair1B2B.h_a21_Qinv,   1.0,-1.0);
+  h_B21_DeltaPs->Add(pair12B.h_a21_DeltaPs,pair1B2B.h_a21_DeltaPs,1.0,-1.0);
+  h_B21_DeltaPo->Add(pair12B.h_a21_DeltaPo,pair1B2B.h_a21_DeltaPo,1.0,-1.0);
+  h_B21_DeltaPl->Add(pair12B.h_a21_DeltaPl,pair1B2B.h_a21_DeltaPl,1.0,-1.0);
 
-  h_B21_Qinv   ->Add(pair2B1.h_a21_Qinv,   pair21.h_a21_Qinv,   1.0,-1.0);
-  h_B21_DeltaPs->Add(pair2B1.h_a21_DeltaPs,pair21.h_a21_DeltaPs,1.0,-1.0);
-  h_B21_DeltaPo->Add(pair2B1.h_a21_DeltaPo,pair21.h_a21_DeltaPo,1.0,-1.0);
-  h_B21_DeltaPl->Add(pair2B1.h_a21_DeltaPl,pair21.h_a21_DeltaPl,1.0,-1.0);
-
+  // 0.5( (-+) - (++) ) + 0.5 (  (+-) - (--) )
   h_Bs_Qinv    ->Add(h_B12_Qinv,    h_B21_Qinv,      0.5, 0.5);
   h_Bs_DeltaPs ->Add(h_B12_DeltaPs, h_B12_DeltaPs,   0.5, 0.5);
   h_Bs_DeltaPo ->Add(h_B12_DeltaPo, h_B12_DeltaPo,   0.5, 0.5);

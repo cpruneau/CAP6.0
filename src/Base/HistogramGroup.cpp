@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez     
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #include "TSystem.h"
@@ -291,31 +291,6 @@ void HistogramGroup::differenceGroup(const HistogramGroup & g1,
                  histograms[k]);
 }
 
-
-void HistogramGroup::cloneHistoVector(const vector<TH1*> & source, vector<TH1*> & target)
-{
-  for (auto & h : source) target.push_back( (TH1*) h->Clone() );
-}
-
-void HistogramGroup::cloneHistoVector(const vector<TH2*> & source, vector<TH2*> & target)
-{
-  for (auto & h : source) target.push_back( (TH2*) h->Clone() );
-}
-
-void HistogramGroup::cloneHistoVector(const vector<TH3*> & source, vector<TH3*> & target)
-{
-  for (auto & h : source) target.push_back( (TH3*) h->Clone() );
-}
-
-void HistogramGroup::cloneHistoVector(const vector<TProfile*> & source, vector<TProfile*> & target)
-{
-  for (auto & h : source) target.push_back( (TProfile*) h->Clone() );
-}
-
-void HistogramGroup::cloneHistoVector(const vector<TProfile2D*> & source, vector<TProfile2D*> & target)
-{
-  for (auto & h : source) target.push_back( (TProfile2D*) h->Clone() );
-}
 
 
 

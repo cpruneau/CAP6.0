@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #include "ParticlePair3DBfCalculator.hpp"
@@ -27,8 +27,6 @@ EventTask()
   setInstanceName("ParticlePair3DBfCalculator");
   setName("ParticlePair3DBfCalculator");
   setTitle("ParticlePair3DBfCalculator");
-//  setName("Pair");
-//  setTitle("Pair");
 }
 
 ParticlePair3DBfCalculator::ParticlePair3DBfCalculator(const ParticlePair3DBfCalculator & task)
@@ -151,6 +149,11 @@ void ParticlePair3DBfCalculator::createHistograms()
     printValue("nParticleFilters",particleFilters.size());
     printCR();
     }
+
+  // -----------------------------------------------------------------------------
+  // particle 2 is considered to be the trigger or reference particle.
+  // -----------------------------------------------------------------------------
+
   int half = nParticleFilters/2;
   for (auto & eventFilter : eventFilters)
     {
@@ -197,26 +200,25 @@ void ParticlePair3DBfCalculator::execute()
     printValue("ParticlePair3DBfCalculator::execute() basePair",basePair);
     printValue("ParticlePair3DBfCalculator::execute() basePairBf",basePairBf);
 
+    // -----------------------------------------------------------------------------
+    // particle 2 is considered to be the trigger or reference particle.
+    // -----------------------------------------------------------------------------
+
     for (int iParticleFilter1 = 0; iParticleFilter1<half;iParticleFilter1++)
       {
       for (int iParticleFilter2 = 0; iParticleFilter2<half;iParticleFilter2++)
         {
-        int indexPairs21B  = basePair   + (iParticleFilter1+half)*nParticleFilters + iParticleFilter2;
-        int indexPairs2B1B = basePair   + (iParticleFilter1+half)*nParticleFilters + iParticleFilter2 + half;
-        int indexPairs2B1  = basePair   + iParticleFilter1*nParticleFilters + iParticleFilter2 + half;
-        int indexPairs21   = basePairBf + iParticleFilter1*nParticleFilters + iParticleFilter2;
-        int indexBf        = basePairBf + iParticleFilter1*half + iParticleFilter2;
-        printValue("ParticlePair3DBfCalculator::execute() indexPairs21B",indexPairs21B);
-        ParticlePair3DDerivedHistos & pair21B  = (ParticlePair3DDerivedHistos &) getGroupAt(0,indexPairs21B);
-        printValue("ParticlePair3DBfCalculator::execute() indexPairs2B1B",indexPairs2B1B);
-        ParticlePair3DDerivedHistos & pair2B1B = (ParticlePair3DDerivedHistos &) getGroupAt(0,indexPairs2B1B);
-        printValue("ParticlePair3DBfCalculator::execute() indexPairs2B1",indexPairs2B1);
-        ParticlePair3DDerivedHistos & pair2B1  = (ParticlePair3DDerivedHistos &) getGroupAt(0,indexPairs2B1);
-        printValue("ParticlePair3DBfCalculator::execute() indexPairs21",indexPairs21);
-        ParticlePair3DDerivedHistos & pair21   = (ParticlePair3DDerivedHistos &) getGroupAt(0,indexPairs21);
-        printValue("ParticlePair3DBfCalculator::execute() indexBf",indexBf);
+        int indexPairs12    = basePairBf + iParticleFilter1*nParticleFilters + iParticleFilter2;
+        int indexPairs12B   = basePair   + iParticleFilter1*nParticleFilters + iParticleFilter2 + half;
+        int indexPairs1B2   = basePair   + (iParticleFilter1+half)*nParticleFilters + iParticleFilter2;
+        int indexPairs1B2B  = basePair   + (iParticleFilter1+half)*nParticleFilters + iParticleFilter2 + half;
+        int indexBf         = basePairBf + iParticleFilter1 + iParticleFilter2*half;
+        ParticlePair3DDerivedHistos & pair12   = (ParticlePair3DDerivedHistos &) getGroupAt(0,indexPairs12);
+        ParticlePair3DDerivedHistos & pair12B  = (ParticlePair3DDerivedHistos &) getGroupAt(0,indexPairs12B);
+        ParticlePair3DDerivedHistos & pair1B2  = (ParticlePair3DDerivedHistos &) getGroupAt(0,indexPairs1B2);
+        ParticlePair3DDerivedHistos & pair1B2B = (ParticlePair3DDerivedHistos &) getGroupAt(0,indexPairs1B2B);
         ParticlePair3DBfHistos & bf = (ParticlePair3DBfHistos &) getGroupAt(1,indexBf);
-        bf.calculateBfHistograms(pair21B,pair2B1B,pair2B1,pair21);
+        bf.calculateBfHistograms(pair12, pair12B,pair1B2,pair1B2B);  // ++, +-, -+, --
         } // calculateBfHistograms
       }
     }

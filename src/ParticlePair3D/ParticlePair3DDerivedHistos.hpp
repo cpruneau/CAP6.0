@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #ifndef CAP__ParticlePair3DDerivedHistos
@@ -37,7 +37,8 @@ public:
   virtual void createHistograms();
   virtual void calculatePairDerivedHistograms(ParticleSingleHistos  & part1BaseHistos,
                                               ParticleSingleHistos  & part2BaseHistos,
-                                              ParticlePair3DHistos  & partPair3DHistos);
+                                              ParticlePair3DHistos  & partPair3DHistos,
+                                              bool same=true);
   virtual void setMasses(double m1, double m2);
 
   int    nBins_Qinv;
@@ -52,6 +53,14 @@ public:
   int    nBins_DeltaPl;
   double min_DeltaPl;
   double max_DeltaPl;
+  
+  int    nBins_pt;
+  double min_pt;
+  double max_pt;
+  int    nBins_y;
+  double min_y;
+  double max_y;
+  
   long   nEvents;
 
   String n1n1_DeltaPs_name;
@@ -102,6 +111,10 @@ public:
   TH1 * h_a21_DeltaPo;
   TH1 * h_a21_DeltaPl;
 
+  TH2 * h_n1_1_ptY_mc;
+  TH2 * h_n1_2_ptY_mc;
+  TH2 * h_n1r_1_ptY_mc;
+  TH2 * h_n1r_2_ptY_mc;
 
   double mass1;
   double mass2;

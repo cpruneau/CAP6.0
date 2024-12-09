@@ -193,10 +193,10 @@ void JetSingleHistos::importHistograms(TFile & inputFile)
 
 void JetSingleHistos::fill(PseudoJet&  jet)
 {
-  double jet_phi = jet.phi();
+  //double jet_phi = jet.phi();
   double jet_pt  = jet.perp();
-  double jet_eta = jet.pseudorapidity();
-  
+  //double jet_eta = jet.pseudorapidity();
+
   // Constituents of the passed Jet
   const std::vector<PseudoJet> & constituents = jet.constituents();
   for (const auto & part : constituents)

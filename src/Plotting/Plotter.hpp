@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #ifndef CAP__Plotter
@@ -63,51 +63,32 @@ public:
                   double _legendTextSize=0.05,
                   int    canvasIndex=0);
 
-//  TCanvas *  plot(const String & canvasName,
-//                  const CanvasConfiguration  & cc,
-//                  const GraphConfiguration   & gc,
-//                  LegendConfiguration  & lc,
-//                  TH2 * h,
-//                  const String & xTitle,  double xMin, double xMax,
-//                  const String & yTitle,  double yMin, double yMax,
-//                  const String & zTitle,  double zMin, double zMax);
-//
-//  TCanvas *  plot(const String & canvasName,
-//                  const CanvasConfiguration  & cc,
-//                  const GraphConfiguration   & gc,
-//                  LegendConfiguration  & lc,
-//                  TGraph * h,
-//                  const String & xTitle,  double xMin, double xMax,
-//                  const String & yTitle,  double yMin, double yMax);
-//
-//  TCanvas *  plot(const String & canvasName,
-//                  const CanvasConfiguration  & cc,
-//                  const vector<GraphConfiguration*> & gc,
-//                  LegendConfiguration  & lc,
-//                  vector<TH1*> histograms,
-//                  const String & xTitle,  double xMin, double xMax,
-//                  const String & yTitle,  double yMin, double yMax);
-//
-//  TCanvas *  plot(const String & canvasName,
-//                  const CanvasConfiguration  & cc,
-//                  const vector<GraphConfiguration*> & gc,
-//                  LegendConfiguration  & lc,
-//                  vector<TGraph*> graphs,
-//                  const String & xTitle,  double xMin, double xMax,
-//                  const String & yTitle,  double yMin, double yMax);
+  TCanvas *  plot(const String & _canvasName,
+                  vector<TH2*> _histograms,
+                  const String & _xTitle="",  double _xMin=1.0, double _xMax=0.0,
+                  const String & _yTitle="",  double _yMin=1.0, double _yMax=0.0,
+                  const String & _zTitle="",  double _zMin=1.0, double _zMax=0.0,
+                  bool   _createLegend=false,
+                  double _xLegendLeft=0.1,
+                  double _xLegendRight=0.2,
+                  double _yLegendLow=0.4,
+                  double _yLegendHigh=0.5,
+                  double _legendTextSize=0.05,
+                  int    canvasIndex=0);
 
 
-  void findMinMax(TH1* histogram, double & yMin, double & yMax);
-  void findMinMax(vector<TH1*> histograms, double & yMin, double & yMax,
-                  bool padding=true, double paddingValue=0.05);
-
-  void setProperties(TH1 * h, 
+  void setProperties(TH1 * h,
                      const GraphConfiguration & graphConfiguration,
                      const String & xTitle="none",
                      const String & yTitle="none",
                      const String & zTitle="none");
-  
+
   void setProperties(const vector<TH1*> & histograms,
+                     const vector<GraphConfiguration> & graphConfigurations,
+                     const String & xTitle="none",
+                     const String & yTitle="none");
+
+  void setProperties(const vector<TH2*> & histograms,
                      const vector<GraphConfiguration> & graphConfigurations,
                      const String & xTitle="none",
                      const String & yTitle="none",

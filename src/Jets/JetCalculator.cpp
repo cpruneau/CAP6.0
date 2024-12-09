@@ -130,30 +130,34 @@ void JetCalculator::importHistograms(TFile & inputFile)
   for (auto & eventFilter : eventFilters)
     {
     String efn = eventFilter->getName();
-    for (auto & jetFilter : jetFilters)
+    for (auto & particleFilter : particleFilters)
       {
-      String jfn = jetFilter->getName();
+      String pfn = particleFilter->getName();
+      for (auto & jetFilter : jetFilters)
+        {
+        String jfn = jetFilter->getName();
 
-      jetHistos = new JetHistos();
-      jetHistos->setName(createName(bn,efn,jfn));
-      jetHistos->setConfiguration(configuration);
-      jetHistos->setParentTask(this);
-      jetHistos->importHistograms(inputFile);
-      addGroupInSet(0,jetHistos);
+        jetHistos = new JetHistos();
+        jetHistos->setName(createName(bn,efn,pfn,jfn));
+        jetHistos->setConfiguration(configuration);
+        jetHistos->setParentTask(this);
+        jetHistos->importHistograms(inputFile);
+        addGroupInSet(0,jetHistos);
 
-      jetSingleHistos = new JetSingleHistos();
-      jetSingleHistos->setName(createName(bn,efn,jfn));
-      jetSingleHistos->setConfiguration(configuration);
-      jetSingleHistos->setParentTask(this);
-      jetSingleHistos->importHistograms(inputFile);
-      addGroupInSet(1,jetSingleHistos);
+        jetSingleHistos = new JetSingleHistos();
+        jetSingleHistos->setName(createName(bn,efn,pfn,jfn));
+        jetSingleHistos->setConfiguration(configuration);
+        jetSingleHistos->setParentTask(this);
+        jetSingleHistos->importHistograms(inputFile);
+        addGroupInSet(1,jetSingleHistos);
 
-      jetPairHistos = new JetPairHistos();
-      jetPairHistos->setName(createName(bn,efn,jfn));
-      jetPairHistos->setConfiguration(configuration);
-      jetPairHistos->setParentTask(this);
-      jetPairHistos->importHistograms(inputFile);
-      addGroupInSet(2,jetPairHistos);
+        jetPairHistos = new JetPairHistos();
+        jetPairHistos->setName(createName(bn,efn,pfn,jfn));
+        jetPairHistos->setConfiguration(configuration);
+        jetPairHistos->setParentTask(this);
+        jetPairHistos->importHistograms(inputFile);
+        addGroupInSet(2,jetPairHistos);
+        }
       }
     }
   if (reportEnd(__FUNCTION__)) {/* no ops */};
@@ -170,30 +174,35 @@ void JetCalculator::createHistograms()
   for (auto & eventFilter : eventFilters)
     {
     String efn = eventFilter->getName();
-    for (auto & jetFilter : jetFilters)
+    for (auto & particleFilter : particleFilters)
       {
-      String jfn = jetFilter->getName();
+      String pfn = eventFilter->getName();
 
-      jetHistosDerived = new JetHistosDerived();
-      jetHistosDerived->setName(createName(bn,efn,jfn));
-      jetHistosDerived->setConfiguration(configuration);
-      jetHistosDerived->setParentTask(this);
-      jetHistosDerived->createHistograms();
-      addGroupInSet(3,jetHistosDerived);
+      for (auto & jetFilter : jetFilters)
+        {
+        String jfn = jetFilter->getName();
 
-      jetSingleHistosDerived = new JetSingleHistosDerived();
-      jetSingleHistosDerived->setName(createName(bn,efn,jfn));
-      jetSingleHistosDerived->setConfiguration(configuration);
-      jetSingleHistosDerived->setParentTask(this);
-      jetSingleHistosDerived->createHistograms();
-      addGroupInSet(4,jetSingleHistosDerived);
+        jetHistosDerived = new JetHistosDerived();
+        jetHistosDerived->setName(createName(bn,efn,pfn,jfn));
+        jetHistosDerived->setConfiguration(configuration);
+        jetHistosDerived->setParentTask(this);
+        jetHistosDerived->createHistograms();
+        addGroupInSet(3,jetHistosDerived);
 
-      jetPairHistosDerived = new JetPairHistosDerived();
-      jetPairHistosDerived->setName(createName(bn,efn,jfn));
-      jetPairHistosDerived->setConfiguration(configuration);
-      jetPairHistosDerived->setParentTask(this);
-      jetPairHistosDerived->createHistograms();
-      addGroupInSet(5,jetPairHistosDerived);
+        jetSingleHistosDerived = new JetSingleHistosDerived();
+        jetSingleHistosDerived->setName(createName(bn,efn,pfn,jfn));
+        jetSingleHistosDerived->setConfiguration(configuration);
+        jetSingleHistosDerived->setParentTask(this);
+        jetSingleHistosDerived->createHistograms();
+        addGroupInSet(4,jetSingleHistosDerived);
+
+        jetPairHistosDerived = new JetPairHistosDerived();
+        jetPairHistosDerived->setName(createName(bn,efn,pfn,jfn));
+        jetPairHistosDerived->setConfiguration(configuration);
+        jetPairHistosDerived->setParentTask(this);
+        jetPairHistosDerived->createHistograms();
+        addGroupInSet(5,jetPairHistosDerived);
+        }
       }
     }
   if (reportEnd(__FUNCTION__)) {/* no ops */};
@@ -205,39 +214,34 @@ void JetCalculator::execute()
   std::vector<EventFilter*> & eventFilters = Manager<EventFilter>::getObjects();
   std::vector<ParticleFilter*> & particleFilters = Manager<ParticleFilter>::getObjects();
   std::vector<JetFilter*> & jetFilters = Manager<JetFilter>::getObjects();
-  int nEventFilters    = eventFilters.size();
-  int nParticleFilters = particleFilters.size();
-  int nJetFilters      = jetFilters.size();
-
+  int index = 0;
   for (unsigned int iEventFilter=0;iEventFilter<eventFilters.size();iEventFilter++)
     {
-    int index = 0;
-    for (unsigned int iJetFilter=0;iJetFilter<jetFilters.size();iJetFilter++)
+    for (unsigned int iParticleFilter=0;iParticleFilter<particleFilters.size();iParticleFilter++)
       {
-      printLine();
-      printLine();
-      printLine();
-      printLine();
-      JetHistos & jetHistos = (JetHistos &) getGroupAt(0,index);
-      JetHistosDerived & jetHistosDerived = (JetHistosDerived &)  getGroupAt(3,index);
-      jetHistosDerived.calculateDerivedHistograms(jetHistos);
+      for (unsigned int iJetFilter=0;iJetFilter<jetFilters.size();iJetFilter++)
+        {
+        JetHistos & jetHistos = (JetHistos &) getGroupAt(0,index);
+        JetHistosDerived & jetHistosDerived = (JetHistosDerived &)  getGroupAt(3,index);
+        jetHistosDerived.calculateDerivedHistograms(jetHistos);
 
-      JetSingleHistos & jetSingleHistos = (JetSingleHistos &) getGroupAt(1,index);
-      JetSingleHistosDerived & jetSingleHistosDerived = (JetSingleHistosDerived &)  getGroupAt(4,index);
-      jetSingleHistosDerived.calculateDerivedHistograms(jetSingleHistos);
+        JetSingleHistos & jetSingleHistos = (JetSingleHistos &) getGroupAt(1,index);
+        JetSingleHistosDerived & jetSingleHistosDerived = (JetSingleHistosDerived &)  getGroupAt(4,index);
+        jetSingleHistosDerived.calculateDerivedHistograms(jetSingleHistos);
 
-      JetPairHistos & jetPairHistos = (JetPairHistos &) getGroupAt(2,index);
-      JetPairHistosDerived & jetPairHistosDerived = (JetPairHistosDerived &)  getGroupAt(5,index);
-      jetPairHistosDerived.calculateDerivedHistograms(jetSingleHistos,jetPairHistos);
-      index++;
+        JetPairHistos & jetPairHistos = (JetPairHistos &) getGroupAt(2,index);
+        JetPairHistosDerived & jetPairHistosDerived = (JetPairHistosDerived &)  getGroupAt(5,index);
+        jetPairHistosDerived.calculateDerivedHistograms(jetSingleHistos,jetPairHistos);
+        index++;
+        }
       }
     }
 }
 
 void JetCalculator::scaleHistograms()
-{
-
-}
+  {
+  // no ops....
+  }
 
 
 

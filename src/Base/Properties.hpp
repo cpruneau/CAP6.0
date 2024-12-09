@@ -6,7 +6,7 @@
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #ifndef CAP__Properties
@@ -43,11 +43,11 @@ class Properties
   virtual bool isFound(const char * name) const;
 
 
-  virtual bool    getValueBool(const char* aKeyword) const;
-  virtual int     getValueInt(const char* aKeyword) const;
-  virtual long    getValueLong(const char* aKeyword) const;
-  virtual double  getValueDouble(const char* aKeyword) const;
-  virtual String  getValueString(const char* aKeyword) const;
+  virtual bool    getValueBool(const char* aKeyword, bool useDefault=1, bool defaultValue=false) const;
+  virtual int     getValueInt(const char* aKeyword,  bool useDefault=1, int defaultValue=0) const;
+  virtual long    getValueLong(const char* aKeyword,  bool useDefault=1, long defaultValue=0) const;
+  virtual double  getValueDouble(const char* aKeyword,  bool useDefault=1, double defaultValue=0) const;
+  virtual String  getValueString(const char* aKeyword,  bool useDefault=1, const String defaultValue="NONE") const;
 
   String  standardize(   const char * path, const char* aKeyword) const;
   virtual bool    getValueBool(  const char * path, const char* aKeyword) const;

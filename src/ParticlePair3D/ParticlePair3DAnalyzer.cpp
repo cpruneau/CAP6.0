@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #include "ParticlePair3DAnalyzer.hpp"
@@ -47,13 +47,13 @@ ParticlePair3DAnalyzer & ParticlePair3DAnalyzer::operator=(const ParticlePair3DA
 void ParticlePair3DAnalyzer::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
-  addProperty("HistogramBaseName","Pair3D");
-  addProperty("nBins_n1",          100);
-  addProperty("Min_n1",            0.0);
-  addProperty("Max_n1",            100.0);
-  addProperty("nBins_eTot",        100);
-  addProperty("Min_eTot",          0.0);
-  addProperty("Max_eTot",          100.0);
+  addProperty( "HistogramBaseName","Pair3D");
+  addProperty( "nBins_n1",          100);
+  addProperty( "Min_n1",            0.0);
+  addProperty( "Max_n1",            100.0);
+  addProperty( "nBins_eTot",        100);
+  addProperty( "Min_eTot",          0.0);
+  addProperty( "Max_eTot",          100.0);
   addProperty( "nBins_pt",  100);
   addProperty( "Min_pt",    0.0);
   addProperty( "Max_pt",  100.0);
@@ -176,7 +176,7 @@ void ParticlePair3DAnalyzer::execute()
           {
           for (auto & particle2 : particleSelected2)
             {
-            if (particle1 == particle2) continue;
+            if (iParticleFilter1==iParticleFilter2 & particle1 == particle2) continue;
             histosPair.fill(*particle1,*particle2,1.0);
             }
           }

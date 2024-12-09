@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez     
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #ifndef CAP__HistogramGroup
@@ -60,12 +60,6 @@ public:
   //! Sets the configuration of this task instance.
   //!
   void setConfiguration(const Configuration & config);
-
-  virtual void cloneHistoVector(const std::vector<TH1*> & source, std::vector<TH1*> & target);
-  virtual void cloneHistoVector(const std::vector<TH2*> & source, std::vector<TH2*> & target);
-  virtual void cloneHistoVector(const std::vector<TH3*> & source, std::vector<TH3*> & target);
-  virtual void cloneHistoVector(const std::vector<TProfile*> & source, std::vector<TProfile*> & target);
-  virtual void cloneHistoVector(const std::vector<TProfile2D*> & source, std::vector<TProfile2D*> & target);
 
   Task * getParentTask() const;
   const String getParentName() const;

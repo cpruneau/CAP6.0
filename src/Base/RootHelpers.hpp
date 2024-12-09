@@ -44,27 +44,6 @@ std::vector<String>  listFilesInDir(const String & pathName,
                                     int  maximumDepth=1,
                                     int  currentDepth=0);
 
-//std::vector<String> getSelectedFileNamesFrom(const String & folder)
-//{
-//  std::vector<String> includePatterns;
-//  std::vector<String> excludePatterns;
-//  std::vector<String> selectedNames;
-//  for (int k=0; k<20; k++)
-//  {
-//    String key = "IncludedPattern"; key += k;
-//    String  value = getValueString(key);
-//    if (!value.Contains("none")) includePatterns.push_back(value);
-//  }
-//  for (int k=0; k<20; k++)
-//  {
-//    String key = "ExcludedPattern"; key += k;
-//    String  value = getValueString(key);
-//    if (!value.Contains("none")) excludePatterns.push_back(value);
-//  }
-//  return listFilesInDir(folder,includePatterns,excludePatterns);
-//}
-
-
 String removeRootExtension(const String fileName);
 long importParameter(TFile & inputFile,
                      const String & parameterName,
@@ -184,8 +163,40 @@ TProfile * loadProfile(TFile & inputFile,const String & histoName) ;
 TProfile2D * loadProfile2D(TFile & inputFile,const String & histoName) ;
 TH1 * clone(const TH1 * h1, const String & histoName)  ;
 
-void findMaximum(TH1 * h, int xFirstBin, int xLastBin, int & xMaxValueBin, double & xMaxValue);
-void findMinimum(TH1 * h, int xFirstBin, int xLastBin, int & xMinValueBin, double  & xMinValue);
+void cloneHistoVector(const std::vector<TH1*> & source, std::vector<TH1*> & target);
+void cloneHistoVector(const std::vector<TH2*> & source, std::vector<TH2*> & target);
+void cloneHistoVector(const std::vector<TH3*> & source, std::vector<TH3*> & target);
+void cloneHistoVector(const std::vector<TProfile*> & source, std::vector<TProfile*> & target);
+void cloneHistoVector(const std::vector<TProfile2D*> & source, std::vector<TProfile2D*> & target);
+
+
+void findMinimum(TH1 * h, int & xMinValueBin, double & minValue, int xFirstBin=1, int xLastBin=-1);
+void findMaximum(TH1 * h, int & xMaxValueBin, double & maxValue, int xFirstBin=1, int xLastBin=-1);
+void findMinMax (TH1 * h,
+                 int & xMinValueBin, double & minValue,
+                 int & xMaxValueBin, double & maxValue,
+                 int xFirstBin=1, int xLastBin=-1);
+void findMinMax (std::vector<TH1*> histograms,
+                 int & xMinValueBin, double & minValue,
+                 int & xMaxValueBin, double & maxValue,
+                 int xFirstBin=1, int xLastBin=-1);
+
+
+
+void findMinimum(TH2 * h, int & xMinValueBin, int & yMinValueBin, double & minValue, int xFirstBin=1, int xLastBin=-1, int yFirstBin=1, int yLastBin=-1);
+void findMaximum(TH2 * h, int & xMaxValueBin, int & yMaxValueBin, double & maxValue, int xFirstBin=1, int xLastBin=-1, int yFirstBin=1, int yLastBin=-1);
+void findMinMax (TH2 * h,
+                 int & xMinValueBin, int & yMinValueBin, double & minValue,
+                 int & xMaxValueBin, int & yMaxValueBin, double & maxValue,
+                 int xFirstBin=1, int xLastBin=-1,
+                 int yFirstBin=1, int yLastBin=-1);
+void findMinMax (std::vector<TH2*> histograms,
+                 int & xMinValueBin, int & yMinValueBin, double & minValue,
+                 int & xMaxValueBin, int & yMaxValueBin, double & maxValue,
+                 int xFirstBin=1, int xLastBin=-1,
+                 int yFirstBin=1, int yLastBin=-1);
+
+
 void scaleByBinWidth1D(TH1 * h, double scale);
 void scaleByBinWidth2D(TH2 * h, double scale);
 void scaleByBinWidth3D(TH3 * h, double scale);

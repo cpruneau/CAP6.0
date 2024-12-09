@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #include "ParticlePair3DCalculator.hpp"
@@ -207,6 +207,7 @@ int ParticlePair3DCalculator::getPidFor(ParticleFilter* pf)
       return dynamic_cast<ConditionInteger*>(condition)->value; //PDG requested
       }
     }
+  return 0;
 }
 
 double ParticlePair3DCalculator::getMassFor(ParticleFilter* pf)
@@ -259,6 +260,7 @@ void ParticlePair3DCalculator::execute()
       //ParticleSingleDerivedHistos & dSingleHistos1 = (ParticleSingleDerivedHistos &) getGroupAt(2,indexSingle1);
       for (int iParticleFilter2 = 0; iParticleFilter2<nParticleFilters;iParticleFilter2++)
         {
+        bool same = iParticleFilter1==iParticleFilter2;
         int indexSingle2 = baseSingle + iParticleFilter2;
         int indexPairs12 = basePair   + iParticleFilter1*nParticleFilters + iParticleFilter2;
         ParticleSingleHistos &bSingleHistos2 = (ParticleSingleHistos &)        getGroupAt(0,indexSingle2);
@@ -266,7 +268,7 @@ void ParticlePair3DCalculator::execute()
         ParticlePair3DHistos &bPairHistos = (ParticlePair3DHistos &) getGroupAt(1,indexPairs12);
         ParticlePair3DDerivedHistos & dPairHistos = (ParticlePair3DDerivedHistos &) getGroupAt(3,indexPairs12);
         dPairHistos.setMasses(masses[iParticleFilter1],masses[iParticleFilter2]);
-        dPairHistos.calculatePairDerivedHistograms(bSingleHistos1,bSingleHistos2,bPairHistos);
+        dPairHistos.calculatePairDerivedHistograms(bSingleHistos1,bSingleHistos2,bPairHistos,same);
         }
       }
     }

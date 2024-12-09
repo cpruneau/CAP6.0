@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #include "EventTask.hpp"
@@ -25,6 +25,7 @@ Manager<ParticleDb>(),
 Manager<Event>(),
 Manager<EventFilter>(),
 Manager<ParticleFilter>(),
+Manager<EfficiencyFilter>(),
 Manager<JetFilter>(),
 EventAccountant(),
 particleFactory(nullptr),
@@ -52,6 +53,7 @@ Manager<ParticleDb>(task),
 Manager<Event>(task),
 Manager<EventFilter>(task),
 Manager<ParticleFilter>(task),
+Manager<EfficiencyFilter>(task),
 Manager<JetFilter>(task),
 EventAccountant(task),
 particleFactory(task.particleFactory),
@@ -69,12 +71,13 @@ allParticlesAccepted()
 EventTask & EventTask::operator=(const EventTask & task)
 {
   if (this!=&task)
-  {
+    {
     HistogramTask::operator=(task);
     Manager<ParticleDb>::operator=(task);
     Manager<Event>::operator=(task);
     Manager<EventFilter>::operator=(task);
     Manager<ParticleFilter>::operator=(task);
+    Manager<EfficiencyFilter>::operator=(task);
     Manager<JetFilter>::operator=(task);
     EventAccountant::operator=(task);
     particleFactory        = task.particleFactory;
@@ -88,7 +91,7 @@ EventTask & EventTask::operator=(const EventTask & task)
     particleFilterCount    = task.particleFilterCount;
     particleFilterPtSum    = task.particleFilterPtSum;
     allParticlesAccepted   = task.allParticlesAccepted;
-  }
+    }
   return *this;
 }
 
@@ -119,17 +122,20 @@ void EventTask::initialize()
   TaskAccountant::reset();
   particleFactory = Particle::getFactory();
   particleDb = Manager<ParticleDb>::getObjectAt(0);
-  eventFilters     = Manager<EventFilter>::getObjects();
-  particleFilters  = Manager<ParticleFilter>::getObjects();
-  jetFilters       = Manager<JetFilter>::getObjects();
-  nEventFilters    = eventFilters.size();
-  nParticleFilters = particleFilters.size();
-  nJetFilters      = jetFilters.size();
+  eventFilters       = Manager<EventFilter>::getObjects();
+  particleFilters    = Manager<ParticleFilter>::getObjects();
+  efficiencyFilters  = Manager<EfficiencyFilter>::getObjects();
+  jetFilters         = Manager<JetFilter>::getObjects();
+  nEventFilters      = eventFilters.size();
+  nParticleFilters   = particleFilters.size();
+  nEfficiencyFilters = efficiencyFilters.size();
+  nJetFilters        = jetFilters.size();
   if (nEventFilters<1) throw TaskException("nEventFilters<1",__FUNCTION__);
   if (nParticleFilters<1) throw TaskException("nParticleFilters<1",__FUNCTION__);
   EventAccountant::initialize(nEventFilters,nParticleFilters);
   eventFilterAccepted.assign(nEventFilters,false);
   particleFilterAccepted.assign(nParticleFilters,false);
+  efficiencyFilterAccepted.assign(nEfficiencyFilters,false);
   jetFilterAccepted.assign(nJetFilters,false);
   particleFilterCount.assign(nParticleFilters,0);
   particleFilterPtSum.assign(nParticleFilters,0);
@@ -202,6 +208,8 @@ void EventTask::clear()
   Manager<Event>::clear();
   Manager<EventFilter>::clear();
   Manager<ParticleFilter>::clear();
+  Manager<EfficiencyFilter>::clear();
+  Manager<JetFilter>::clear();
   clearHistograms();
   if (hasSubTasks()) clearSubTasks();
   if (reportEnd(__FUNCTION__)) { /* no ops */ };
@@ -274,6 +282,38 @@ bool EventTask::analyzeThisEvent(std::vector<Particle*>  & particles,
   }
   return analyzeEvent;
 }
+
+//!
+//!Preview whether the given event should be analyze based on the particle filter provided.
+//!An array of bools is produced on output which indicates what particles satisfy the particle filters.
+//!
+bool EventTask::analyzeThisEvent(std::vector<Particle*>  & particles,
+                                 std::vector<EfficiencyFilter*> & efficiencyFilters,
+                                 std::vector<bool> & efficiencyFilterAccepted,
+                                 std::vector< std::vector<Particle*> > & allParticlesAccepted)
+{
+  bool analyzeEvent = false;
+  unsigned int iEfficiencyFilter = 0;
+  for (auto & efficiencyFilter : efficiencyFilters)
+    {
+    bool useThisFilter = false;
+    std::vector<Particle*> & particlesAccepted = allParticlesAccepted[iEfficiencyFilter];
+    particlesAccepted.clear();
+    for (auto & particle : particles)
+      {
+      if (efficiencyFilter->accept(*particle))
+        {
+        useThisFilter = true; // at least one particle accepted
+        particlesAccepted.push_back(particle);
+        }
+      }
+    efficiencyFilterAccepted[iEfficiencyFilter] = useThisFilter;
+    if (useThisFilter) analyzeEvent = true;
+    iEfficiencyFilter++;
+    }
+  return analyzeEvent;
+}
+
 
 //!
 //!Preview whether the given event should be analyze based on the particle filter provided.

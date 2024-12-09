@@ -194,9 +194,9 @@ void JetPairHistos::importHistograms(TFile & inputFile)
 
 void JetPairHistos::fill(PseudoJet&  jet)
 {
-  double jet_phi = jet.phi();
+  //double jet_phi = jet.phi();
   double jet_pt  = jet.perp();
-  double jet_eta = jet.pseudorapidity();
+  //double jet_eta = jet.pseudorapidity();
   int pdgId1, pdgId2;
   double q1, q2;
 

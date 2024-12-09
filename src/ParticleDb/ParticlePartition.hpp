@@ -1,6 +1,6 @@
 /* **********************************************************************
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * Copyright (C) 2016, Chun Shen
  * All rights reserved.
  *
@@ -8,7 +8,7 @@
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #ifndef CAP__ParticlePartition

@@ -6,7 +6,7 @@
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022-2024
+ * Author: Claude Pruneau,   04/01/2024-2024
  *
  * *********************************************************************/
 #ifndef CAP__StreamManager

@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #include "PythiaEventGenerator.hpp"
@@ -19,7 +19,12 @@ namespace CAP
 PythiaEventGenerator::PythiaEventGenerator()
 :
 EventTask(),
-pythia(nullptr)
+pythia(nullptr),
+saveFinalOnly(true),
+savePhotons(false),
+saveNeutrinos(false),
+saveQuarks(false),
+saveGaugeBosons(false)
 {
   appendClassName("PythiaEventGenerator");
   setName("Pythia");
@@ -30,7 +35,12 @@ pythia(nullptr)
 PythiaEventGenerator::PythiaEventGenerator(const PythiaEventGenerator & task)
 :
 EventTask(task),
-pythia(task.pythia)
+pythia(task.pythia),
+saveFinalOnly(task.saveFinalOnly),
+savePhotons(task.savePhotons),
+saveNeutrinos(task.saveNeutrinos),
+saveQuarks(task.saveQuarks),
+saveGaugeBosons(task.saveGaugeBosons)
 { }
 
 PythiaEventGenerator & PythiaEventGenerator::operator=(const PythiaEventGenerator & task)
@@ -39,6 +49,11 @@ PythiaEventGenerator & PythiaEventGenerator::operator=(const PythiaEventGenerato
     {
     EventTask::operator=(task);
     pythia = task.pythia;
+    saveFinalOnly    = task.saveFinalOnly;
+    savePhotons      = task.savePhotons;
+    saveNeutrinos    = task.saveNeutrinos;
+    saveQuarks       = task.saveQuarks;
+    saveGaugeBosons  = task.saveGaugeBosons;
     }
   return *this;
 }
@@ -62,6 +77,11 @@ void PythiaEventGenerator::setDefaultConfiguration()
   addProperty("UseRopes",         false);
   addProperty("UseShoving",       false);
   addProperty("xmlInputPath",     String(""));
+  addProperty("SaveFinalOnly",    true);
+  addProperty("SavePhotons",      false);
+  addProperty("SaveNeutrinos",    false);
+  addProperty("SaveQuarks",       false);
+  addProperty("SaveGaugeBosons",  false);
 
   for (int k=0; k<30; k++)
     {
@@ -76,8 +96,6 @@ void PythiaEventGenerator::configure()
   EventTask::configure();
   if (reportDebug(__FUNCTION__)) print(cout);
 }
-
-
 
 //!
 //! Initialize generator
@@ -101,7 +119,11 @@ void PythiaEventGenerator::initialize()
       pythia->settings.parm("Beams:eB",      getValueDouble("Beams:eB"));
       break;
     }
-
+  saveFinalOnly   = getValueBool("SaveFinalOnly");
+  savePhotons     = getValueBool("SavePhotons");
+  saveNeutrinos   = getValueBool("SaveNeutrinos");
+  saveQuarks      = getValueBool("SaveQuarks");
+  saveGaugeBosons = getValueBool("SaveGaugeBosons");
 
   if (getValueDouble("SetSeed"))
     {
@@ -196,58 +218,28 @@ void PythiaEventGenerator::execute()
   particleFactory->reset();
   pythia->next();
   int nParticleToCopy   = pythia->event.size();
-//  printCR();
-//  printLine();
-//  printValue("nParticleToCopy",nParticleToCopy);
-
   if (pythia->event[0].id() == 90)
     {
     nParticleToCopy--;
-//     ioff = -1;
     }
-
-//  if (reportDebug(__FUNCTION__)) cout << "nParticleToCopy : " << nParticleToCopy << endl;
 
   for (int i = 1; i <= nParticleToCopy; i++)
     {
-
-//    int ist = tracks_fStatusCode[iParticle];
-//    if (ist <= 0) continue;
     int pdg = pythia->event[i].id();
-    if (abs(pdg)<40  || pdg==2101) continue; // skip quarks,  leptons, and photons
-    if (!pythia->event[i].isFinal()) continue;
-    //if (reportDebug(__FUNCTION__))   cout << "     pdg:" << pdg << endl;
+    if (saveFinalOnly    && !pythia->event[i].isFinal()) continue;
+    if (!saveQuarks      && abs(pdg)<10) continue; // skip quarks, gluons, etc
+    if (!saveNeutrinos   && (abs(pdg)==12 || abs(pdg)==14  || abs(pdg)==16 || abs(pdg)==18)) continue;
+    if (!savePhotons     && pdg==22) continue;
+    if (!saveGaugeBosons && (abs(pdg)>22 && abs(pdg)<40)) continue;
     ParticleType * particleType = particleDb->findPdgCode(pdg);
-    if (particleType==nullptr)
-      {
-      if (reportDebug(__FUNCTION__)) cout << "     is an unknown code" << endl;
-      continue;
-      }
-    //if (particleType->isPhoton()) continue;
-
+    if (particleType==nullptr) throw NullPointerException("particleType==nullptr",__FUNCTION__);
     Particle & particle = *particleFactory->getNextObject();
     particle.setType(particleType);
     particle.setLive(1);
-//    particle.setParents(pythia->event[i].mother1()   + ioff,
-//                        pythia->event[i].mother2()   + ioff);
-//
-////    setParents(Particle * parent1, Particle * parent2);
-//
-//    particle.setChildren(pythia->event[i].daughter1() + ioff,
-//                         pythia->event[i].daughter2() + ioff)
-    // momentum-energy units are  [GeV/c]
-    // positions are in [mm], time in [mm/c]
     particle.setPxPyPzE(pythia->event[i].px(),pythia->event[i].py(),pythia->event[i].pz(),pythia->event[i].e());
     particle.setXYZT(pythia->event[i].xProd(),pythia->event[i].yProd(),pythia->event[i].zProd(),pythia->event[i].tProd());
-    //incrementParticlesAccepted();
-    //if (reportDebug(__FUNCTION__)) cout << "   Add Particle to the event" << endl;
-   //  if (particleFilters[0]->accept(particle)) event.addParticle(&particle);
-   // printValue("adding particle type",particle.getType().getName());
     event.addParticle(&particle);
     }
-//  int multiplicity = event.size();
-//  if (reportDebug(__FUNCTION__)) cout << "multiplicity " << multiplicity << endl;
-  //event.set("PythiaMultiplicity",multiplicity);
   EventAccountant::incrementEventsAccepted(0);
   TaskAccountant::increment();
 }

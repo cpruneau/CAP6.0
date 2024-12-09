@@ -5,14 +5,14 @@
 #include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
 #add_definitions(${ROOT_CXX_FLAGS})
 
-ROOT_GENERATE_DICTIONARY(G__Performance MeasurementSimulator.hpp ParticleSimulator.hpp PerformanceAnalyzer.hpp ParticlePerformanceHistos.hpp ClosureCalculator.hpp ClosureIterator.hpp  EventPlaneRandomizerTask.hpp EventVertexRandomizerTask.hpp ResolutionFunction.hpp EfficiencyFunction.hpp LINKDEF PerformanceLinkDef.h)
+ROOT_GENERATE_DICTIONARY(G__Performance MeasurementSimulator.hpp PerformanceAnalyzer.hpp ParticlePerformanceHistos.hpp ClosureCalculator.hpp ClosureIterator.hpp  EventPlaneRandomizerTask.hpp EventVertexRandomizerTask.hpp ResolutionFunction.hpp EfficiencyFunction.hpp LINKDEF PerformanceLinkDef.h)
 #  PidFunction.hpp
 
 ################################################################################################
 # Create a shared library with geneated dictionary
 ################################################################################################
 add_compile_options(-Wall -Wextra -pedantic)
-add_library(Performance SHARED MeasurementSimulator.cpp  ParticleSimulator.cpp PerformanceAnalyzer.cpp ParticlePerformanceHistos.cpp ClosureCalculator.cpp ClosureIterator.cpp
+add_library(Performance SHARED MeasurementSimulator.cpp  PerformanceAnalyzer.cpp ParticlePerformanceHistos.cpp ClosureCalculator.cpp ClosureIterator.cpp
 EventPlaneRandomizerTask.cpp EventVertexRandomizerTask.cpp ResolutionFunction.cpp EfficiencyFunction.hpp  G__Performance.cxx)
 # PidFunction.cpp
 

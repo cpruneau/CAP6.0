@@ -1900,46 +1900,205 @@ void setHistogram(TH3 * h, double v, double ev)
 /////throws a HistogramException if the histogram does not exist (null pointer).
 TH1 * clone(const TH1 * h1, const String & histoName)
 {
-  if (!ptrExist(__FUNCTION__,h1)) throw NullPointerException(__FUNCTION__);
+  if (!h1) throw NullPointerException(__FUNCTION__);
   TH1 * h = (TH1*) h1->Clone();
   if (!h) throw HistogramException(histoName,"Histogram not cloned",__FUNCTION__);
   h->SetName(histoName);
   return h;
 }
 
-void findMaximum(TH1 * h, int xFirstBin, int xLastBin, int & xMaxValueBin, double & xMaxValue)
+void cloneHistoVector(const vector<TH1*> & source, vector<TH1*> & target)
 {
-  if (!ptrExist(__FUNCTION__,h)) throw NullPointerException(__FUNCTION__);
-  int    n   = h->GetNbinsX();
+  for (auto & h : source) target.push_back( (TH1*) h->Clone() );
+}
+
+void cloneHistoVector(const vector<TH2*> & source, vector<TH2*> & target)
+{
+  for (auto & h : source) target.push_back( (TH2*) h->Clone() );
+}
+
+void cloneHistoVector(const vector<TH3*> & source, vector<TH3*> & target)
+{
+  for (auto & h : source) target.push_back( (TH3*) h->Clone() );
+}
+
+void cloneHistoVector(const vector<TProfile*> & source, vector<TProfile*> & target)
+{
+  for (auto & h : source) target.push_back( (TProfile*) h->Clone() );
+}
+
+void cloneHistoVector(const vector<TProfile2D*> & source, vector<TProfile2D*> & target)
+{
+  for (auto & h : source) target.push_back( (TProfile2D*) h->Clone() );
+}
+
+void findMaximum(TH1 * h, int & xMaxValueBin, double & maxValue, int xFirstBin, int xLastBin)
+{
+  if (!h) throw NullPointerException(__FUNCTION__);
+  int n = h->GetNbinsX();
   if (xFirstBin<1) xFirstBin = 1;
-  if (xLastBin>n)  xLastBin = n;
+  if (xLastBin<1 || xLastBin>n)  xLastBin = n;
   for (int i=xFirstBin;i<=xLastBin;++i)
     {
     double v = h->GetBinContent(i);
-    if (v>xMaxValue)
+    if (v>maxValue)
       {
       xMaxValueBin = i;
-      xMaxValue = v;
+      maxValue = v;
       }
     }
 }
 
-void findMinimum(TH1 * h, int xFirstBin, int xLastBin, int & xMinValueBin, double  & xMinValue)
+void findMinimum(TH1 * h, int & xMinValueBin, double  & minValue, int xFirstBin, int xLastBin)
 {
-  if (!ptrExist(__FUNCTION__,h)) throw NullPointerException(__FUNCTION__);
-  int    n   = h->GetNbinsX();
+  if (!h) throw NullPointerException(__FUNCTION__);
+  int n = h->GetNbinsX();
   if (xFirstBin<1) xFirstBin = 1;
-  if (xLastBin>n)  xLastBin = n;
+  if (xLastBin<1 || xLastBin>n)  xLastBin = n;
   for (int i=xFirstBin;i<=xLastBin;++i)
     {
     double v = h->GetBinContent(i);
-    if (v>xMinValue)
+    if (v<minValue)
       {
       xMinValueBin = i;
-      xMinValue = v;
+      minValue = v;
       }
     }
 }
+
+void findMinMax (TH1 * h,
+                 int & xMinValueBin, double & minValue,
+                 int & xMaxValueBin, double & maxValue,
+                 int xFirstBin, int xLastBin)
+{
+  if (!h) throw NullPointerException(__FUNCTION__);
+  int n = h->GetNbinsX();
+  if (xFirstBin<1) xFirstBin = 1;
+  if (xLastBin<1 || xLastBin>n)  xLastBin = n;
+  for (int i=xFirstBin;i<=xLastBin;++i)
+    {
+    double v = h->GetBinContent(i);
+    if (v<minValue)
+      {
+      xMinValueBin = i;
+      minValue = v;
+      }
+    if (v>maxValue)
+      {
+      xMaxValueBin = i;
+      maxValue = v;
+      }
+    }
+}
+
+void findMinMax (std::vector<TH1*> histograms,
+                 int & xMinValueBin, double & minValue,
+                 int & xMaxValueBin, double & maxValue,
+                 int xFirstBin, int xLastBin)
+{
+  for (auto & histogram : histograms)
+    {
+    findMinMax (histogram,xMinValueBin,minValue,xMaxValueBin,maxValue,xFirstBin,xLastBin);
+    }
+}
+
+
+
+void findMinimum(TH2 * h, int & xMinValueBin, int & yMinValueBin, double & minValue, int xFirstBin, int xLastBin, int yFirstBin, int yLastBin)
+{
+  if (!h) throw NullPointerException(__FUNCTION__);
+  int nx = h->GetNbinsX();
+  int ny = h->GetNbinsY();
+  if (xFirstBin<1) xFirstBin = 1;
+  if (xLastBin<1 || xLastBin>nx)  xLastBin = nx;
+  if (yFirstBin<1) yFirstBin = 1;
+  if (yLastBin<1 || yLastBin>ny)  yLastBin = ny;
+  for (int ix=xFirstBin;ix<=xLastBin;++ix)
+    {
+    for (int iy=yFirstBin;iy<=yLastBin;++iy)
+      {
+      double v = h->GetBinContent(ix,iy);
+      if (v<minValue)
+        {
+        xMinValueBin = ix;
+        yMinValueBin = iy;
+        minValue = v;
+        }
+      }
+    }
+}
+
+void findMaximum(TH2 * h, int & xMaxValueBin, int & yMaxValueBin, double & maxValue, int xFirstBin, int xLastBin, int yFirstBin, int yLastBin)
+{
+  if (!h) throw NullPointerException(__FUNCTION__);
+  int nx = h->GetNbinsX();
+  int ny = h->GetNbinsY();
+  if (xFirstBin<1) xFirstBin = 1;
+  if (xLastBin<1 || xLastBin>nx)  xLastBin = nx;
+  if (yFirstBin<1) yFirstBin = 1;
+  if (yLastBin<1 || yLastBin>ny)  yLastBin = ny;
+  for (int ix=xFirstBin;ix<=xLastBin;++ix)
+    {
+    for (int iy=yFirstBin;iy<=yLastBin;++iy)
+      {
+      double v = h->GetBinContent(ix,iy);
+      if (v>maxValue)
+        {
+        xMaxValueBin = ix;
+        yMaxValueBin = iy;
+        maxValue = v;
+        }
+      }
+    }
+}
+
+void findMinMax (TH2 * h,
+                 int & xMinValueBin, int & yMinValueBin, double & minValue,
+                 int & xMaxValueBin, int & yMaxValueBin, double & maxValue,
+                 int xFirstBin, int xLastBin,
+                 int yFirstBin, int yLastBin)
+{
+  if (!h) throw NullPointerException(__FUNCTION__);
+  int nx = h->GetNbinsX();
+  int ny = h->GetNbinsY();
+  if (xFirstBin<1) xFirstBin = 1;
+  if (xLastBin<1 || xLastBin>nx)  xLastBin = nx;
+  if (yFirstBin<1) yFirstBin = 1;
+  if (yLastBin<1 || yLastBin>ny)  yLastBin = ny;
+  for (int ix=xFirstBin;ix<=xLastBin;++ix)
+    {
+    for (int iy=yFirstBin;iy<=yLastBin;++iy)
+      {
+      double v = h->GetBinContent(ix,iy);
+      if (v<minValue)
+        {
+        xMinValueBin = ix;
+        yMinValueBin = iy;
+        minValue = v;
+        }
+      if (v>maxValue)
+        {
+        xMaxValueBin = ix;
+        yMaxValueBin = iy;
+        maxValue = v;
+        }
+      }
+    }
+  }
+
+void findMinMax (std::vector<TH2*> histograms,
+                 int & xMinValueBin, int & yMinValueBin, double & minValue,
+                 int & xMaxValueBin, int & yMaxValueBin, double & maxValue,
+                 int xFirstBin, int xLastBin,
+                 int yFirstBin, int yLastBin)
+{
+  for (auto & histogram : histograms)
+    {
+    findMinMax (histogram,xMinValueBin,yMinValueBin,minValue,xMaxValueBin,yMaxValueBin,maxValue,xFirstBin,xLastBin,yFirstBin,yLastBin);
+    }
+}
+
+
 
 void scaleByBinWidth1D(TH1 * h, double scale)
 {

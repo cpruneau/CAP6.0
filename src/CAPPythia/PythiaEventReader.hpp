@@ -1,12 +1,12 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Victor Gonzalez, Sumit Basu
+ * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez   
  * All rights reserved.
  *
  * Based on the ROOT package and environment
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #ifndef CAP__PythiaEventReader
@@ -27,6 +27,8 @@ class PythiaEventReader : public EventTask, public RootChainManager
 public:
 
   PythiaEventReader();
+  PythiaEventReader(const PythiaEventReader & task);
+  PythiaEventReader & operator=(const PythiaEventReader & task);
   virtual ~PythiaEventReader() {}
   virtual void configure();
   virtual void setDefaultConfiguration();
@@ -36,6 +38,12 @@ public:
 protected:
 
   static const int nMaxTracks = 5000;
+
+  bool saveFinalOnly;
+  bool savePhotons;
+  bool saveNeutrinos;
+  bool saveQuarks;
+  bool saveGaugeBosons;
   
   Int_t           nParticles;
   UInt_t          tracks_fUniqueID[nMaxTracks];   //[tracks_]

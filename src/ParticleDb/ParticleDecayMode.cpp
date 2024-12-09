@@ -1,5 +1,5 @@
 /* **********************************************************************
- * Copyright (C) 2019-2022, Claude Pruneau, Chun Shen
+ * Copyright (C) 2019-2024, Claude Pruneau, Chun Shen
  * All rights reserved.
  *
  * Based on the ROOT package and environment
@@ -9,7 +9,7 @@
  *
  * For the licensing terms see LICENSE.
  *
- * Author: Claude Pruneau,   04/01/2022
+ * Author: Claude Pruneau,   04/01/2024
  *
  * *********************************************************************/
 #include "ParticleDecayMode.hpp"

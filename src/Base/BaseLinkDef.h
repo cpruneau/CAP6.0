@@ -8,7 +8,6 @@
 #pragma link C++ class CAP::Timer+;
 #pragma link C++ class CAP::Counter+;
 #pragma link C++ class CAP::Parser+;
-//#pragma link C++ class CAP::Condition+;
 #pragma link C++ class CAP::Property+;
 #pragma link C++ class CAP::Properties+;
 #pragma link C++ class CAP::PropertiesParser+;
@@ -19,8 +18,6 @@
 #pragma link C++ class CAP::HistogramGroup+;
 #pragma link C++ class CAP::HistogramSet+;
 #pragma link C++ class CAP::HistogramTask+;
-#pragma link C++ class CAP::DerivedHistoIterator+;
 #pragma link C++ class CAP::MessageLogger+;
-//#pragma link C++ class CAP::StateManager+;
 #pragma link C++ class CAP::SelectionGenerator+;
 #endif
