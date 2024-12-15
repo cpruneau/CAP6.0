@@ -5,4 +5,5 @@
 #pragma link C++ class CAP::TaskCreator+;
 #pragma link C++ class CAP::RunAnalysis+;
 #pragma link C++ class CAP::RunSubSampleSum+;
+#pragma link C++ class CAP::RunClosureAnalysis+;
 #endif

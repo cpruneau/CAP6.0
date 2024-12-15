@@ -52,69 +52,18 @@ echo "==========================================================================
 echo " SetupCAP starting!"
 echo "========================================================================================"
 echo " "
-echo " Creating build, lib, and bin folders (if needed)."
 echo "========================================================================================"
-if [[ ! (-d build) ]]
-then
-  mkdir build;
-fi
-if [[ ! (-d lib) ]]
-then
-  mkdir lib;
-fi
-if [[ ! (-d bin) ]]
-then
-  mkdir bin;
-fi
-
-echo " "
+echo " CAP DEPENDENCIES"
 echo "========================================================================================"
-echo " Defining environment variables"
-echo "========================================================================================"
-export CAP_ROOT_PATH=`pwd`
-export CAP_SRC_PATH="$CAP_ROOT_PATH/src/"
-export CAP_BIN_PATH="$CAP_ROOT_PATH/bin/"
-export CAP_LIB_PATH="$CAP_ROOT_PATH/lib/"
-export CAP_GRID_PATH="$CAP_ROOT_PATH/Grid/"
-export CAP_GRID_PATH_WSU="$CAP_ROOT_PATH/Grid/WSU/"
-export CAP_GRID_PATH_ROM="$CAP_ROOT_PATH/Grid/ROM/"
-export CAP_MACROS_PATH="$CAP_SRC_PATH/Macros/"
-export PATH="$CAP_BIN_PATH:$PATH"
-export DYLD_LIBRARY_PATH="$CAP_LIB_PATH:$DYLD_LIBRARY_PATH"
-export LD_LIBRARY_PATH="$CAP_LIB_PATH:$LD_LIBRARY_PATH"
-export CAP_PROJECTS_PATH="$CAP_ROOT_PATH/projects/"
-export CAP_DATABASE_PATH="$CAP_ROOT_PATH/DB/"
-export CAP_DATA_IMPORT_PATH="$DataInputPath"
-export CAP_DATA_EXPORT_PATH="$DataOutputPath"
-export CAP_HISTOS_IMPORT_PATH="$HistosInputPath"
-export CAP_HISTOS_EXPORT_PATH="$HistosOutputPath"
-export CAP_CALIB_IMPORT_PATH="$HistosInputPath"
-export CAP_CALIB_EXPORT_PATH="$HistosOutputPath"
-
-echo "========================================================================================"
-echo " HistosInputPath............................................: " $HistosInputPath
-echo " HistosOutputPath...........................................: " $HistosOutputPath
-echo " CAP_ROOT_PATH..............................................: " $CAP_ROOT_PATH
-echo " CAP_SRC_PATH...(source)....................................: " $CAP_SRC_PATH
-echo " CAP_BIN_PATH...(binary)....................................: " $CAP_BIN_PATH
-echo " CAP_LIB_PATH...(libs)......................................: " $CAP_LIB_PATH
-echo " CAP_GRID_PATH...(GRID).....................................: " $CAP_GRID_PATH
-echo " CAP_GRID_PATH_WSU...(WSU)..................................: " $CAP_GRID_PATH_WSU
-echo " CAP_GRID_PATH_ROM...(WSU)..................................: " $CAP_GRID_PATH_ROM
-echo " CAP Database   (CAP_DATABASE_PATH).........................: " $CAP_DATABASE_PATH
-echo " CAP_PROJECTS_PATH..........................................: " $CAP_PROJECTS_PATH
-echo " CAP_GRID_PATH..............................................: " $CAP_GRID_PATH
-echo " CAP_MACROS_PATH............................................: " $CAP_MACROS_PATH
-echo " CAP_DATA_IMPORT_PATH.......................................: " $CAP_DATA_IMPORT_PATH
-echo " CAP_DATA_EXPORT_PATH.......................................: " $CAP_DATA_EXPORT_PATH
-echo " CAP_HISTOS_IMPORT_PATH.....................................: " $CAP_HISTOS_IMPORT_PATH
-echo " CAP_HISTOS_EXPORT_PATH.....................................: " $CAP_HISTOS_EXPORT_PATH
-echo " CAP_CALIB_IMPORT_PATH......................................: " $CAP_CALIB_IMPORT_PATH
-echo " CAP_CALIB_EXPORT_PATH......................................: " $CAP_CALIB_EXPORT_PATH
+echo " The current version of CAP requires the prior installation of PYTHIA and FASJET "
+echo " The location of the include files and lib files are flexible but must be passed to "
+echo " cmake  in order to complete the build of CAP. The locations are passed with the following"
+echo " environment variables - which should be defined in your shell profile."
 echo " PYTHIA8_INCLUDE_PATH.......................................: " $PYTHIA8_INCLUDE_PATH
 echo " PYTHIA8_LIB_PATH...........................................: " $PYTHIA8_LIB_PATH
 echo " FASTJET_PATH...............................................: " $FASTJET_PATH
 echo " FASTJET_INCLUDE_PATH.......................................: " $FASTJET_INCLUDE_PATH
+echo " "
 echo " "
 echo "========================================================================================"
 echo " BUILD"
@@ -156,6 +105,77 @@ echo " "
 echo " Contact the authors of CAP if you have questions..."
 echo " "
 echo " "
+echo " "
+echo "========================================================================================"
+echo " Creating build, lib, and bin folders (if needed)."
+echo "========================================================================================"
+if [[ ! (-d build) ]]
+then
+  mkdir build;
+fi
+if [[ ! (-d lib) ]]
+then
+  mkdir lib;
+fi
+if [[ ! (-d bin) ]]
+then
+  mkdir bin;
+fi
+
+echo " "
+echo "========================================================================================"
+echo " Defining environment variables"
+echo "========================================================================================"
+export CAP_ROOT_PATH=`pwd`
+export CAP_SRC_PATH="$CAP_ROOT_PATH/src/"
+export CAP_BIN_PATH="$CAP_ROOT_PATH/bin/"
+export CAP_LIB_PATH="$CAP_ROOT_PATH/lib/"
+export CAP_GRID_PATH="$CAP_ROOT_PATH/Grid/"
+export CAP_GRID_PATH_WSU="$CAP_ROOT_PATH/Grid/WSU/"
+export CAP_GRID_PATH_ROM="$CAP_ROOT_PATH/Grid/ROM/"
+export CAP_MACROS_PATH="$CAP_SRC_PATH/Macros/"
+export PATH="$CAP_BIN_PATH:$PATH"
+export DYLD_LIBRARY_PATH="$CAP_LIB_PATH:$DYLD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="$CAP_LIB_PATH:$LD_LIBRARY_PATH"
+export CAP_PROJECTS_PATH="$CAP_ROOT_PATH/projects/"
+export CAP_DATABASE_PATH="$CAP_ROOT_PATH/DB/"
+export CAP_DATA_IMPORT_PATH="$DataInputPath"
+export CAP_DATA_EXPORT_PATH="$DataOutputPath"
+export CAP_HISTOS_IMPORT_PATH="$HistosInputPath"
+export CAP_HISTOS_EXPORT_PATH="$HistosOutputPath"
+export CAP_CALIB_IMPORT_PATH="$HistosInputPath"
+export CAP_CALIB_EXPORT_PATH="$HistosOutputPath"
+echo " "
+echo "========================================================================================"
+echo " PYTHIA8_INCLUDE_PATH.......................................: " $PYTHIA8_INCLUDE_PATH
+echo " PYTHIA8_LIB_PATH...........................................: " $PYTHIA8_LIB_PATH
+echo " FASTJET_PATH...............................................: " $FASTJET_PATH
+echo " FASTJET_INCLUDE_PATH.......................................: " $FASTJET_INCLUDE_PATH
+echo " HistosInputPath............................................: " $HistosInputPath
+echo " HistosOutputPath...........................................: " $HistosOutputPath
+echo " CAP_ROOT_PATH..............................................: " $CAP_ROOT_PATH
+echo " CAP_SRC_PATH...(source)....................................: " $CAP_SRC_PATH
+echo " CAP_BIN_PATH...(binary)....................................: " $CAP_BIN_PATH
+echo " CAP_LIB_PATH...(libs)......................................: " $CAP_LIB_PATH
+echo " CAP_GRID_PATH...(GRID).....................................: " $CAP_GRID_PATH
+echo " CAP_GRID_PATH_WSU...(WSU)..................................: " $CAP_GRID_PATH_WSU
+echo " CAP_GRID_PATH_ROM...(WSU)..................................: " $CAP_GRID_PATH_ROM
+echo " CAP Database   (CAP_DATABASE_PATH).........................: " $CAP_DATABASE_PATH
+echo " CAP_PROJECTS_PATH..........................................: " $CAP_PROJECTS_PATH
+echo " CAP_GRID_PATH..............................................: " $CAP_GRID_PATH
+echo " CAP_MACROS_PATH............................................: " $CAP_MACROS_PATH
+echo " CAP_DATA_IMPORT_PATH.......................................: " $CAP_DATA_IMPORT_PATH
+echo " CAP_DATA_EXPORT_PATH.......................................: " $CAP_DATA_EXPORT_PATH
+echo " CAP_HISTOS_IMPORT_PATH.....................................: " $CAP_HISTOS_IMPORT_PATH
+echo " CAP_HISTOS_EXPORT_PATH.....................................: " $CAP_HISTOS_EXPORT_PATH
+echo " CAP_CALIB_IMPORT_PATH......................................: " $CAP_CALIB_IMPORT_PATH
+echo " CAP_CALIB_EXPORT_PATH......................................: " $CAP_CALIB_EXPORT_PATH
+echo " PYTHIA8_INCLUDE_PATH.......................................: " $PYTHIA8_INCLUDE_PATH
+echo " PYTHIA8_LIB_PATH...........................................: " $PYTHIA8_LIB_PATH
+echo " FASTJET_PATH...............................................: " $FASTJET_PATH
+echo " FASTJET_INCLUDE_PATH.......................................: " $FASTJET_INCLUDE_PATH
+echo " "
+
 echo "========================================================================================"
 echo " Setup_CAP completed!"
 echo "========================================================================================"

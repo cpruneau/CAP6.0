@@ -280,15 +280,32 @@ void HistogramGroup::divideGroup(const HistogramGroup & g1,
     divideHistogram(g1.histograms[k],g2.histograms[k],histograms[k]);
 }
 
+// HERE
+
 void HistogramGroup::differenceGroup(const HistogramGroup & g1,
                                      const HistogramGroup & ref,
                                      bool correlatedUncertainties __attribute__((unused)) )
 {
-  if (!sameSizeAs(g1)) throw IncompatibleGroupException(__FUNCTION__);
-  for (unsigned int k=0; k<histograms.size(); k++)
-    addHistogram(1.0,g1.histograms[k],
-                 -1.0,ref.histograms[k],
-                 histograms[k]);
+
+  printString("HistogramGroup::differenceGroup -1-");
+
+  if (!g1.sameSizeAs(ref) )
+    {
+    printIncompatibleGroups(__FUNCTION__,g1,ref);
+    throw IncompatibleGroupException(__FUNCTION__);
+    }
+  printString("HistogramGroup::differenceGroup -2-");
+  for (unsigned int k=0; k<g1.histograms.size(); k++)
+    {
+    printValue("Computing k",k);
+    TH1 * diff = (TH1 *) g1.histograms[k]->Clone();
+    diff->Add(ref.histograms[k],-1.0);
+    String name = diff->GetName();
+    name.ReplaceAll("Reco","Diff");
+    diff->SetName(name);
+    diff->SetTitle(name);
+    histograms.push_back(diff);
+    }
 }
 
 

@@ -243,7 +243,7 @@ TCanvas *  Plotter::plot(const String & _canvasName,
     if (_xMin<_xMax) histogram->GetXaxis()->SetRangeUser(_xMin,_xMax);
     if (_yMin<_yMax) histogram->GetYaxis()->SetRangeUser(_yMin,_yMax);
     if (k==0)
-      histogram->Draw();
+      histogram->Draw("COLZ");
     else
       histogram->Draw("SAME");
     k++;

@@ -1,6 +1,6 @@
 /* **********************************************************************
  * Copyright (C) 2019-2024, Claude Pruneau, Victor Gonzalez
- * All rights reserved.
+ * ALL rights reserved.
  *
  * Based on the ROOT package and environment
  *
@@ -51,17 +51,17 @@ void FilterCreator::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
   addProperty("EventFilter:N",1);     // number of filters to create
-  addProperty("EventFilter:Filter0:Name", "All");  // All is a generic filter
-  addProperty("EventFilter:Filter0:Type", "All");  // All is a generic filter
-  addProperty("ParticleFilter:N",1);  // All is a generic filter
-  addProperty("ParticleFilter:Filter0:Name", "All");  // All is a generic filter
-  addProperty("ParticleFilter:Filter0:Type", "All");  // All is a generic filter
-  addProperty("EfficiencyFilter:N",1);  // All is a generic filter
-  addProperty("EfficiencyFilter:Filter0:Name", "All");  // All is a generic filter
-  addProperty("EfficiencyFilter:Filter0:Type", "All");  // All is a generic filter
-  addProperty("JetFilter:N", 1);     // number of filters to create
-  addProperty("JetFilter:Filter0:Name", "All");  // All is a generic filter
-  addProperty("JetFilter:Filter0:Type", "All");  // All is a generic filter
+  addProperty("EventFilter:Filter0:Name", "ALL");  // ALL is a generic filter
+  addProperty("EventFilter:Filter0:Type", "ALL");  // ALL is a generic filter
+  addProperty("ParticleFilter:N",1);  // ALL is a generic filter
+  addProperty("ParticleFilter:Filter0:Name", "ALL");  // ALL is a generic filter
+  addProperty("ParticleFilter:Filter0:Type", "ALL");  // ALL is a generic filter
+  addProperty("EfficiencyFilter:N",0);  // ALL is a generic filter
+  addProperty("EfficiencyFilter:Filter0:Name", "ALL");  // ALL is a generic filter
+  addProperty("EfficiencyFilter:Filter0:Type", "ALL");  // ALL is a generic filter
+  addProperty("JetFilter:N", 0);     // number of filters to create
+  addProperty("JetFilter:Filter0:Name", "ALL");  // ALL is a generic filter
+  addProperty("JetFilter:Filter0:Type", "ALL");  // ALL is a generic filter
 }
 
 
@@ -112,14 +112,14 @@ void FilterCreator::initialize()
   printLine();
   printString("FilterCreator::initialize()");
 
-  int nEventFilters      = getValueInt("EventFilter:N");
-  int nParticleFilters   = getValueInt("ParticleFilter:N");
-  int nEfficiencyFilters = getValueInt("EfficiencyFilter:N");
-  int nJetFilters        = getValueInt("JetFilter:N");
+  int nEventFilters      = configuration.getValueInt("EventFilter:N",1,0);
+  int nParticleFilters   = configuration.getValueInt("ParticleFilter:N",1,0);
+  int nEfficiencyFilters = configuration.getValueInt("EfficiencyFilter:N",1,0);
+  int nJetFilters        = configuration.getValueInt("JetFilter:N",1,0);
 
-  if (nEventFilters<1)    throw TaskException("nEventFilters<1",__FUNCTION__);
-  if (nParticleFilters<1) throw TaskException("nParticleFilters<1",__FUNCTION__);
-  if (nJetFilters<1)      throw TaskException("nJetFilters<1",__FUNCTION__);
+  //if (nEventFilters<1)    throw TaskException("nEventFilters<1",__FUNCTION__);
+  //if (nParticleFilters<1) throw TaskException("nParticleFilters<1",__FUNCTION__);
+  //if (nJetFilters<1)      throw TaskException("nJetFilters<1",__FUNCTION__);
   if (true) // reportDebug(__FUNCTION__))
     {
     printCR();
@@ -140,24 +140,24 @@ void FilterCreator::initialize()
     conditionMinima2.clear();
     conditionMaxima2.clear();
     keyword = createName("EventFilter:Filter",iEventFilter,":Name");
-    name = getValueString(keyword);
+    name = configuration.getValueString(keyword);
     keyword = createName("EventFilter:Filter",iEventFilter,":Title");
-    title = getValueString(keyword);
+    title = configuration.getValueString(keyword);
     keyword = createName("EventFilter:Filter",iEventFilter,":nConditions");
-    nConditions = getValueInt(keyword);
+    nConditions = configuration.getValueInt(keyword,1,0);
     for (int iCondition=0; iCondition<nConditions; iCondition++)
       {
       keyword = createName("EventFilter:Filter",iEventFilter,":Condition",iCondition,":Type");
-      conditionType  = getValueString(keyword);
+      conditionType  = configuration.getValueString(keyword);
       conditionTypes.push_back(conditionType);
       keyword = createName("EventFilter:Filter",iEventFilter,":Condition",iCondition,":Subtype");
-      conditionSubtype  = getValueString(keyword);
+      conditionSubtype  = configuration.getValueString(keyword);
       conditionSubtypes.push_back(conditionSubtype);
       keyword = createName("EventFilter:Filter",iEventFilter,":Condition",iCondition,":Minimum");
-      minimum  = getValueDouble(keyword);
+      minimum  = configuration.getValueDouble(keyword);
       conditionMinima.push_back(minimum);
       keyword = createName("EventFilter:Filter",iEventFilter,":Condition",iCondition,":Maximum");
-      maximum  = getValueDouble(keyword);
+      maximum  = configuration.getValueDouble(keyword);
       conditionMaxima.push_back(maximum);
       conditionMinima2.push_back(0.0);
       conditionMaxima2.push_back(0.0);
@@ -183,11 +183,11 @@ void FilterCreator::initialize()
     conditionMinima2.clear();
     conditionMaxima2.clear();
     keyword = createName("ParticleFilter:Filter",iParticleFilter,":Name");
-    name = getValueString(keyword);
+    name = configuration.getValueString(keyword);
     keyword = createName("ParticleFilter:Filter",iParticleFilter,":Title");
-    title = getValueString(keyword);
+    title = configuration.getValueString(keyword);
     keyword = createName("ParticleFilter:Filter",iParticleFilter,":nConditions");
-    nConditions = getValueInt(keyword);
+    nConditions = configuration.getValueInt(keyword,1,0);
 
     printValue("ParticleFilter:Filter:Name",name);
     printValue("ParticleFilter:Filter:Title",title);
@@ -196,24 +196,24 @@ void FilterCreator::initialize()
     for (int iCondition=0; iCondition<nConditions; iCondition++)
       {
       keyword = createName("ParticleFilter:Filter",iParticleFilter,":Condition",iCondition,":Type");
-      conditionType  = getValueString(keyword);
+      conditionType  = configuration.getValueString(keyword);
       conditionTypes.push_back(conditionType);
       keyword = createName("ParticleFilter:Filter",iParticleFilter,":Condition",iCondition,":Subtype");
-      conditionSubtype  = getValueString(keyword);
+      conditionSubtype  = configuration.getValueString(keyword);
       conditionSubtypes.push_back(conditionSubtype);
       keyword = createName("ParticleFilter:Filter",iParticleFilter,":Condition",iCondition,":Minimum");
-      minimum  = getValueDouble(keyword);
+      minimum  = configuration.getValueDouble(keyword);
       conditionMinima.push_back(minimum);
       keyword = createName("ParticleFilter:Filter",iParticleFilter,":Condition",iCondition,":Maximum");
-      maximum  = getValueDouble(keyword);
+      maximum  = configuration.getValueDouble(keyword);
       conditionMaxima.push_back(maximum);
       if (conditionType.EqualTo("DoubleDualRange"))
         {
         keyword = createName("ParticleFilter:Filter",iParticleFilter,":Condition",iCondition,":Minimum2");
-        minimum2  = getValueDouble(keyword);
+        minimum2  = configuration.getValueDouble(keyword);
         conditionMinima2.push_back(minimum2);
         keyword = createName("ParticleFilter:Filter",iParticleFilter,":Condition",iCondition,":Maximum2");
-        maximum2  = getValueDouble(keyword);
+        maximum2  = configuration.getValueDouble(keyword);
         conditionMaxima2.push_back(maximum2);
         }
       else
@@ -250,11 +250,11 @@ void FilterCreator::initialize()
     conditionMinima2.clear();
     conditionMaxima2.clear();
     keyword = createName("EfficiencyFilter:Filter",iEfficiencyFilter,":Name");
-    name = getValueString(keyword);
+    name = configuration.getValueString(keyword);
     keyword = createName("EfficiencyFilter:Filter",iEfficiencyFilter,":Title");
-    title = getValueString(keyword);
+    title = configuration.getValueString(keyword);
     keyword = createName("EfficiencyFilter:Filter",iEfficiencyFilter,":nConditions");
-    nConditions = getValueInt(keyword);
+    nConditions = configuration.getValueInt(keyword,1,0);
 
     keyword = createName("EfficiencyFilter:Filter",iEfficiencyFilter,":nBins_pt");
     int nBins_pt   = configuration.getValueInt(keyword);
@@ -284,24 +284,24 @@ void FilterCreator::initialize()
     for (int iCondition=0; iCondition<nConditions; iCondition++)
       {
       keyword = createName("EfficiencyFilter:Filter",iEfficiencyFilter,":Condition",iCondition,":Type");
-      conditionType  = getValueString(keyword);
+      conditionType  = configuration.getValueString(keyword);
       conditionTypes.push_back(conditionType);
       keyword = createName("EfficiencyFilter:Filter",iEfficiencyFilter,":Condition",iCondition,":Subtype");
-      conditionSubtype  = getValueString(keyword);
+      conditionSubtype  = configuration.getValueString(keyword);
       conditionSubtypes.push_back(conditionSubtype);
       keyword = createName("EfficiencyFilter:Filter",iEfficiencyFilter,":Condition",iCondition,":Minimum");
-      minimum  = getValueDouble(keyword);
+      minimum  = configuration.getValueDouble(keyword);
       conditionMinima.push_back(minimum);
       keyword = createName("EfficiencyFilter:Filter",iEfficiencyFilter,":Condition",iCondition,":Maximum");
-      maximum  = getValueDouble(keyword);
+      maximum  = configuration.getValueDouble(keyword);
       conditionMaxima.push_back(maximum);
       if (conditionType.EqualTo("DoubleDualRange"))
         {
         keyword = createName("EfficiencyFilter:Filter",iEfficiencyFilter,":Condition",iCondition,":Minimum2");
-        minimum2  = getValueDouble(keyword);
+        minimum2  = configuration.getValueDouble(keyword);
         conditionMinima2.push_back(minimum2);
         keyword = createName("EfficiencyFilter:Filter",iEfficiencyFilter,":Condition",iCondition,":Maximum2");
-        maximum2  = getValueDouble(keyword);
+        maximum2  = configuration.getValueDouble(keyword);
         conditionMaxima2.push_back(maximum2);
         }
       else
@@ -396,33 +396,33 @@ void FilterCreator::initialize()
     conditionMinima2.clear();
     conditionMaxima2.clear();
     keyword = createName("JetFilter:Filter",iJetFilter,":Name");
-    name = getValueString(keyword);
+    name = configuration.getValueString(keyword);
     keyword = createName("JetFilter:Filter",iJetFilter,":Title");
-    title = getValueString(keyword);
+    title = configuration.getValueString(keyword);
     keyword = createName("JetFilter:Filter",iJetFilter,":nConditions");
-    nConditions = getValueInt(keyword);
+    nConditions = configuration.getValueInt(keyword,1,0);
     for (int iCondition=0; iCondition<nConditions; iCondition++)
       {
       keyword = createName("JetFilter:Filter",iJetFilter,":Condition",iCondition,":Type");
-      conditionType  = getValueString(keyword);
+      conditionType  = configuration.getValueString(keyword);
       conditionTypes.push_back(conditionType);
       keyword = createName("JetFilter:Filter",iJetFilter,":Condition",iCondition,":Subtype");
-      conditionSubtype  = getValueString(keyword);
+      conditionSubtype  = configuration.getValueString(keyword);
       conditionSubtypes.push_back(conditionSubtype);
       keyword = createName("JetFilter:Filter",iJetFilter,":Condition",iCondition,":Minimum");
-      minimum  = getValueDouble(keyword);
+      minimum  = configuration.getValueDouble(keyword);
       conditionMinima.push_back(minimum);
       keyword = createName("JetFilter:Filter",iJetFilter,":Condition",iCondition,":Maximum");
-      maximum  = getValueDouble(keyword);
+      maximum  = configuration.getValueDouble(keyword);
       conditionMaxima.push_back(maximum);
 
       if (conditionType.EqualTo("DoubleDualRange"))
         {
         keyword = createName("JetFilter:Filter",iJetFilter,":Condition",iCondition,":Minimum2");
-        minimum2  = getValueDouble(keyword);
+        minimum2  = configuration.getValueDouble(keyword);
         conditionMinima2.push_back(minimum2);
         keyword = createName("JetFilter:Filter",iJetFilter,":Condition",iCondition,":Maximum2");
-        maximum2  = getValueDouble(keyword);
+        maximum2  = configuration.getValueDouble(keyword);
         conditionMaxima2.push_back(maximum2);
         }
       else
@@ -735,7 +735,7 @@ EfficiencyFilter *  FilterCreator::createEfficiencyFilter(const String & name,
     for (unsigned int k=0; k<conditionTypes.size(); k++)
       {
       printValue("FilterCreator::createEfficiencyFilter() condition index",k);
-      printValue("FilterCreator::createEfficiencyFilter() conditionTypes",conditionTypes[k]);
+      printValue("FilterCreator::createEfficiencyFilter() conditionTypes",   conditionTypes[k]);
       printValue("FilterCreator::createEfficiencyFilter() conditionSubtypes",conditionSubtypes[k]);
       printValue("FilterCreator::createEfficiencyFilter() conditionMinima",  conditionMinima[k]);
       printValue("FilterCreator::createEfficiencyFilter() conditionMaxima",  conditionMaxima[k]);

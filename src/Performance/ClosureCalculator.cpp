@@ -39,27 +39,27 @@ void ClosureCalculator::execute()
   String histogramsImportGenFileName      = getValueString("HistogramsImportGenFile");
   String histogramsImportRecoFileName     = getValueString("HistogramsImportRecoFile");
   String histogramsExportPath             = getHistoExportPath();
-  String histogramsExportClosureFileName  = getValueString("HistogramsImportClosureFile");
-  int selectedMethod = configuration.getValueInt("SelectedMethod");
+  String histogramsExportFileName         = getValueString("HistogramsExportFile");
+  int selectedMethod = configuration.getValueInt("SelectedMethod",1,0);
 
   if (reportInfo(__FUNCTION__))
     {
     printCR();
     printLine();
     printValue("HistogramsImportPath",histogramsImportPath);
-    printValue("histogramsImportGenFileName",histogramsImportGenFileName);
-    printValue("histogramsImportRecoFileName",histogramsImportRecoFileName);
+    printValue("HistogramsImportGenFileName",histogramsImportGenFileName);
+    printValue("HistogramsImportRecoFileName",histogramsImportRecoFileName);
     printValue("HistogramsExportPath",histogramsExportPath);
-    printValue("histogramsExportClosureFileName",histogramsExportClosureFileName);
+    printValue("histogramsExportFileName",histogramsExportFileName);
     }
 
   TFile & generatorFile = *openOldRootFile(histogramsImportPath,histogramsImportGenFileName);
   TFile & detectorFile  = *openOldRootFile(histogramsImportPath,histogramsImportRecoFileName);
   TFile * closureFile;
   if (histogramsForceRewrite())
-    closureFile = openRecreateRootFile(histogramsImportPath,histogramsExportClosureFileName);
+    closureFile = openRecreateRootFile(histogramsImportPath,histogramsExportFileName);
   else
-    closureFile = openNewRootFile(histogramsImportPath,histogramsExportClosureFileName);
+    closureFile = openNewRootFile(histogramsImportPath,histogramsExportFileName);
 
   HistogramGroup * generator = new HistogramGroup();
   HistogramGroup * detector  = new HistogramGroup();
@@ -70,6 +70,7 @@ void ClosureCalculator::execute()
   generator->setOwnership(false);
   long nExecuted = TaskAccountant::importNEexecutedTask(generatorFile);
 
+  printString("Loading files");
   detector->setParentTask(this);
   detector->setName("DetectorLevel");
   detector->loadGroup(detectorFile);
@@ -77,20 +78,27 @@ void ClosureCalculator::execute()
   closure->setName("Closure");
   closure->setParentTask(this);
   closure->setOwnership(false);
+  printValue("Excuting with method",selectedMethod);
+
   switch (selectedMethod)
     {
       case 0: closure->differenceGroup(*detector,*generator,true); break;
       case 1: closure->ratioGroup(*detector,*generator,true); break;
     }
+  printString("Exporting histograms");
   closure->exportHistograms(*closureFile);
+  printString("Exporting NExecuted");
   TaskAccountant::exportNEexecutedTask(*closureFile);
+  printString("Closing files");
 
   generatorFile.Close();
   detectorFile.Close();
-  closureFile-> Close();
+  closureFile->Close();
+  printString("Delete groups");
   delete generator;
   delete detector;
   delete closure;
+  printString("ALL Done");
   if (reportInfo (__FUNCTION__)) cout << "Closure Test Completed." << endl;
 }
 

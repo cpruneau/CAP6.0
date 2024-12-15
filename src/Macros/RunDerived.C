@@ -17,9 +17,8 @@
 
 void loadLibraries(const TString & includeBasePath);
 
-
-int RunDerived(TString configFile="Pythia/pp_13.7TeV/RunAna3D.ini",
-               TString histogramPath="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3D/",
+int RunDerived(TString configFile="Pythia/pp_13.7TeV/RunAna3Dex.ini",
+               TString histogramPath="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3Dex/",
                int nLevels = 0,
                long seed=12312231)
 {
