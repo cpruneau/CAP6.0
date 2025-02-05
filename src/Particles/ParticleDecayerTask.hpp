@@ -35,7 +35,8 @@ public:
   virtual ~ParticleDecayerTask() {}
   virtual void setDefaultConfiguration();
   virtual void execute();
-  
+  virtual void scaleHistograms();
+
   //!
   //!Get the decay handle (decayer) used by this task.
   //!

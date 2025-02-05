@@ -10,6 +10,7 @@ build*
 publishedData
 CMakeFiles
 src/Archive
+src/Hold/*
 src/Book2
 src/Cluster
 src/LambdaAnalysis

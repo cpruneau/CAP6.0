@@ -111,6 +111,23 @@ public:
   TH1 * h_a21_DeltaPo;
   TH1 * h_a21_DeltaPl;
 
+  TH1 * h_n1_1_pt;
+  TH1 * h_n1_2_pt;
+  TH1 * h_n1_1_y;
+  TH1 * h_n1_2_y;
+
+  TH1 * h_n1_1_pt_mc;
+  TH1 * h_n1_2_pt_mc;
+  TH1 * h_n1_1_y_mc;
+  TH1 * h_n1_2_y_mc;
+
+
+
+  TH1 * h_n1r_1_pt_mc;
+  TH1 * h_n1r_2_pt_mc;
+  TH1 * h_n1r_1_y_mc;
+  TH1 * h_n1r_2_y_mc;
+
   TH2 * h_n1_1_ptY_mc;
   TH2 * h_n1_2_ptY_mc;
   TH2 * h_n1r_1_ptY_mc;

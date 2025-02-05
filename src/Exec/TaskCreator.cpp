@@ -111,11 +111,13 @@ void TaskCreator::configureEventsStreams(Task * task,
     referenceName += "StreamOwner";
     referenceName += k;
     bool owner = requestedConfiguration.getValueBool(referenceName);
-
-//      printCR();
-//      printValue("Stream Index",k);
-//      printValue("Stream Name",name);
-//      printValue("Stream Owner",owner);
+    if (reportInfo(__FUNCTION__))
+      {
+      printCR();
+      printValue("Stream Index",k);
+      printValue("Stream Name",name);
+      printValue("Stream Owner",owner);
+      }
     if (owner)
       dynamic_cast<Manager<Event>*>(task)->create(name);
     else
@@ -138,12 +140,13 @@ void TaskCreator::configureEventFilters(Task * _task,
     referenceName += "EventFilterOwner";
     referenceName += k;
     bool owner = requestedConfiguration.getValueBool(referenceName);
-//    if (reportDebug(__FUNCTION__))
-//      {
-//      printCR(); printValue("EventFilter Index",k);
-//      printValue("EventFilter Name",name);
-//      printValue("EventFilter Owner",owner);
-//      }
+    if (reportInfo(__FUNCTION__))
+      {
+      printCR();
+      printValue("EventFilter Index",k);
+      printValue("EventFilter Name",name);
+      printValue("EventFilter Owner",owner);
+      }
     if (owner)
       dynamic_cast<Manager<EventFilter>*>(_task)->create(name);
     else
@@ -166,13 +169,13 @@ void TaskCreator::configureParticleFilters(Task * _task,
     referenceName += "ParticleFilterOwner";
     referenceName += k;
     bool owner = requestedConfiguration.getValueBool(referenceName);
-//    if (reportDebug(__FUNCTION__))
-//      {
-//      printCR();
-//      printValue("ParticleFilter Index",k);
-//      printValue("ParticleFilter Name",name);
-//      printValue("ParticleFilter Owner",owner);
-//      }
+    if (reportInfo(__FUNCTION__))
+      {
+      printCR();
+      printValue("ParticleFilter Index",k);
+      printValue("ParticleFilter Name",name);
+      printValue("ParticleFilter Owner",owner);
+      }
     if (owner)
       dynamic_cast<Manager<ParticleFilter>*>(_task)->create(name);
     else
@@ -194,13 +197,13 @@ void TaskCreator::configureEfficiencyFilters(Task * _task,
     referenceName += "EfficiencyFilterOwner";
     referenceName += k;
     bool owner = requestedConfiguration.getValueBool(referenceName);
-//    if (reportDebug(__FUNCTION__))
-//      {
-//      printCR();
-//      printValue("EfficiencyFilter Index",k);
-//      printValue("EfficiencyFilter Name",name);
-//      printValue("EfficiencyFilter Owner",owner);
-//      }
+    if (reportInfo(__FUNCTION__))
+      {
+      printCR();
+      printValue("EfficiencyFilter Index",k);
+      printValue("EfficiencyFilter Name",name);
+      printValue("EfficiencyFilter Owner",owner);
+      }
     if (owner)
       dynamic_cast<Manager<EfficiencyFilter>*>(_task)->create(name);
     else
@@ -214,28 +217,28 @@ void TaskCreator::configureJetFilters(Task * _task,
 {
   int nJetFilters = requestedConfiguration.getValueInt(taskReferenceName+"nJetFilters");
   printValue("TaskCreator::configureJetFilter() nJetFilters",nJetFilters);
-
-  for (int k=0; k<nJetFilters; k++)
-    {
-    String referenceName = taskReferenceName;
-    referenceName += "JetFilterName";
-    referenceName += k;
-    String name = requestedConfiguration.getValueString(referenceName);
-    referenceName = taskReferenceName;
-    referenceName += "JetFilterOwner";
-    referenceName += k;
-    bool owner = requestedConfiguration.getValueBool(referenceName);
-//    if (reportDebug(__FUNCTION__))
-//      {
-//      printCR();
-//      printValue("JetFilter Index",k);
-//      printValue("JetFilter Name",name);
-//      printValue("JetFilter Owner",owner);
-//      }
-    if (owner)
-      dynamic_cast<Manager<JetFilter>*>(_task)->create(name);
-    else
-      dynamic_cast<Manager<JetFilter>*>(_task)->use(name);      }
+    for (int k=0; k<nJetFilters; k++)
+      {
+      String referenceName = taskReferenceName;
+      referenceName += "JetFilterName";
+      referenceName += k;
+      String name = requestedConfiguration.getValueString(referenceName);
+      referenceName = taskReferenceName;
+      referenceName += "JetFilterOwner";
+      referenceName += k;
+      bool owner = requestedConfiguration.getValueBool(referenceName);
+      if (reportInfo(__FUNCTION__))
+        {
+        printCR();
+        printValue("JetFilter Index",k);
+        printValue("JetFilter Name",name);
+        printValue("JetFilter Owner",owner);
+        }
+      if (owner)
+        dynamic_cast<Manager<JetFilter>*>(_task)->create(name);
+      else
+        dynamic_cast<Manager<JetFilter>*>(_task)->use(name);
+      }
 }
 
 
@@ -244,6 +247,7 @@ void TaskCreator::configureSubtasks(Task * _task,
                                     Configuration & requestedConfiguration)
 {
   int nSubtasks = requestedConfiguration.getValueInt(taskReferenceName+"nSubtasks");
+  printValue("TaskCreator::configureSubtasks() nSubtasks",nSubtasks);
   for (int k=0; k<nSubtasks; k++)
     {
     String subtaskReferenceName = taskReferenceName;

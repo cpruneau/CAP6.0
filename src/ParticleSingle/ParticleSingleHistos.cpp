@@ -297,6 +297,17 @@ void ParticleSingleHistos::importHistograms(TFile & inputFile)
   h_n1_pt      = importH1(inputFile,  createName(bn,"n1_pt"));
   h_n1_ptXS    = importH1(inputFile,  createName(bn,"n1_ptXS"));
 
+//  if (!h_n1)
+//    {
+//    printString("ParticleSingleHistos::importHistograms()  n1 is not loaded");
+//    exit(1);
+//    }
+//  else
+//    {
+//    printValue("n1 mean",h_n1->GetMean() );
+//    printValue("n1 integral",h_n1->Integral() );
+//    printValue("h_n1_pt->Integral()",h_n1_pt->Integral() );
+//    }
 
   if (fillEta)
     {

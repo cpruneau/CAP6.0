@@ -50,18 +50,10 @@ FilterCreator & FilterCreator::operator=(const FilterCreator & task)
 void FilterCreator::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
-  addProperty("EventFilter:N",1);     // number of filters to create
-  addProperty("EventFilter:Filter0:Name", "ALL");  // ALL is a generic filter
-  addProperty("EventFilter:Filter0:Type", "ALL");  // ALL is a generic filter
-  addProperty("ParticleFilter:N",1);  // ALL is a generic filter
-  addProperty("ParticleFilter:Filter0:Name", "ALL");  // ALL is a generic filter
-  addProperty("ParticleFilter:Filter0:Type", "ALL");  // ALL is a generic filter
-  addProperty("EfficiencyFilter:N",0);  // ALL is a generic filter
-  addProperty("EfficiencyFilter:Filter0:Name", "ALL");  // ALL is a generic filter
-  addProperty("EfficiencyFilter:Filter0:Type", "ALL");  // ALL is a generic filter
-  addProperty("JetFilter:N", 0);     // number of filters to create
-  addProperty("JetFilter:Filter0:Name", "ALL");  // ALL is a generic filter
-  addProperty("JetFilter:Filter0:Type", "ALL");  // ALL is a generic filter
+  addProperty("EventFilter:N",0);
+  addProperty("ParticleFilter:N",0);
+  addProperty("EfficiencyFilter:N",0);
+  addProperty("JetFilter:N", 0);     
 }
 
 
@@ -464,7 +456,7 @@ EventFilter *  FilterCreator::createEventFilter(const String & name,
                                                 const vector<double>  & conditionMinima2,
                                                 const vector<double>  & conditionMaxima2)
 {
-  bool verbose = false;
+  bool verbose = true;
   if (verbose)
     {
     printCR();
@@ -606,7 +598,7 @@ ParticleFilter *  FilterCreator::createParticleFilter(const String & name,
                                                       const vector<double>  & conditionMinima2,
                                                       const vector<double>  & conditionMaxima2)
 {
-  bool verbose = false;
+  bool verbose = true;
   if (verbose)
     {
     printCR();
@@ -725,7 +717,7 @@ EfficiencyFilter *  FilterCreator::createEfficiencyFilter(const String & name,
                                                           const vector<double>  & conditionMinima2,
                                                           const vector<double>  & conditionMaxima2)
 {
-  bool verbose = false;
+  bool verbose = true;
   if (verbose)
     {
     printCR();
@@ -845,7 +837,7 @@ JetFilter *  FilterCreator::createJetFilter(const String & name,
                                     const vector<double>  & conditionMinima2,
                                     const vector<double>  & conditionMaxima2)
 {
-  bool verbose = false;
+  bool verbose = true;
   if (verbose)
     {
     printCR();

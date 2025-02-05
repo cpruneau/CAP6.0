@@ -336,16 +336,29 @@ void ParticleDbTask::initialize()
     if (dbEnableSelected)         enableSelectedParticles();
     }
 
+//  printValue("dbEnableAllDecays",dbEnableAllDecays);
+//  printValue("dbEnableNeutralDecays",dbEnableNeutralDecays);
+//  printValue("dbEnableChargedDecays",dbEnableChargedDecays);
+//  printValue("dbEnableWeakDecays",dbEnableWeakDecays);
+//  printValue("dbEnableLongLivedDecays",dbEnableLongLivedDecays);
+//  printValue("dbEnableShortLivedDecays",dbEnableShortLivedDecays);
+//  printValue("dbEnableSelectedDecays",dbEnableSelectedDecays);
+//  printValue("dbDisableNeutralDecays",dbDisableNeutralDecays);
+//  printValue("dbDisableChargedDecays",dbDisableChargedDecays);
+//  printValue("dbDisableWeakDecays",dbDisableWeakDecays);
+//  printValue("dbDisableLongLivedDecays",dbDisableLongLivedDecays);
+//  printValue("dbDisableShortLivedDecays",dbDisableShortLivedDecays);
+//  printValue("dbDisableSelectedDecays",dbDisableSelectedDecays);
 
   if (dbEnableAllDecays)
     {
     enableAllDecays(); // default
-    if (dbDisableNeutralDecays)    disableNeutralDecays();
-    if (dbDisableChargedDecays)    disableChargedDecays();
-    if (dbDisableWeakDecays)       disableWeakDecays();
-    if (dbDisableLongLivedDecays)  disableLongLivedWith(dbMaxLifeTime);
-    if (dbDisableShortLivedDecays) disableShortLivedWith(dbMaxLifeTime);
-    if (dbDisableSelectedDecays)   disableSelectedDecays(); // default
+//    if (dbDisableNeutralDecays)    disableNeutralDecays();
+//    if (dbDisableChargedDecays)    disableChargedDecays();
+//    if (dbDisableWeakDecays)       disableWeakDecays();
+//    if (dbDisableLongLivedDecays)  disableLongLivedWith(dbMaxLifeTime);
+//    if (dbDisableShortLivedDecays) disableShortLivedWith(dbMaxLifeTime);
+//    if (dbDisableSelectedDecays)   disableSelectedDecays(); // default
     }
   else
     {
@@ -358,7 +371,6 @@ void ParticleDbTask::initialize()
     if (dbEnableSelectedDecays)   enableSelectedDecays();
     }
   printString("Successfully initiated particleDb");
-
 }
 
 void ParticleDbTask::finalize()
@@ -842,17 +854,21 @@ void ParticleDbTask::listParticleStatus()
     {
     std::cout << particleType->getName();
     if (particleType->isEnabled())
-      std::cout << "  Enabled: ";
+      std::cout << " Enabled,";
     else
-      std::cout << "  Disabled:";
+      std::cout << " Disabled,";
+
     if (particleType->isStable())
-      std::cout << "  Stable:  ";
+      std::cout << " Stable.";
     else
-      std::cout << "  Unstable:";
-    if (particleType->isDecayEnabled())
-      std::cout << "  DecayEnabled";
-    else
-      std::cout << "  DecayDisabled";
+      {
+      std::cout << " Unstable,";
+      if (particleType->isDecayEnabled())
+        std::cout << " DecayEnabled,";
+      else
+        std::cout << " DecayDisabled, ";
+      std::cout << " n decay modes: " << particleType->getNDecayModes();
+      }
     std::cout << std::endl;
     }
 }

@@ -86,13 +86,11 @@ void  ParticleDbParser::readDb(ParticleDb   & particleDb,
     particleType->setCharm(  static_cast<int> ( netC   ));
     particleType->setBottomNumber( 0 );
     particleType->setPdgCode(static_cast<int> ( pdgCode));
-    particleType->setStable(true);
     particleType->disableDecay();
     particleType->enable();
     particleDb.addParticleType(particleType);
     delete iss;
     }
-
 
   //
   // read decays
@@ -160,44 +158,43 @@ void  ParticleDbParser::readDb(ParticleDb   & particleDb,
       printValue("Mass exception: childName2",childName2);
       printValue("Mass exception: childName3",childName3);
       }
-    continue;
-    }
-  if (CGcoeff)
-    {// complete branching ratio by Clebsch-Gordan coefficient
-      double j1, m1, j2, m2, J, M, CB;
-      J  = parentType->getIsospin();
-      M  = parentType->getIsospin3();
-      j1 = childType1->getIsospin();
-      m1 = childType1->getIsospin3();
-      j2 = childType2->getIsospin();
-      m2 = childType2->getIsospin3();
-      CB = clebschGordan(J, M, j1, m1, j2, m2);
-      tRatio = CB*CB * tBRatio;
-      // Multiply the Clebsh by two?
-      // The same spin, ampss, strangeness (charm?)
-      // and different I3?
-      if (  (TMath::Abs(childType1->getSpin()  - childType2->getSpin()) < 0.01)
-          && (TMath::Abs(childType1->getMass() - childType2->getMass()) < 0.01)
-          && (TMath::Abs(childType1->getIsospin3()-childType2->getIsospin3())   > 0.01)
-          && (childType1->getStrangeness()-childType2->getStrangeness() == 0)
-          && (childType1->getCharm()- childType2->getCharm() == 0)        )
-        {
-        tRatio *= 2.0;
-        }
-    }
-  else
-    {
-    tRatio = tBRatio;
-    }
-  //if (flag) cout << "Creating decay mode" << endl;
 
-  ParticleDecayMode decayMode;
-  decayMode.setBranchingRatio(tRatio);
-  decayMode.addChild(childType1);
-  decayMode.addChild(childType2);
-  if (childType3) decayMode.addChild(childType3);
-  if (childType4) decayMode.addChild(childType3);
-  parentType->addDecayMode(decayMode);
+    if (CGcoeff)
+      {
+      // complete branching ratio by Clebsch-Gordan coefficient
+        double j1, m1, j2, m2, J, M, CB;
+        J  = parentType->getIsospin();
+        M  = parentType->getIsospin3();
+        j1 = childType1->getIsospin();
+        m1 = childType1->getIsospin3();
+        j2 = childType2->getIsospin();
+        m2 = childType2->getIsospin3();
+        CB = clebschGordan(J, M, j1, m1, j2, m2);
+        tRatio = CB*CB * tBRatio;
+        // Multiply the Clebsh by two?
+        // The same spin, ampss, strangeness (charm?)
+        // and different I3?
+        if (  (TMath::Abs(childType1->getSpin()  - childType2->getSpin()) < 0.01)
+            && (TMath::Abs(childType1->getMass() - childType2->getMass()) < 0.01)
+            && (TMath::Abs(childType1->getIsospin3()-childType2->getIsospin3())   > 0.01)
+            && (childType1->getStrangeness()-childType2->getStrangeness() == 0)
+            && (childType1->getCharm()- childType2->getCharm() == 0)        )
+          {
+          tRatio *= 2.0;
+          }
+      }
+    else
+      {
+      tRatio = tBRatio;
+      }
+    ParticleDecayMode decayMode;
+    decayMode.setBranchingRatio(tRatio);
+    decayMode.addChild(childType1);
+    decayMode.addChild(childType2);
+    if (childType3) decayMode.addChild(childType3);
+    if (childType4) decayMode.addChild(childType3);
+    parentType->addDecayMode(decayMode);
+    }
 
   if (isVerbose())
     {

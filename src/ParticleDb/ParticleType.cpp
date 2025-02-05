@@ -55,7 +55,6 @@ nat(0),
 leptonElectron(0),
 leptonMuon(0),
 leptonTau(0),
-stable(1),
 enabled(1),
 decayEnabled(0),
 antiParticleIndex(-1),
@@ -108,7 +107,6 @@ nat(source.nat),
 leptonElectron(source.leptonElectron),
 leptonMuon(source.leptonMuon),
 leptonTau(source.leptonTau),
-stable(source.stable),
 enabled(source.enabled),
 decayEnabled(source.decayEnabled),
 antiParticleIndex(-1),
@@ -157,7 +155,6 @@ ParticleType & ParticleType::operator=(const ParticleType & source)
     leptonElectron     =  source.leptonElectron;
     leptonMuon         =  source.leptonMuon;
     leptonTau          =  source.leptonTau;
-    stable             =  source.stable;
     enabled            =  source.enabled;
     decayEnabled       =  source.decayEnabled;
     antiParticleIndex  =  source.antiParticleIndex;
@@ -174,7 +171,7 @@ ParticleType & ParticleType::operator=(const ParticleType & source)
 
 bool ParticleType::isStable() const
 {
-  return stable;
+  return decayModes.size()<1;
 }
 
 bool ParticleType::isDisabled() const {  return !enabled; }
@@ -229,7 +226,6 @@ void ParticleType::addDecayMode(double branchingRatio,
 void ParticleType::addDecayMode(ParticleDecayMode &decayMode)
 {
   decayModes.push_back(decayMode);
-  stable = false;
   decayEnabled = true;
 }
 
@@ -257,7 +253,7 @@ ParticleDecayMode & ParticleType::generateDecayMode()
     printString("ParticleType::generateDecayMode() index<0 ");
     printValue("Bad index",index);
     printValue("particle name",name);
-    printValue("stable",stable);
+    printValue("decayEnabled",decayEnabled);
     printValue("width",width);
     printValue("n modes",decayModes.size());
     throw ParticleDecayException("Bad index",__FUNCTION__);
@@ -899,7 +895,6 @@ ostream & ParticleType::print(ostream & os, int style, int size)
       os <<  fixed << setw(5) << setprecision(1) <<  leptonElectron;
       os <<  fixed << setw(5) << setprecision(1) <<  leptonMuon;
       os <<  fixed << setw(5) << setprecision(1) <<  leptonTau;
-      os <<  fixed << setw(5) << setprecision(1) <<  stable;
       os <<  fixed << setw(5) << setprecision(1) <<  decayEnabled;
       os <<  fixed << setw(5) << setprecision(1) <<  enabled;
       os <<  endl;
@@ -934,7 +929,6 @@ ostream & ParticleType::print(ostream & os, int style, int size)
       printValue("leptonElectron",leptonElectron);
       printValue("leptonMuon",leptonMuon);
       printValue("leptonTau",leptonTau);
-      printValue("stable",stable);
       printValue("decayEnabled",decayEnabled);
       printValue("enabled",enabled);
       printLine(os);
@@ -983,14 +977,6 @@ ostream & ParticleType::printDecays(ostream & os, int style, int size)
     }
   return os;
 }
-
-//!
-//! Set the stable state of  this particle to the given value. This can be used to declare a particle as stable even if it nominally decays into other particles within a finite lifeTime.
-//!
-void   ParticleType::setStable(bool value)  
-  {
-  stable = value;
-  }
 
 //!
 //!  Set the enabled flag to true. Particle types  are considered

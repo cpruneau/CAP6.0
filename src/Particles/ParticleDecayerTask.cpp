@@ -25,13 +25,11 @@ decayer()
   appendClassName("ParticleDecayerTask");
   setName("ParticleDecayerTask");
   setTitle("ParticleDecayerTask");
-  setVersion("1.0");
  }
 
 void ParticleDecayerTask::setDefaultConfiguration()
 {
   EventTask::setDefaultConfiguration();
-  addProperty("Stream0Index", 0);
 }
 
 // ====================================================================
@@ -56,13 +54,19 @@ void ParticleDecayerTask::execute()
   while (!done)
     {
     Particle & parent = * event.getParticleAt(iParticle);
+//    printValue("parent name",parent.getType().getName());
+//    printValue("parent isLive",parent.isLive());
+//    printValue("parent isStable",parent.isStable());
+
     if (parent.isLive() &&  !parent.isStable() )
       {
-      ParticleType   &    parentType      = parent.getType();
-      LorentzVector &    parentMomentum  = parent.getMomentum();
-      LorentzVector &    parentPosition  = parent.getPosition();
-      ParticleDecayMode & decayMode       = parentType.generateDecayMode();
+      ParticleType &  parentType      = parent.getType();
+      LorentzVector & parentMomentum  = parent.getMomentum();
+      LorentzVector & parentPosition  = parent.getPosition();
+      ParticleDecayMode & decayMode   = parentType.generateDecayMode();
       int nChildren = decayMode.getNChildren();
+      //printValue("parent nChildren",nChildren);
+
       switch (nChildren)
         {
           case 1:
@@ -72,8 +76,10 @@ void ParticleDecayerTask::execute()
           {
           Particle * child1 = particleFactory->getNextObject();
           Particle * child2 = particleFactory->getNextObject();
-          ParticleType   & childType1 = decayMode.getChildType(0); child1->setType(&childType1); child1->setLive(true);
-          ParticleType   & childType2 = decayMode.getChildType(1); child2->setType(&childType2); child2->setLive(true);
+          ParticleType  & childType1 = decayMode.getChildType(0); child1->setType(&childType1); child1->setLive(true);
+          ParticleType  & childType2 = decayMode.getChildType(1); child2->setType(&childType2); child2->setLive(true);
+//          printValue("childType1",childType1.getName());
+//          printValue("childType2",childType2.getName());
           LorentzVector & p1 = child1->getMomentum();
           LorentzVector & r1 = child1->getPosition();
           LorentzVector & p2 = child2->getMomentum();
@@ -86,7 +92,8 @@ void ParticleDecayerTask::execute()
           event.addParticle(child1); child1->setLive(true);
           event.addParticle(child2); child2->setLive(true);
           parent.setDecayed(true);
-          nParticles += 2;
+         // nParticles += 2;
+          //printValue("nParticles",nParticles);
           }
           break;
 
@@ -114,7 +121,7 @@ void ParticleDecayerTask::execute()
           event.addParticle(child2); child2->setLive(true);
           event.addParticle(child3); child3->setLive(true);
           parent.setDecayed(true);
-          nParticles += 3;
+          //nParticles += 3;
           }
           break;
           case 4:
@@ -157,10 +164,13 @@ void ParticleDecayerTask::execute()
     iParticle++;
     done = (iParticle >= event.getNParticles());
     }
-  nParticles = event.getNParticles();
+  //nParticles = event.getNParticles();
 }
 
-
+void ParticleDecayerTask::scaleHistograms()
+{
+  // no ops...
+}
 
 
 

@@ -108,31 +108,31 @@ void plotPionSingles(CAP::Plotter * plotter, vector<TFile*> & inputFiles)
   histos.clear();
 
   histos2.push_back( cloneLoadH2(*inputFiles[0],"Pair3D_ALL_PiP_n1_ptY"));
-  histos2[0]->GetYaxis()->SetTitle("#int #rho_{1}^{#pi^{+}}");
+  histos2[0]->GetYaxis()->SetTitle("#rho_{1}^{#pi^{+}}");
   histos2[0]->SetTitle("#rho_{1}^{#pi^{+}}");
   plotter->plot("Pair3D_ALL_Pi_int_rho1_ptY",histos2,
                 TString("y"), -10.0, 10.0,
                 TString("p_{T}"), 0.0, 8.0,
                 TString("#rho_{1}(pT)"),0.00001, 1.0,
-                true, 0.5, 0.7, 0.2, 0.45, fontSize,2);
+                true, 0.5, 0.7, 0.2, 0.45, fontSize,1);
   histos2.clear();
 
   histos2.push_back( cloneLoadH2(*inputFiles[1],"Pair3D_ALL_PiP_PiM_n1_1_ptY_mc"));
-  histos2[0]->GetYaxis()->SetTitle("#int #rho_{1}^{#pi^{+}}");
+  histos2[0]->GetYaxis()->SetTitle("#rho_{1}^{#pi^{+}}");
   histos2[0]->SetTitle("#rho_{1}^{#pi^{+}} MC");
   plotter->plot("Pair3D_ALL_Pi_int_rho1_ptY_MC",histos2,
                 TString("y"), -10.0, 10.0,
                 TString("p_{T}"), 0.0, 8.0,
                 TString("#rho_{1}(pT)"),0.00001, 1.0,
-                true, 0.5, 0.7, 0.2, 0.45, fontSize,2);
+                true, 0.5, 0.7, 0.2, 0.45, fontSize,1);
   histos2.clear();
 
   histos2.push_back( cloneLoadH2(*inputFiles[1],"Pair3D_ALL_PiP_PiM_n1r_1_ptY_mc"));
-  histos2[0]->GetYaxis()->SetTitle("#int #rho_{1}^{#pi^{+}}");
+  histos2[0]->GetYaxis()->SetTitle("#rho_{1}^{#pi^{+}}");
   histos2[0]->SetTitle("#rho_{1}^{#pi^{+}} RATIO");
   plotter->plot("Pair3D_ALL_Pi_int_rho1_ptY_RATIO",histos2,
                 TString("y"), -10.0, 10.0,
-                TString("p_{T}"), 0.0, 8.0,
+                TString("p_{T}"), 0.0, 2.0,
                 TString("#rho_{1}(pT)"),0.5, 1.5,
                 true, 0.5, 0.7, 0.2, 0.45, fontSize,2);
   histos2.clear();
@@ -211,6 +211,9 @@ void plotPionsQinv(CAP::Plotter * plotter, vector<TFile*> & inputFiles)
   double fontSize = 0.03;
   vector<TH1*> histos;
   vector<TH2*> histos2;
+  double Qmax = 2.0;
+  double yieldMin = -0.1;
+  double yieldMax = 6.499;
 
   histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiP_PiP_n2_Qinv"));
   histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiP_PiM_n2_Qinv"));
@@ -222,7 +225,7 @@ void plotPionsQinv(CAP::Plotter * plotter, vector<TFile*> & inputFiles)
   histos[2]->SetTitle("#rho_{2}^{#pi^{-}#pi^{+}}");
   histos[3]->SetTitle("#rho_{2}^{#pi^{-}#pi^{-}}");
   plotter->plot("Pair3D_ALL_pi_pi_rho2VsQinv",histos,
-                TString("Q_{inv}"), 0.0, 500.0,
+                TString("Q_{inv}"), 0.0, Qmax,
                 TString("#rho_{2}(Q_{inv})"),0.5, 19.99,
                 true, 0.5, 0.7, 0.2, 0.45, fontSize,1);
   histos.clear();
@@ -237,8 +240,8 @@ void plotPionsQinv(CAP::Plotter * plotter, vector<TFile*> & inputFiles)
   histos[2]->SetTitle("C_{2}^{#pi^{-}#pi^{+}}");
   histos[3]->SetTitle("C_{2}^{#pi^{-}#pi^{-}}");
   plotter->plot("Pair3D_ALL_Pi_Pi_C2VsQinv",histos,
-                TString("Q_{inv}"), 0.0, 500.0,
-                TString("C_{2}(Q_{inv})"),-0.5, 0.5,
+                TString("Q_{inv}"), 0.0, Qmax,
+                TString("C_{2}(Q_{inv})"),yieldMin, yieldMax,
                 true, 0.5, 0.7, 0.2, 0.55, fontSize,1);
   histos.clear();
 
@@ -252,9 +255,9 @@ void plotPionsQinv(CAP::Plotter * plotter, vector<TFile*> & inputFiles)
   histos[2]->SetTitle("A_{12}^{#pi^{-}#pi^{+}}");
   histos[3]->SetTitle("A_{12}^{#pi^{-}#pi^{-}}");
   plotter->plot("Pair3D_ALL_Pi_Pi_A12VsQinv",histos,
-                TString("Q_{inv}"), 0.0, 500.0,
-                TString("A_{2}(Q_{inv})"),-0.5, 0.5,
-                true, 0.5, 0.7, 0.2, 0.65, fontSize,1);
+                TString("Q_{inv}"), 0.0, Qmax,
+                TString("A_{2}(Q_{inv})"),yieldMin, 1.0,
+                true, 0.5, 0.7, 0.2, 0.65, fontSize,0);
   histos.clear();
 
 
@@ -272,11 +275,48 @@ void plotPionsQinv(CAP::Plotter * plotter, vector<TFile*> & inputFiles)
   histos[0]->SetTitle("#rho_{2}^{#pi^{-}#pi^{+}} - #rho_{2}^{#pi^{+}#pi^{+}}");
   histos[1]->SetTitle("#rho_{2}^{#pi^{+}#pi^{-}} - #rho_{2}^{#pi^{-}#pi^{-}}");
   plotter->plot("Pair3D_ALL_Pi_Pi_rho2DiffVsQinv",histos,
-                TString("Q_{inv}"), 0.0, 500.0,
-                TString("#rho_{2}(Q_{inv})"),-0.1, 2.5,
-                true, 0.6, 0.75, 0.5, 0.85, fontSize,0);
+                TString("Q_{inv}"), 0.0, Qmax,
+                TString("#rho_{2}(Q_{inv})"),yieldMin, 5*yieldMax,
+                true, 0.6, 0.75, 0.5, 0.85, 0.01,0);
   histos.clear();
 
+  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiP_PiP_n2_Qinv"));
+  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiP_PiM_n2_Qinv"));
+  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiP_PiP_n1n1_Qinv"));
+  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiP_PiM_n1n1_Qinv"));
+  histos[0]->GetYaxis()->SetTitle("n_{2}^{#pi^{+}#pi^{+}}(Q_{inv})");
+  histos[0]->SetTitle("n_{2}^{#pi^{+}#pi^{+}}");
+  histos[1]->SetTitle("n_{2}^{#pi^{+}#pi^{-}}");
+  histos[2]->SetTitle("n_{1}n_{1}^{#pi^{+}#pi^{+}}");
+  histos[3]->SetTitle("n_{1}n_{1}^{#pi^{+}#pi^{-}}");
+  plotter->plot("Pair3D_ALL_PiP_PiP_n2_vs_n1n1",histos,
+                TString("Q_{inv}"), 0.0, Qmax,
+                TString("n_{2}(Q_{inv})"),yieldMin, 499.99,
+                true, 0.3, 0.5, 0.2, 0.5, 0.01,0);
+  histos.clear();
+
+  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiM_PiM_n1r_1_pt_mc"));
+  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiM_PiM_n1r_2_pt_mc"));
+  histos[0]->GetYaxis()->SetTitle("n_{1}^{MC}/n_{1}");
+  histos[0]->SetTitle("n_{1}^{MC}/n_{1}");
+  histos[1]->SetTitle("n_{1}^{MC}/n_{1}");
+  plotter->plot("Pair3D_ALL_PiP_PiP_n1r_1_pt_mc",histos,
+                TString("p_{T}"), 0.0, -1.0,
+                TString("n_{1}^{MC}/n_{1}"),yieldMin, 49.99,
+                true, 0.3, 0.5, 0.2, 0.5, 0.01,1);
+  histos.clear();
+
+
+//  histos.push_back( cloneLoadH1(*inputFiles[0],"Pair3D_ALL_PiP_PiM_n2_Qinv"));
+//  histos.push_back( cloneLoadH1(*inputFiles[1],"Pair3D_ALL_PiP_PiM_n1n1_Qinv"));
+//  histos[0]->GetYaxis()->SetTitle("n_{2}^{#pi^{-}#pi^{+}}(Q_{inv})");
+//  histos[0]->SetTitle("n_{2}^{#pi^{+}#pi^{-}}");
+//  histos[1]->SetTitle("n_{1}n_{1}^{#pi^{+}#pi^{-}}");
+//  plotter->plot("Pair3D_ALL_PiP_PiM_n2_vs_n1n1",histos,
+//                TString("Q_{inv}"), 0.0, Qmax,
+//                TString("n_{2}(Q_{inv})"),-0.1, 49.99,
+//                true, 0.5, 0.7, 0.2, 0.65, 0.05,1);
+//  histos.clear();
 
 
 }
@@ -361,7 +401,8 @@ void plotKaonsQinv(CAP::Plotter * plotter, vector<TFile*> & inputFiles)
 
 
 
-int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3Dex/",
+//int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3Dex/",
+int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/GaussTest/",
            const TString & fileName0="Pair3DGen.root",
            const TString & fileName1="Pair3DGenDerived.root",
            const TString & fileName2="Pair3DGenBF.root")
@@ -407,10 +448,10 @@ int PlotBF(const TString & path="/Volumes/ClaudeDisc4/OutputFiles/pythiaTest3Dex
   vector<TH1*>    histos;
   double legendSize = 0.3;
 
-//  plotPionSingles(plotter,inputFiles);
+  plotPionSingles(plotter,inputFiles);
 //  plotKaonSingles(plotter,inputFiles);
-//  plotPionsQinv(plotter,inputFiles);
-  plotKaonsQinv(plotter,inputFiles);
+  plotPionsQinv(plotter,inputFiles);
+//  plotKaonsQinv(plotter,inputFiles);
   if (doPrint) plotter->printAllCanvas(path);
   }
   catch (CAP::PropertyException & e)

@@ -166,7 +166,15 @@ void ParticlePair3DAnalyzer::execute()
       {
       ParticleSingleHistos & histosSingle = (ParticleSingleHistos &) getGroupAt(0,baseSingle+iParticleFilter1);
       std::vector<Particle*> & particleSelected1 = allParticlesAccepted[iParticleFilter1];
-      for (auto & particle1 : particleSelected1) histosSingle.fill(*particle1,1.0);
+      double multiplicityAccepted = 0.0;
+      double energyAccepted = 0.0;
+      for (auto & particle1 : particleSelected1)
+        {
+        multiplicityAccepted++;
+        energyAccepted += particle1->getMomentum().E();
+        histosSingle.fill(*particle1,1.0);
+        }
+      histosSingle.fillMultiplicity(multiplicityAccepted,energyAccepted,1.0);
 
       for (unsigned int iParticleFilter2=0; iParticleFilter2<nParticleFilters;iParticleFilter2++)
         {
@@ -176,7 +184,7 @@ void ParticlePair3DAnalyzer::execute()
           {
           for (auto & particle2 : particleSelected2)
             {
-            if (iParticleFilter1==iParticleFilter2 & particle1 == particle2) continue;
+            if (iParticleFilter1==iParticleFilter2 && particle1 == particle2) continue;
             histosPair.fill(*particle1,*particle2,1.0);
             }
           }

@@ -61,7 +61,7 @@ protected:
   int    leptonElectron; //!<Electron lepton number
   int    leptonMuon;     //!<Muon lepton number
   int    leptonTau;      //!<Tau lepton number
-  bool   stable;         //!<defines whether this ParticleType is stable
+  //bool   stable;         //!<defines whether this ParticleType is stable
   bool   enabled;        //!<particle declared not used
   bool   decayEnabled;   //!<particle decays are turned off externally
   int    antiParticleIndex; //!< index (in the active DB) of the antiparticle of this particle.
@@ -560,9 +560,6 @@ public:
 
   ParticleDecayMode & getDecayMode(int index);
   ParticleDecayMode & generateDecayMode();
-  void   setStable(bool value);
-
-
   std::vector<ParticleDecayMode> & getDecayModes();
   ostream & print(ostream & os, int style=0, int size=12);
   ostream & printDecays(ostream & os, int style=0, int size=12);

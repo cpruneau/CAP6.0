@@ -44,7 +44,7 @@ find_library(FASTJET_LIB fastjet PATHS $ENV{DYLD_LIBRARY_PATH} )
 # Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
 ################################################################################################
 include(${ROOT_USE_FILE})
-include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS} "Base" "Math" "Xml" "ParticleDb" "Particles"  "SubSample"  "CAPPythia"  "Global" "Jets" "Spherocity" "ParticleSingle" "ParticlePair" "ParticlePair3D" "NuDyn" "PtPt"  "Plotting" "Therminator"  "Performance" "Exec" "$ENV{ROOTSYS}/include"
+include_directories(${CMAKE_SOURCE_DIR} ${ROOT_INCLUDE_DIRS} "Base" "Math" "Xml" "ParticleDb" "Particles"  "SubSample"  "CAPPythia"  "Global" "Jets" "Spherocity" "ParticleSingle" "ParticlePair" "ParticlePair3D" "NuDyn" "PtPt"  "Plotting" "Therminator"  "Performance" "Exec" "BasicEventGen" "$ENV{ROOTSYS}/include"
 "$ENV{FASTJET_INCLUDE_PATH}" "$ENV{PYTHIA8_INCLUDE_PATH}" "$ENV{PYTHIA8_INCLUDE_PATH}/Pythia8/" )
 add_definitions(${ROOT_CXX_FLAGS})
 add_compile_options(-Wall -Wextra -pedantic)
@@ -71,7 +71,7 @@ add_subdirectory(NuDyn)
 add_subdirectory(PtPt)
 add_subdirectory(Performance)
 add_subdirectory(Jets)
-#add_subdirectory(BasicGen)
+add_subdirectory(BasicEventGen)
 #add_subdirectory(ThermalGas)
 #add_subdirectory(CollGeom)
 #add_subdirectory(Epos)
