@@ -7,6 +7,12 @@
 #include "TH3.h"
 #include "TProfile.h"
 #include "TProfile2D.h"
+#include "TGraph.h"
+#include "TGraphErrors.h"
+#include "TLegend.h"
+#include "TLine.h"
+#include "TArrow.h"
+#include "TLatex.h"
 
 namespace CAP
 {
@@ -170,6 +176,16 @@ void cloneHistoVector(const std::vector<TProfile*> & source, std::vector<TProfil
 void cloneHistoVector(const std::vector<TProfile2D*> & source, std::vector<TProfile2D*> & target);
 
 
+double findHistoMinimum(TH1 * h);
+double findHistoMaximum(TH1 * h);
+double findHistoMinimum2D(TH2 * h);
+double findHistoMaximum2D(TH2 * h);
+double findGraphMinimum(TGraph * h);
+double findGraphMaximum(TGraph * h);
+double findMinimum(std::vector<double> & values);
+double findMaximum(std::vector<double> & values);
+
+
 void findMinimum(TH1 * h, int & xMinValueBin, double & minValue, int xFirstBin=1, int xLastBin=-1);
 void findMaximum(TH1 * h, int & xMaxValueBin, double & maxValue, int xFirstBin=1, int xLastBin=-1);
 void findMinMax (TH1 * h,
@@ -195,6 +211,7 @@ void findMinMax (std::vector<TH2*> histograms,
                  int & xMaxValueBin, int & yMaxValueBin, double & maxValue,
                  int xFirstBin=1, int xLastBin=-1,
                  int yFirstBin=1, int yLastBin=-1);
+void findMinMax(std::vector<double> & values, double & minimum, double & maximum);
 
 
 void scaleByBinWidth1D(TH1 * h, double scale);
@@ -206,9 +223,18 @@ void sumw2All();
 void unpack_vsXY_to_vsXVsY(const TH1 * source, TH2 * target);
 void correctMerging(TH1 * h, int nEta, int nPhi, bool reverse);
 
-void calculateC2_H1H1H1(const TH1 * n2_12, const TH1 * n1n1_12, TH1 * c2_12, bool ijNormalization=0, double a1=1.0, double a2=1.0);
-void calculateC2_H2H2H2(const TH2 * n2_12, const TH2 * n1n1_12, TH2 * c2_12, bool ijNormalization=0, double a1=1.0, double a2=1.0);
-void calculateC2_H3H3H3(const TH3 * n2_12, const TH3 * n1n1_12, TH3 * c2_12, bool ijNormalization=0, double a1=1.0, double a2=1.0);
+void calculateC2_H1H1H1(const TH1 * n2_12,
+                        const TH1 * n1n1_12,
+                        TH1 * c2_12,
+                        double a1=1.0, double a2=1.0);
+void calculateC2_H2H2H2(const TH2 * n2_12,
+                        const TH2 * n1n1_12,
+                        TH2 * c2_12,
+                        double a1=1.0, double a2=1.0);
+void calculateC2_H3H3H3(const TH3 * n2_12,
+                        const TH3 * n1n1_12,
+                        TH3 * c2_12,
+                        double a1=1.0, double a2=1.0);
 
 
 void calculateR2_H1H1H1(const TH1 * n2_12, const TH1 * n1n1_12, TH1 * r2_12, bool ijNormalization=0, double a1=1.0, double a2=1.0);
@@ -366,6 +392,44 @@ bool ptrExist(const String &  caller, const TH1 * h1, const TH1 * h2, const TH1 
 bool ptrExist(const String &  caller, const TH1 * h1, const TH1 * h2, const TH1 * h3, const TH1 * h4, const TH1 * h5, const TH1 * h6, const TH1 * h7, const TH1 * h8, const TH1 * h9, const TH1 * h10);
 bool ptrExist(const String &  caller, const TH1 * h1, const TH1 * h2, const TH1 * h3, const TH1 * h4, const TH1 * h5, const TH1 * h6, const TH1 * h7, const TH1 * h8, const TH1 * h9, const TH1 * h10, const TH1 * h11);
 bool ptrExist(const String &  caller, const TH1 * h1, const TH1 * h2, const TH1 * h3, const TH1 * h4, const TH1 * h5, const TH1 * h6, const TH1 * h7, const TH1 * h8, const TH1 * h9, const TH1 * h10, const TH1 * h11, const TH1 * h12);
+
+
+TLatex  * createLabel(const String & text, double x, double y, double angle, int color,  double fontSize, bool doDraw=true);
+TLegend * createLegend(double x1, double y1, double x2, double y2, double fontSize);
+TLegend * createLegend(TH1*histogram, const String & legendText, double x1, double y1, double x2, double y2, double fontSize, bool doDraw=true);
+TLegend * createLegend(std::vector<TH1*> & histograms,double x1, double x2, double y1, double y2, double fontSize, bool doDraw=true);
+TLegend * createLegend(std::vector<TH1*> & histograms, std::vector<TString> &legendTexts,double x1, double x2, double y1, double y2, double fontSize, bool doDraw=true);
+TLegend * createLegend(std::vector<TGraph*> graphs, std::vector<TString> & legendTexts,double x1, double x2, double y1, double y2, double fontSize, bool doDraw=true);
+
+TLine   * createLine(float x1, float y1, float x2, float y2, int style, int color, int width, bool doDraw=true);
+TArrow  * createArrow(float x1, float y1, float x2, float y2, float arrowSize, Option_t* option, int style, int color, int width, bool doDraw=true);
+
+TGraph * makeGraph(std::vector<double> vx,
+                   std::vector<double> vex,
+                   std::vector<double> vy,
+                   std::vector<double> vey);
+
+TGraph * sumGraphs(TGraph * g1, TGraph * g2);
+
+TGraph* calculateCumulativeIntegral(TH1 & h,
+                                    double xLow,
+                                    double xHigh,
+                                    double xStep);
+
+void calculateRmsWidth(TH1 * h,
+                       double xLowEdge,   double xHighEdge,
+                       double & mean,     double & meanError,
+                       double & rmsWidth, double & rmsWidthError);
+
+void setLimits(TH1 & h, double xMin, double xMax, double yMin, double yMax);
+void setLimits(TH2 & h, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax);
+
+void setLimits(const std::vector<TH1*> & histograms,double xMin, double xMax, double yMin, double yMax);
+void setLimits(const std::vector<TH2*> & histograms,double xMin, double xMax, double yMin, double yMax, double zMin, double zMax);
+
+double Gaussian(double *x, double *par);
+
+double GeneralizedGaussian(double *x, double *par);
 
 } // namespace CAP
 

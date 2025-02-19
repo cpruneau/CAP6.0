@@ -82,6 +82,17 @@ void BasicEventGen::initialize()
   if (typeSelected==nullptr) throw NullPointerException("particleType==nullptr",__FUNCTION__);
   mass   = typeSelected->getMass();
   massSq = mass*mass;
+
+  typeSelected1 = particleDb->findPdgCode(211);
+  if (typeSelected1==nullptr) throw NullPointerException("particleType1==nullptr",__FUNCTION__);
+  mass1   = typeSelected1->getMass();
+  mass1Sq = mass1*mass1;
+
+  typeSelected2 = particleDb->findPdgCode(-211);
+  if (typeSelected2==nullptr) throw NullPointerException("particleType1==nullptr",__FUNCTION__);
+  mass2   = typeSelected2->getMass();
+  mass2Sq = mass1*mass1;
+
   if (reportEnd(__FUNCTION__)) { /* no ops */ };
 }
 
@@ -100,24 +111,73 @@ void BasicEventGen::execute()
   LorentzVector position;
   position.SetXYZT(0.0, 0.0, 0.0, 0.0);
 
-  r = gRandom->Rndm();
-  int nParticles = int(multMin*(1-r) + multMax*r);
+//  r = gRandom->Rndm();
+  int nParticles; // = int(4.0*r);
 
+//  for (int i = 0; i < nParticles; i++)
+//    {
+//    phi      = Math::twoPi() * gRandom->Rndm();
+//    r        = gRandom->Rndm();
+//    rapidity = rapidityMin + r*(rapidityMax-rapidityMin);
+//    pt       = gRandom->Exp(ptSlope);
+//    mt       = sqrt(massSq + pt*pt);
+//    momentum.SetXYZT(pt*cos(phi),pt*sin(phi),mt*sinh(rapidity),mt*cosh(rapidity));
+//    Particle & particle = *particleFactory->getNextObject();
+//    particle.setType(typeSelected);
+//    particle.setLive(1);
+//    particle.setMomentum(momentum);
+//    particle.setPosition(position);
+//    event.addParticle(&particle);
+//    }
+
+  // background 211
+  r = gRandom->Rndm();
+  nParticles = int(5.0 + r*25.0);
   for (int i = 0; i < nParticles; i++)
     {
     phi      = Math::twoPi() * gRandom->Rndm();
     r        = gRandom->Rndm();
-    rapidity = rapidityMin*(1.0-r) + rapidityMax*r;
-    pt       = gRandom->Exp(ptSlope);
-    mt       = sqrt(massSq + pt*pt);
+    rapidity = -4.0 + r*8.0;
+    pt       = gRandom->Exp(0.3);
+    mt       = sqrt(mass1Sq + pt*pt);
     momentum.SetXYZT(pt*cos(phi),pt*sin(phi),mt*sinh(rapidity),mt*cosh(rapidity));
     Particle & particle = *particleFactory->getNextObject();
-    particle.setType(typeSelected);
+    particle.setType(typeSelected1);
     particle.setLive(1);
     particle.setMomentum(momentum);
     particle.setPosition(position);
     event.addParticle(&particle);
+
+//    printValue("1 - rapidity",rapidity);
+//    printValue("1 - particle.getMomentum().Rapidity()",particle.getMomentum().Rapidity());
+
     }
+
+  // background -211
+  r = gRandom->Rndm();
+  nParticles = int(5.0 + r*25.0);;
+  for (int i = 0; i < nParticles; i++)
+    {
+    phi      = Math::twoPi() * gRandom->Rndm();
+    r        = gRandom->Rndm();
+    rapidity = -4.0 + r*8.0;
+    pt       = gRandom->Exp(0.3);
+    mt       = sqrt(mass2Sq + pt*pt);
+    momentum.SetXYZT(pt*cos(phi),pt*sin(phi),mt*sinh(rapidity),mt*cosh(rapidity));
+    Particle & particle = *particleFactory->getNextObject();
+    particle.setType(typeSelected2);
+    particle.setLive(1);
+    particle.setMomentum(momentum);
+    particle.setPosition(position);
+    event.addParticle(&particle);
+
+//    printValue("2 - rapidity",rapidity);
+//    printValue("2 - momentum.Rapidity()",momentum.Rapidity());
+
+
+    }
+
+
   EventAccountant::incrementEventsAccepted(0);
   TaskAccountant::increment();
 }

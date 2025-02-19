@@ -1907,27 +1907,27 @@ TH1 * clone(const TH1 * h1, const String & histoName)
   return h;
 }
 
-void cloneHistoVector(const vector<TH1*> & source, vector<TH1*> & target)
+void cloneHistoVector(const std::vector<TH1*> & source, std::vector<TH1*> & target)
 {
   for (auto & h : source) target.push_back( (TH1*) h->Clone() );
 }
 
-void cloneHistoVector(const vector<TH2*> & source, vector<TH2*> & target)
+void cloneHistoVector(const std::vector<TH2*> & source, std::vector<TH2*> & target)
 {
   for (auto & h : source) target.push_back( (TH2*) h->Clone() );
 }
 
-void cloneHistoVector(const vector<TH3*> & source, vector<TH3*> & target)
+void cloneHistoVector(const std::vector<TH3*> & source, std::vector<TH3*> & target)
 {
   for (auto & h : source) target.push_back( (TH3*) h->Clone() );
 }
 
-void cloneHistoVector(const vector<TProfile*> & source, vector<TProfile*> & target)
+void cloneHistoVector(const std::vector<TProfile*> & source, std::vector<TProfile*> & target)
 {
   for (auto & h : source) target.push_back( (TProfile*) h->Clone() );
 }
 
-void cloneHistoVector(const vector<TProfile2D*> & source, vector<TProfile2D*> & target)
+void cloneHistoVector(const std::vector<TProfile2D*> & source, std::vector<TProfile2D*> & target)
 {
   for (auto & h : source) target.push_back( (TProfile2D*) h->Clone() );
 }
@@ -2297,7 +2297,7 @@ void calculateAvgH2H2(const TH2 * source, TH2 * target, double scaleFactor)
   if (!sameDimensions(__FUNCTION__,source,target))  throw IncompatibleHistogramException(__FUNCTION__);
   int nDeta = source->GetNbinsX();
   int nDphi = source->GetNbinsY();
-  vector<double> denominator(nDeta,0.0);
+  std::vector<double> denominator(nDeta,0.0);
   for (int iEta=0;iEta<(nDeta+1)/2; ++iEta)
     {
     denominator[iEta] = iEta+1;
@@ -2330,7 +2330,7 @@ void calculateAverageVsDeta(const TH2 * obs_12, TH2 * avgObs_12, int n)
   if (!sameDimensions(__FUNCTION__,obs_12,avgObs_12))  throw IncompatibleHistogramException(__FUNCTION__);
   int n_x = obs_12->GetNbinsX();
   int n_y = obs_12->GetNbinsY();
-  vector<double> denom(n_x,1.0);
+  std::vector<double> denom(n_x,1.0);
   int off = (n_x - (2*n-1))/2;
   for (int i_x=0; i_x<n; ++i_x)
     {
@@ -2361,7 +2361,10 @@ void calculateAverageVsDeta(const TH2 * obs_12, TH2 * avgObs_12, int n)
 //!
 //! Calculate C2 = N2 - N1*N1
 //!
-void calculateC2_H1H1H1(const TH1 * n2_12, const TH1 * n1n1_12, TH1 * c2_12, bool ijNormalization, double a1, double a2)
+void calculateC2_H1H1H1(const TH1 * n2_12,
+                        const TH1 * n1n1_12,
+                        TH1 * c2_12,
+                        double a1, double a2)
 {
   if (!ptrExist(__FUNCTION__,n2_12,n1n1_12,c2_12))  throw NullPointerException(__FUNCTION__);
   if (!sameDimensions(__FUNCTION__,n2_12,n1n1_12,c2_12))  throw IncompatibleHistogramException(__FUNCTION__);
@@ -2380,7 +2383,10 @@ void calculateC2_H1H1H1(const TH1 * n2_12, const TH1 * n1n1_12, TH1 * c2_12, boo
 //!
 //! Calculate C2 = N2 - N1*N1
 //!
-void calculateC2_H2H2H2(const TH2 * n2_12, const TH2 * n1n1_12, TH2 * c2_12, bool ijNormalization, double a1, double a2)
+void calculateC2_H2H2H2(const TH2 * n2_12,
+                        const TH2 * n1n1_12,
+                        TH2 * c2_12,
+                        double a1, double a2)
 {
   if (!ptrExist(__FUNCTION__,n2_12,n1n1_12,c2_12))  throw NullPointerException(__FUNCTION__);
   if (!sameDimensions(__FUNCTION__,n2_12,n1n1_12,c2_12))  throw IncompatibleHistogramException(__FUNCTION__);
@@ -2403,7 +2409,10 @@ void calculateC2_H2H2H2(const TH2 * n2_12, const TH2 * n1n1_12, TH2 * c2_12, boo
 //!
 //! Calculate C2 = N2 - N1*N1
 //!
-void calculateC2_H3H3H3(const TH3 * n2_12, const TH3 * n1n1_12, TH3 * c2_12, bool ijNormalization, double a1, double a2)
+void calculateC2_H3H3H3(const TH3 * n2_12,
+                        const TH3 * n1n1_12,
+                        TH3 * c2_12,
+                        double a1, double a2)
 {
   if (!ptrExist(__FUNCTION__,n2_12,n1n1_12,c2_12))  throw NullPointerException(__FUNCTION__);
   if (!sameDimensions(__FUNCTION__,n2_12,n1n1_12,c2_12))  throw IncompatibleHistogramException(__FUNCTION__);
@@ -2415,7 +2424,7 @@ void calculateC2_H3H3H3(const TH3 * n2_12, const TH3 * n1n1_12, TH3 * c2_12, boo
     {
     for (int i2=1;i2<=n2_12_n_y;++i2)
       {
-      for (int i3=1;i2<=n2_12_n_y;++i2)
+      for (int i3=1;i2<=n2_12_n_z;++i2)
         {
         v1  = a1*n2_12->GetBinContent(i1,i2,i3);    ev1 = a1*n2_12->GetBinError(i1,i2,i3);
         v2  = a2*n1n1_12->GetBinContent(i1,i2,i3);  ev2 = a2*n1n1_12->GetBinError(i1,i2,i3);
@@ -2436,10 +2445,13 @@ void calculateR2_H1H1H1(const TH1 * n2_12, const TH1 * n1n1_12, TH1 * r2_12, boo
   if (!sameDimensions(__FUNCTION__,n2_12,n1n1_12,r2_12))  throw IncompatibleHistogramException(__FUNCTION__);
   int n2_12_n_x = n2_12->GetNbinsX();
   double v1,ev1,v2,ev2,v,ev, re1,re2;
+
+
   for (int i1=1;i1<=n2_12_n_x;++i1)
     {
     v1  = a1*n2_12->GetBinContent(i1);    ev1 = a1*n2_12->GetBinError(i1);
     v2  = a2*n1n1_12->GetBinContent(i1);  ev2 = a2*n1n1_12->GetBinError(i1);
+
     if (v1>0 && v2>0 && ev1/v1<0.5  && ev2/v2<0.5 )
       {
       if (ijNormalization) //account for the fact only half the pairs were counted
@@ -2453,12 +2465,12 @@ void calculateR2_H1H1H1(const TH1 * n2_12, const TH1 * n1n1_12, TH1 * r2_12, boo
       re1 = ev1/v1;
       re2 = ev2/v2;
       ev  = v*sqrt(re1*re1+re2*re2);
-      v   -= 1.;
+      v   -= 1.000;
       }
     else
       {
       v = 0.;
-      ev = 0;
+      ev = 0.000001;
       }
     r2_12->SetBinContent(i1,v); r2_12->SetBinError(i1,ev);
     }
@@ -3154,7 +3166,7 @@ void reduce_n2xEtaPhi_n2DetaDphi(const TH2 * source, TH2 * target,int nEtaBins,i
 
 //!
 //! Calculate the external product of n_1(eta,phi) by n_2(eta,phi) and project onto n1n1_12(Deta,Dphi)
-//! First create a 4D external product of h_1 and h_2 using a 1D vector
+//! First create a 4D external product of h_1 and h_2 using a 1D std::vector
 //! than project it onto DeltaEta(x-axis) DeltaPhi (y-axis)
 //! Errors are neglected and must be accounted for using a sub-sample analysis.
 //!
@@ -3163,8 +3175,8 @@ void reduce_n1EtaPhiN1EtaPhiOntoN1N1DetaDphi(const TH2 * h_1, TH2 * h_2, TH2 * h
   { /* no ops */};
   if (!ptrExist(__FUNCTION__,h_1,h_2,h_12)) throw NullPointerException(__FUNCTION__);
   if (!sameDimensions(__FUNCTION__,h_1,h_2)) throw IncompatibleHistogramException(__FUNCTION__);
-  vector<double> numerator(nDeta*nDphi,0.0);
-  vector<double> denominator(nDeta*nDphi,0.0);
+  std::vector<double> numerator(nDeta*nDphi,0.0);
+  std::vector<double> denominator(nDeta*nDphi,0.0);
   int nEta = h_1->GetNbinsX();
   int nPhi = h_1->GetNbinsY();
   nDeta = h_12->GetNbinsX();
@@ -4163,6 +4175,404 @@ void ratioHistos(TH1 *h, TH1 *hRef, TH1 *hRatio, bool correlatedUncertainties)
         }
       }
     }
+}
+
+double findHistoMinimum(TH1 * h)
+{
+  return h->GetBinContent(h->GetMinimumBin());
+}
+
+double findHistoMaximum(TH1 * h)
+{
+  return h->GetBinContent(h->GetMaximumBin());
+}
+
+double findHistoMinimum2D(TH2 * h)
+{
+  int ix, iy, iz;
+  h->GetMinimumBin(ix,iy,iz);
+  return h->GetBinContent(ix,iy);
+}
+
+double findHistoMaximum2D(TH2 * h)
+{
+  int ix, iy, iz;
+  h->GetMaximumBin(ix,iy,iz);
+  return h->GetBinContent(ix,iy);
+}
+
+double findGraphMinimum(TGraph * h)
+{
+  double min = 1.0E100;
+  int n = h->GetN();
+  for (int k=0; k<n; k++)
+    {
+    double x, y;
+    h->GetPoint(k,x,y);
+    if (y<min) min = y;
+    }
+  return min;
+}
+
+double findGraphMaximum(TGraph * h)
+{
+  double max = -1.0E100;
+  int n = h->GetN();
+  for (int k=0; k<n; k++)
+    {
+    double x, y;
+    h->GetPoint(k,x,y);
+    if (y>max) max = y;
+    }
+  return max;
+}
+
+double findMinimum(std::vector<double> & values)
+{
+  double min = 1.0E100;
+  for (Size_t k=0; k<values.size(); k++)
+    {
+    if (values[k]<min) min = values[k];
+    //cout << "k   " << k << " v: " << values[k] << " min: " << min << endl;
+    }
+  return min;
+}
+
+double findMaximum(std::vector<double> & values)
+{
+  double max = -1.0E100;
+  for (Size_t k=0; k<values.size(); k++)
+    {
+    if (values[k]>max) max = values[k];
+    //cout << "k   " << k << " v: " << values[k] << " max: " << max << endl;
+    }
+  return max;
+}
+
+void findMinMax(std::vector<double> & values,
+                double & minimum, double & maximum)
+{
+  double min = 1.0E100;
+  double max = -1.0E100;
+  for (Size_t k=0; k<values.size(); k++)
+    {
+    if (values[k]<min) min = values[k];
+    if (values[k]>max) max = values[k];
+    }
+  minimum = min;
+  maximum = max;
+}
+
+TLatex * createLabel(const String & text, double x, double y, double angle, int color,  double fontSize, bool doDraw)
+{
+  TLatex * label = new TLatex(x,y,text);
+  label->SetTextColor(color);
+  label->SetTextAngle(angle);
+  label->SetTextSize(fontSize);
+  if (doDraw) label->Draw();
+  return label;
+}
+
+TLegend * createLegend(double x1, double y1, double x2, double y2, double fontSize)
+{
+  TLegend *legend = new TLegend(x1,y1,x2,y2);
+  legend->SetTextSize(fontSize);
+  legend->SetFillColor(0);
+  legend->SetBorderSize(0);
+  return legend;
+}
+
+TLegend * createLegend(TH1*histogram,
+                       const String & legendText,
+                       double x1, double y1, double x2, double y2,
+                       double fontSize, bool doDraw)
+{
+  TLegend *legend = new TLegend(x1,y1,x2,y2);
+  legend->SetTextSize(fontSize);
+  legend->SetFillColor(0);
+  legend->SetBorderSize(0);
+  legend->AddEntry(histogram,legendText);
+  if (doDraw) legend->Draw();
+  return legend;
+}
+
+TLegend * createLegend(std::vector<TH1*> & histograms,
+                       double x1, double x2, double y1, double y2,
+                       double fontSize,
+                       bool doDraw)
+{
+  TLegend *legend = new TLegend(x1,y1,x2,y2);
+  legend->SetTextSize(fontSize);
+  legend->SetFillColor(0);
+  legend->SetBorderSize(0);
+  for (auto & histogram : histograms)
+    {
+    legend->AddEntry(histogram,histogram->GetTitle());
+    }
+  if (doDraw) legend->Draw();
+  return legend;
+}
+
+
+TLegend * createLegend(std::vector<TH1*> & histograms,
+                       std::vector<TString> & legendTexts,
+                       double x1, double y1, double x2, double y2,
+                       double fontSize,
+                       bool doDraw)
+{
+  TLegend *legend = new TLegend(x1,y1,x2,y2);
+  legend->SetTextSize(fontSize);
+  legend->SetFillColor(0);
+  legend->SetBorderSize(0);
+  int k=0;
+  for (auto & histogram : histograms)
+    {
+    printValue("histo name",histogram->GetName());
+    printValue("histo legend",legendTexts[k]);
+    legend->AddEntry(histogram,legendTexts[k]);
+    if (doDraw) legend->Draw();
+    k++;
+    }
+  return legend;
+}
+
+TLegend * createLegend(std::vector<TGraph*> graphs, std::vector<TString> & legendTexts,double x1, double y1, double x2, double y2, double fontSize, bool doDraw)
+{
+  TLegend *legend = new TLegend(x1,y1,x2,y2);
+  legend->SetTextSize(fontSize);
+  legend->SetFillColor(0);
+  legend->SetBorderSize(0);
+  int k=0;
+  for (auto & graph : graphs)
+    legend->AddEntry(graph,legendTexts[k++]);
+  if (doDraw) legend->Draw();
+  return legend;
+}
+
+//!
+//! Create simple line
+//!
+TLine * createLine(float x1, float y1, float x2, float y2, int style, int color, int width, bool doDraw)
+{
+  TLine *line = new TLine(x1,y1,x2,y2);
+  line->SetLineStyle(style);
+  line->SetLineColor(color);
+  line->SetLineWidth(width);
+  if (doDraw) line->Draw();
+  return line;
+}
+
+//!
+//! Create Arrow Line
+//!
+TArrow * createArrow(float x1, float y1, float x2, float y2, float arrowSize, Option_t* option, int style, int color, int width, bool doDraw)
+{
+  TArrow *line = new TArrow(x1,y1,x2,y2,arrowSize,option);
+  line->SetLineStyle(style);
+  line->SetLineColor(color);
+  line->SetLineWidth(width);
+  if (doDraw) line->Draw();
+  return line;
+}
+
+TGraph * makeGraph(std::vector<double> vx,
+                   std::vector<double> vex,
+                   std::vector<double> vy,
+                   std::vector<double> vey)
+{
+  auto n = vx.size();
+  if ( vex.size()!=n || vy.size()!=n || vey.size()!=n )
+    throw Exception("Arguments provided have incompatible sizes","makeGraph(vx,vex,vy,vey)");
+  double * x  = new double[n];
+  double * ex = new double[n];
+  double * y  = new double[n];
+  double * ey = new double[n];
+  for (unsigned long k=0;k<n;k++)
+    {
+    x[k]  = vx[k];
+    ex[k] = vex[k];
+    y[k]  = vy[k];
+    ey[k] = vey[k];
+    }
+  return new TGraphErrors(n,x,y,ex,ey);
+}
+
+//!
+//! Sum graphs g1 and g2 into new graph
+//!
+TGraph *  sumGraphs(TGraph * g1, TGraph * g2)
+{
+  int  n = g1->GetN();
+  int  n2 = g2->GetN();
+  if (n != n2)
+    throw Exception("Args do not have same number of points","sumGraphs(TGraph * g1, TGraph * g2)");
+  std::vector<double> x;
+  std::vector<double> ex;
+  std::vector<double> y;
+  std::vector<double> ey;
+
+  for (int index=0; index<n; index++)
+    {
+    double x1, ex1, y1, ey1, x2, y2, ey2;
+    g1->GetPoint(index,x1,y1);
+    ex1 = g1->GetErrorX(index);
+    ey1 = g1->GetErrorY(index);
+    g2->GetPoint(index,x2,y2);
+    ey2 = g2->GetErrorY(index);
+    if (x1!=x2) throw Exception("Args do not have same x value","sumGraphs(TGraph * g1, TGraph * g2)");
+    x.push_back(x1);
+    ex.push_back(ex1);
+    y.push_back(y1+y2);
+    ey.push_back(sqrt(ey1*ey1 + ey2*ey2));
+    }
+  return makeGraph(x,ex,y,ey);
+}
+
+TGraph* calculateCumulativeIntegral(TH1 & h,
+                                    double xLow,
+                                    double xHigh,
+                                    double xStep)
+{
+  std::vector<double> vx;
+  std::vector<double> vex;
+  std::vector<double> vy;
+  std::vector<double> vey;
+
+  const TAxis * xAxis  = h.GetXaxis();
+  int ixLow;
+  int ixHigh;
+  double sum  = 0;
+  double esum = 0;
+  for (double x=xLow; x<xHigh; x+=xStep)
+    {
+    ixLow  = xAxis->FindBin(xLow);
+    ixHigh = xAxis->FindBin(x);
+    sum = h.IntegralAndError(ixLow,ixHigh,esum,"WIDTH");
+    vx.push_back(x);
+    vex.push_back(0.001);
+    vy.push_back(sum);
+    vey.push_back(esum);
+    }
+  return makeGraph(vx,vex,vy,vey);
+}
+
+
+
+void calculateRmsWidth(TH1 * h,
+                       double xLowEdge,   double xHighEdge,
+                       double & mean,     double & meanError,
+                       double & rmsWidth, double & rmsWidthError)
+{
+  TAxis * xAxis = h->GetXaxis();
+  int n = xAxis->GetNbins();
+  int xLowBin  = xAxis->FindBin(xLowEdge);
+  int xHighBin = xAxis->FindBin(xHighEdge);
+  if (xLowBin<1)   xLowBin  = 1;
+  if (xHighBin>n)  xHighBin = n;
+  double sum    = 0.0;
+  double xSum   = 0.0;
+  double x2Sum  = 0.0;
+  double x, v;
+  for (int  iX=xLowBin; iX<xHighBin; iX++ )
+    {
+    x = xAxis->GetBinCenter(iX); break;
+    v = h->GetBinContent(iX);
+    sum   += v;
+    xSum  += x*v;
+    x2Sum += x*x*v;
+    }
+  if (sum<=0.0) throw Exception("null sum","calculateRmsWidth");
+  mean = xSum/sum;
+  meanError = 0;
+  rmsWidth  = sqrt(x2Sum/sum - mean*mean);
+  rmsWidthError = 0.0;
+}
+
+void setLimits(TH1 & histogram, double xMin, double xMax, double yMin, double yMax)
+{
+  if (xMin<xMax) histogram.GetXaxis()->SetRangeUser(xMin,xMax);
+  if (yMin<yMax)
+    {
+    histogram.SetMinimum(yMin);
+    histogram.SetMaximum(yMax);
+    }
+}
+
+void setLimits(TH2 & histogram, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax)
+{
+  if (xMin<xMax) histogram.GetXaxis()->SetRangeUser(xMin,xMax);
+  if (yMin<yMax) histogram.GetYaxis()->SetRangeUser(yMin,yMax);
+  if (zMin<zMax)
+    {
+    histogram.SetMinimum(zMin);
+    histogram.SetMaximum(zMax);
+    }
+}
+
+void setLimits(const std::vector<TH1*> & histograms,double xMin, double xMax, double yMin, double yMax)
+{
+  for (auto & histogram : histograms)
+    {
+    setLimits(*histogram, xMin, xMax, yMin, yMax);
+    }
+}
+
+void setLimits(const std::vector<TH2*> & histograms,double xMin, double xMax, double yMin, double yMax, double zMin, double zMax)
+{
+  for (auto & histogram : histograms)
+    {
+    setLimits(*histogram, xMin, xMax, yMin, yMax, zMin, zMax);
+    }
+}
+
+
+
+
+
+//!
+//! Gaussian + Flat Background
+//!
+//! 4 parameters function
+//! par[0] =  peak amplitude
+//! par[1] = peak mean
+//! par[2] = peak rms
+//! par[3] = a0 : constant offset
+//!
+double Gaussian(double *xx, double *par)
+{
+  double x        = xx[0];
+  double a        = par[0];
+  double mean     = par[1];
+  double rms      = par[2];
+  double a0       = par[3];
+  double norm     = 1.0/(rms*Math::sqrtTwoPi());
+  double arg      = (x-mean)/rms;
+  double peak     = norm * exp(-arg*arg/2.0);
+  return a0 + a*peak;
+}
+
+
+
+//!
+//! GeneralizedGaussian + Flat Background
+//!
+//! 4 parameters function
+//! par[0] = a : peak amplitude
+//! par[1] = omega : peak width
+//! par[2] = gamma: generalized gaussian exponent
+//! par[3] = a0 : constant offset
+//!
+double GeneralizedGaussian(double *xx, double *par)
+{
+  double x        = xx[0];
+  double a        = par[0];
+  double omega    = par[1];
+  double gamma    = par[2];
+  double a0       = par[3];
+  double norm   = gamma/2.0/omega/TMath::Gamma(1.0/gamma);
+  double arg    = TMath::Abs(x/omega);
+  double peak   = norm * TMath::Exp(-(TMath::Power(arg,gamma) ));
+  return a0 + a*peak;
 }
 
 

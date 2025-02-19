@@ -56,8 +56,10 @@ public:
   FunctionGroup & operator=(const FunctionGroup & source);
 
   void setDefaultOptions(bool color=0);
-  void setFunctionProperties(TF1 * f, GraphConfiguration & graphConfiguration);
-  void plotAllFunctions(const String & outputPath, bool doPrint=false);
+  void setFunctionProperties(TF1 * f,
+                             GraphConfiguration & graphConfiguration,
+                             bool verbose=false);
+  //void plotAllFunctions(const String & outputPath, bool doPrint=false);
 
   void push_back(TF1* function);
   TF1* getFunctionAt(unsigned int index);

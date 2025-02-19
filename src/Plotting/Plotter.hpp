@@ -13,21 +13,20 @@
 #define CAP__Plotter
 #include "TSystem.h"
 #include "TStyle.h"
-#include "TLegend.h"
-#include "TLine.h"
-#include "TArrow.h"
+//#include "TLegend.h"
+//#include "TLine.h"
+#include "TGraph.h"
 
 #include "CanvasGroup.hpp"
 #include "CanvasConfiguration.hpp"
 #include "GraphConfiguration.hpp"
-#include "LegendConfiguration.hpp"
-#include "DataGraph.hpp"
+//#include "LegendConfiguration.hpp"
+//#include "DataGraph.hpp"
 #include "HistogramTask.hpp"
 #include "HistogramGroup.hpp"
 
 namespace CAP
 {
-
 
 class Plotter 
 :
@@ -61,7 +60,8 @@ public:
                   double _yLegendLow=0.4,
                   double _yLegendHigh=0.5,
                   double _legendTextSize=0.05,
-                  int    canvasIndex=0);
+                  int    canvasIndex=0,
+                  bool   overlay=true);
 
   TCanvas *  plot(const String & _canvasName,
                   vector<TH2*> _histograms,
@@ -96,101 +96,26 @@ public:
 
   void setProperties(TGraph * g,
                      const GraphConfiguration & graphConfiguration,
-                     const String & xTitle="none",
-                     const String & yTitle="none");
+                     const String & xTitle="",
+                     const String & yTitle="");
 
   void setProperties(const vector<TGraph*> & graphs,
                      const vector<GraphConfiguration> & graphConfigurations,
-                     const String & xTitle="none",
-                     const String & yTitle="none");
-
-
-  TLatex  * createLabel(const String & text, double x, double y, double angle, int color,  double fontSize, bool doDraw=true);
-  TLegend * createLegend(double x1, double y1, double x2, double y2, double fontSize);
-  TLegend * createLegend(TH1*histogram, const String & legendText, double x1, double y1, double x2, double y2, double fontSize, bool doDraw=true);
-  TLegend * createLegend(vector<TH1*> & histograms,double x1, double x2, double y1, double y2, double fontSize, bool doDraw=true);
-  TLegend * createLegend(vector<TH1*> & histograms, vector<TString> &legendTexts,double x1, double x2, double y1, double y2, double fontSize, bool doDraw=true);
-  TLegend * createLegend(vector<TGraph*> graphs, vector<TString> & legendTexts,double x1, double x2, double y1, double y2, double fontSize, bool doDraw=true);
-  TLegend * createLegend(vector<DataGraph*> graphs,double x1, double x2, double y1, double y2, double fontSize, bool doDraw=true);
-
-  TLegend * createLegend(const LegendConfiguration & legendConfig);
-  TLegend * createLegend(TH1*histogram, const LegendConfiguration & legendConfig);
-  TLegend * createLegend(vector<TH1*> h,const LegendConfiguration & legendConfig);
-  TLegend * createLegend(TGraph*graph, const LegendConfiguration & legendConfig);
-  TLegend * createLegend(vector<TGraph*> h,const LegendConfiguration & legendConfig);
-  TLegend * createLegend(vector<DataGraph*> graphs,const LegendConfiguration & legendConfig);
-
-  TLine   * createLine(float x1, float y1, float x2, float y2, int style, int color, int width, bool doDraw=true);
-  TArrow  * createArrow(float x1, float y1, float x2, float y2, float arrowSize, Option_t* option, int style, int color, int width, bool doDraw=true);
-  void setDefaultOptions(bool color);
-
-  double findHistoMinimum(TH1 * h);
-  double findHistoMaximum(TH1 * h);
-  double findHistoMinimum2D(TH2 * h);
-  double findHistoMaximum2D(TH2 * h);
-  double findGraphMinimum(TGraph * h);
-  double findGraphMaximum(TGraph * h);
-  double findMinimum(vector<double> & values);
-  double findMaximum(vector<double> & values);
-
-
-  TGraph * makeGraph(vector<double> vx,
-                     vector<double> vex,
-                     vector<double> vy,
-                     vector<double> vey);
+                     const String & xTitle="",
+                     const String & yTitle="");
 
   vector<GraphConfiguration> createGraphConfigurationPalette(int n, int dim);
 
-  TGraph * sumGraphs(TGraph * g1, TGraph * g2);
-
-
-  TGraph* calculateIntegral1D(TH1* h,
-                            double etaLow,
-                            double etaHigh,
-                            double etaStep,
-                            int size=500);
-
-  TGraph* calculateIntegral(TH2* h2,
-                            double etaLow,
-                            double etaHigh,
-                            double etaStep,
-                            int size=500);
-
-  void calculateRmsWidth(TH2 * h,
-                         double xLowEdge, double xHighEdge,
-                         double yLowEdge, double yHighEdge,
-                         double & mean, double & meanError,
-                         double & rmsWidth, double & rmsWidthError,
-                         int direction=1);
-
-  double GeneralizedGaussian(double *x, double *par);
+  void setDefaultOptions(bool color);
 
   void addCanvasConfiguartion(CanvasConfiguration::CanvasFormat format,
                               CanvasConfiguration::CanvasAxes axes);
   void addGraphConfiguration(unsigned int n, unsigned int nDimensions);
 
-
-
 protected:
 
   vector<CanvasConfiguration> canvasPalette;
   vector<GraphConfiguration> graphPalette;
-
-  String canvasBaseName;
-  String canvasName;
-  String outputPathNameBase;
-  String outputFileNameBase;
-  String outputPathName;
-  String outputFileName;
-  String plotOption;
-  bool doPrint;
-  bool doPrintGif;
-  bool doPrintPdf;
-  bool doPrintSvg;
-  bool doPrintPng;
-  bool doPrintC;
-  bool useColor;
-  int  usePalette;
 
   ClassDef(Plotter,0)
 };

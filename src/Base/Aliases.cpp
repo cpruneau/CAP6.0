@@ -15,15 +15,4 @@
 namespace CAP
 {
 
-void setVerbose(bool _verbose)
-{
-  verbose = _verbose;
-}
-
-bool isVerbose()
-{
-  return verbose;
-}
-
-
 } // namespace CAP

@@ -64,7 +64,9 @@ void FunctionGroup::setDefaultOptions(bool color)
 //!
 //! Setting Function Properties
 //!
-void FunctionGroup::setFunctionProperties(TF1 * f, GraphConfiguration & graphConfiguration)
+void FunctionGroup::setFunctionProperties(TF1 * f,
+                                          GraphConfiguration & graphConfiguration,
+                                          bool verbose)
 {
   if (verbose)
     {
@@ -103,41 +105,41 @@ void FunctionGroup::setFunctionProperties(TF1 * f, GraphConfiguration & graphCon
 //!
 //!Plot all functions if this group in separate canvases
 //!
-void FunctionGroup::plotAllFunctions(const String & outputPath, bool doPrint)
-{
-//  GraphConfiguration  * gc1D = new GraphConfiguration(1,0);
-//  GraphConfiguration  * gc2D = new GraphConfiguration(2,0);
-//  CanvasConfiguration * cc1D = new CanvasConfiguration();
-//  CanvasConfiguration * cc2D = new CanvasConfiguration();
-//  CanvasGroup    * canvasGroup = new CanvasGroup();
-//  canvasGroup->createDirectory(outputPath);
-//  String name;
-//  for (auto & f : functions)
-//    {
-//    name = f->GetName();
-//    if (f->IsA() == TF1::Class())
-//      {
-//      if (verbose)
-//        {
-//        printValue("Plotting 1D function named",f->GetTitle());
-//        }
-//      canvasGroup->createCanvas(name, *cc1D, 30);
-//      setFunctionProperties(f, *gc1D);
-//      f->Draw();
-//      }
-//    else if (f->IsA() == TF2::Class())
-//      {
-//      if (verbose)
-//        {
-//        printValue("Plotting 2D function named",f->GetTitle());
-//        }
-//      canvasGroup->createCanvas(name, *cc2D, 30);
-//      setFunctionProperties(f, *gc2D);
-//      f->Draw("SURF3");
-//      }
-//    }
-//  if (doPrint) canvasGroup->printAllCanvas(outputPath);
-}
+//void FunctionGroup::plotAllFunctions(const String & outputPath, bool doPrint)
+//{
+////  GraphConfiguration  * gc1D = new GraphConfiguration(1,0);
+////  GraphConfiguration  * gc2D = new GraphConfiguration(2,0);
+////  CanvasConfiguration * cc1D = new CanvasConfiguration();
+////  CanvasConfiguration * cc2D = new CanvasConfiguration();
+////  CanvasGroup    * canvasGroup = new CanvasGroup();
+////  canvasGroup->createDirectory(outputPath);
+////  String name;
+////  for (auto & f : functions)
+////    {
+////    name = f->GetName();
+////    if (f->IsA() == TF1::Class())
+////      {
+////      if (verbose)
+////        {
+////        printValue("Plotting 1D function named",f->GetTitle());
+////        }
+////      canvasGroup->createCanvas(name, *cc1D, 30);
+////      setFunctionProperties(f, *gc1D);
+////      f->Draw();
+////      }
+////    else if (f->IsA() == TF2::Class())
+////      {
+////      if (verbose)
+////        {
+////        printValue("Plotting 2D function named",f->GetTitle());
+////        }
+////      canvasGroup->createCanvas(name, *cc2D, 30);
+////      setFunctionProperties(f, *gc2D);
+////      f->Draw("SURF3");
+////      }
+////    }
+////  if (doPrint) canvasGroup->printAllCanvas(outputPath);
+//}
 
 
 void FunctionGroup::push_back(TF1* function)

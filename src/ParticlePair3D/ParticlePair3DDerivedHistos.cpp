@@ -312,12 +312,15 @@ void ParticlePair3DDerivedHistos::calculatePairDerivedHistograms(ParticleSingleH
   part1_n1->SetBinContent(1,v1);
   double v2 = part2_n1->GetBinContent(2);
   part2_n1->SetBinContent(1,v2);
-  double nParticle1 = part1_n1->GetMean();
-  double nParticle2 = part2_n1->GetMean();
-//    double nParticle1 = part1_ptY->Integral();
-//    double nParticle2 = part2_ptY->Integral();
-  printValue("nParticle1",nParticle1);
-  printValue("nParticle2",nParticle2);
+  double nParticle1_mean = part1_n1->GetMean();
+  double nParticle2_mean = part2_n1->GetMean();
+  double nParticle1 = part1_ptY->Integral();
+  double nParticle2 = part2_ptY->Integral();
+  printValue("nParticle1 (integral)",nParticle1);
+  printValue("nParticle1_mean",nParticle1_mean);
+
+  printValue("nParticle2 (integral)",nParticle1);
+  printValue("nParticle2_mean",nParticle2_mean);
 
   int nPart1 = nParticle1;
   int nPart2 = nParticle2;
@@ -399,10 +402,6 @@ void ParticlePair3DDerivedHistos::calculatePairDerivedHistograms(ParticleSingleH
       evY2   = evY1;
       }
 
-    // analyze pairs
-    if (evPhi1.size() != nPart1) { printString("WTF 1"); exit(1); }
-    if (evPhi2.size() != nPart2) { printString("WTF 2"); exit(1); }
-
     for (unsigned long iParticle1=0; iParticle1<evPhi1.size(); iParticle1++)
       {
       phi1 = evPhi1[iParticle1];
@@ -475,7 +474,7 @@ void ParticlePair3DDerivedHistos::calculatePairDerivedHistograms(ParticleSingleH
   printValue("nPart1",nPart1);
   printValue("nParticle1",nParticle1);
   printValue("nParticle1_mc",nParticle1_mc);
-  printValue("nPart21",nPart2);
+  printValue("nPart2",nPart2);
   printValue("nParticle2",nParticle2);
   printValue("nParticle2_mc",nParticle2_mc);
   printValue("tweak1",tweak1);
@@ -483,20 +482,42 @@ void ParticlePair3DDerivedHistos::calculatePairDerivedHistograms(ParticleSingleH
 
   h_n1_1_pt_mc->Scale(tweak1);
   h_n1_1_y_mc->Scale(tweak1);
+  h_n1_1_ptY_mc->Scale(tweak1);
+
   h_n1_2_pt_mc->Scale(tweak2);
   h_n1_2_y_mc->Scale(tweak2);
-  h_n1_1_ptY_mc->Scale(tweak1*tweak2);
-  h_n1_2_ptY_mc->Scale(tweak1*tweak2);
+  h_n1_2_ptY_mc->Scale(tweak2);
 
   h_n1r_1_pt_mc->Divide(h_n1_1_pt_mc, h_n1_1_pt);
   h_n1r_1_y_mc->Divide(h_n1_1_y_mc,   h_n1_1_y);
+  h_n1r_1_ptY_mc->Divide(h_n1_1_ptY_mc, part1_ptY);
+
   h_n1r_2_pt_mc->Divide(h_n1_2_pt_mc, h_n1_2_pt);
   h_n1r_2_y_mc->Divide(h_n1_2_y_mc,   h_n1_2_y);
-  h_n1r_1_ptY_mc->Divide(h_n1_1_ptY_mc, part1_ptY);
   h_n1r_2_ptY_mc->Divide(h_n1_2_ptY_mc, part2_ptY);
 
-  h_n1n1_Qinv->Scale(scale*tweak1*tweak2);
-  h_n1n1_DeltaP->Scale(scale*tweak1*tweak2);
+  h_n1n1_Qinv->Scale(scale);
+  h_n1n1_DeltaP->Scale(scale);
+
+  double n2_yield = partPair3DHistos.h_n2_Qinv->GetBinContent(5);
+  double n1n1_yield = h_n1n1_Qinv->GetBinContent(5);
+
+  double n2_yield_err   = partPair3DHistos.h_n2_Qinv->GetBinError(5);
+  double n1n1_yield_err = h_n1n1_Qinv->GetBinError(5);
+
+
+  double tweak = n2_yield/n1n1_yield;
+  printValue("n2_yield",n2_yield);
+  printValue("n1n1_yield",n1n1_yield);
+  printValue("n2_yield/n1n1_yield",tweak);
+  printValue("n2_yield_err",n2_yield_err);
+  printValue("n1n1_yield_err",n1n1_yield_err);
+
+
+//  h_n1n1_Qinv->Scale(tweak);
+//  h_n1n1_DeltaP->Scale(tweak);
+
+
   h_n1n1_DeltaP->ProjectionX(n1n1_DeltaPs_name,1,nBins_DeltaPo,1,nBins_DeltaPl,"e");
   h_n1n1_DeltaP->ProjectionY(n1n1_DeltaPo_name,1,nBins_DeltaPs,1,nBins_DeltaPl,"e");
   h_n1n1_DeltaP->ProjectionZ(n1n1_DeltaPl_name,1,nBins_DeltaPs,1,nBins_DeltaPo,"e");
@@ -512,6 +533,12 @@ void ParticlePair3DDerivedHistos::calculatePairDerivedHistograms(ParticleSingleH
   h_c2_DeltaP->ProjectionZ(c2_DeltaPl_name,1,nBins_DeltaPs,1,nBins_DeltaPo,"e");
   
   calculateR2_H1H1H1(partPair3DHistos.h_n2_Qinv,h_n1n1_Qinv,h_r2_Qinv);
+
+  double r2_yield = h_r2_Qinv->GetBinContent(5);
+  double r2_yield_err = h_r2_Qinv->GetBinError(5);
+  printValue("r2_yield",r2_yield);
+  printValue("r2_yield_err",r2_yield_err);
+
   calculateR2_H3H3H3(partPair3DHistos.h_n2_DeltaP,h_n1n1_DeltaP,h_r2_DeltaP);
   h_r2_DeltaP->ProjectionX(r2_DeltaPs_name,1,nBins_DeltaPo,1,nBins_DeltaPl,"e");
   h_r2_DeltaP->ProjectionY(r2_DeltaPo_name,1,nBins_DeltaPs,1,nBins_DeltaPl,"e");

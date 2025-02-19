@@ -41,7 +41,8 @@ PropertiesParser()
 //!
 void  ParticleDbParser::readDb(ParticleDb   & particleDb,
                                ifstream & inputFile,
-                               ifstream & inputFileDecays)
+                               ifstream & inputFileDecays,
+                               bool verbose)
 {
   char   buff[300];
   char   name[20];
@@ -150,7 +151,7 @@ void  ParticleDbParser::readDb(ParticleDb   & particleDb,
       mass4 = childType4->getMass();
       }
     double massDiff = mass1+mass2+mass3+mass4-mass0;
-    if (massDiff>0 && isVerbose())
+    if (massDiff>0 && verbose)
       {
       printCR();
       printValue("Mass exception: parentName",parentName);
@@ -196,7 +197,7 @@ void  ParticleDbParser::readDb(ParticleDb   & particleDb,
     parentType->addDecayMode(decayMode);
     }
 
-  if (isVerbose())
+  if (verbose)
     {
     printCR();
     printValue("Total index of particles read",particleDb.size());

@@ -24,22 +24,27 @@ namespace CAP
 {
   std::ifstream & openInputAsciiFile(const String & path,
                                      const String & name,
-                                     const String & extension);
+                                     const String & extension,
+                                     bool verbose=true);
 
   std::ofstream & openOutputAsciiFile(const String & path,
                                       const String & name,
-                                      const String & extension);
+                                      const String & extension,
+                                      bool verbose=true);
 
   std::ifstream & openInputBinaryFile(const String & path,
                                       const String & fileName,
-                                      const String & extension);
+                                      const String & extension,
+                                      bool verbose=true);
 
   std::ofstream & openOutputBinaryFile(const String & outputPath,
                                        const String & fileName,
-                                       const String & extension);
+                                       const String & extension,
+                                       bool verbose=true);
 
   void copyFile(const String & inputPath,  const String & inputFileName, const String & inExtension,
-                const String & outputPath, const String & outputFileName, const String & outExtension);
+                const String & outputPath, const String & outputFileName, const String & outExtension,
+                bool verbose=true);
 
 
 }

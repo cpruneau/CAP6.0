@@ -40,8 +40,14 @@ protected:
   double ptSlope;
   double mass;
   double massSq;
+  double mass1;
+  double mass1Sq;
+  double mass2;
+  double mass2Sq;
 
   ParticleType * typeSelected;
+  ParticleType * typeSelected1;
+  ParticleType * typeSelected2;
 
 
   ClassDef(BasicEventGen,0)

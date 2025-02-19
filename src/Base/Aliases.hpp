@@ -28,9 +28,6 @@ using Histogram3D   = TH3;
 using LorentzVector = TLorentzVector;
 using VectorString  = std::vector<String>;
 
-static bool verbose = false;
-void setVerbose(bool _verbose);
-bool isVerbose();
 }
 
 #endif /* CAP__Aliases */

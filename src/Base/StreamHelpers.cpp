@@ -17,7 +17,8 @@ namespace CAP
 
 std::ifstream & openInputAsciiFile(const String & path,
                                    const String & name,
-                                   const String & extension)
+                                   const String & extension,
+                                   bool verbose)
 {
   String fileName = path;
   // make sure that if an path is given, it ends with '/'
@@ -29,7 +30,7 @@ std::ifstream & openInputAsciiFile(const String & path,
   fileName += name;
   if (!fileName.EndsWith(extension)) fileName += extension;
   std::ios_base::openmode mode = std::ios_base::in;
-  if (isVerbose())
+  if (verbose)
     {
     printCR();
     printValue("openInputAsciiFile(...) Open input file named",fileName);
@@ -37,7 +38,7 @@ std::ifstream & openInputAsciiFile(const String & path,
     }
   std::ifstream * file = new std::ifstream(fileName.Data(),mode);
   if (!file || !file->is_open()) throw  FileException(fileName,"File not found","openInputAsciiFile()");
-  if (isVerbose())
+  if (verbose)
     {
     printCR();
     printValue("openInputAsciiFile(...) Successfully opened file named",fileName);
@@ -47,7 +48,8 @@ std::ifstream & openInputAsciiFile(const String & path,
 
 std::ofstream & openOutputAsciiFile(const String & path,
                                     const String & name,
-                                    const String & extension)
+                                    const String & extension,
+                                    bool verbose)
 {
   String fileName = path;
   // make sure that if an path is given, it ends with '/'
@@ -59,7 +61,7 @@ std::ofstream & openOutputAsciiFile(const String & path,
   fileName += name;
   if (!fileName.EndsWith(extension)) fileName += extension;
   std::ios_base::openmode mode = std::ios_base::out|std::ios_base::app;
-  if (isVerbose())
+  if (verbose)
     {
     printCR();
     printValue("openInputAsciiFile(...) Open output file named",fileName);
@@ -67,7 +69,7 @@ std::ofstream & openOutputAsciiFile(const String & path,
     }
   std::ofstream * file = new std::ofstream(fileName.Data(),mode);
   if (!file || !file->is_open()) throw  FileException(fileName,"File not found","openInputAsciiFile()");
-  if (isVerbose())
+  if (verbose)
     std::cout << "openOutputAsciiFile(...) File: " << fileName << " successfully opened." << std::endl;
   return *file;
 }
@@ -75,7 +77,8 @@ std::ofstream & openOutputAsciiFile(const String & path,
 
 std::ifstream & openInputBinaryFile(const String & path,
                                     const String & name,
-                                    const String & extension)
+                                    const String & extension,
+                                    bool verbose)
 {
   String fileName = path;
   // make sure that if an path is given, it ends with '/'
@@ -87,7 +90,7 @@ std::ifstream & openInputBinaryFile(const String & path,
   fileName += name;
   if (!fileName.EndsWith(extension)) fileName += extension;
   std::ios_base::openmode mode = std::ios_base::in|std::ios::binary;
-  if (isVerbose())
+  if (verbose)
     {
     printCR();
     printValue("openInputBinaryFile(...) Open output file named",fileName);
@@ -95,7 +98,7 @@ std::ifstream & openInputBinaryFile(const String & path,
     }
   std::ifstream * file = new std::ifstream(fileName.Data(),mode);
   if (!file || !file->is_open()) throw  FileException(fileName,"File not found","openInputAsciiFile()");
-  if (isVerbose())
+  if (verbose)
     {
     printCR();
     printValue("openInputBinaryFile(...) Successfully opened file named",fileName);
@@ -105,7 +108,8 @@ std::ifstream & openInputBinaryFile(const String & path,
 
 std::ofstream & openOutputBinaryFile(const String & path,
                                     const String & name,
-                                    const String & extension)
+                                     const String & extension,
+                                     bool verbose)
 {
   String fileName = path;
   // make sure that if an path is given, it ends with '/'
@@ -117,14 +121,14 @@ std::ofstream & openOutputBinaryFile(const String & path,
   fileName += name;
   if (!fileName.EndsWith(extension)) fileName += extension;
   std::ios_base::openmode mode = std::ios_base::out|std::ios::binary;
-  if (isVerbose())
+  if (verbose)
     {
     printCR();
     printValue("openOuputBinaryFile(...) Open output binary file named",fileName);
     }
   std::ofstream * file = new std::ofstream(fileName.Data(),mode);
   if (!file || !file->is_open()) throw  FileException(fileName,"File not found","openInputAsciiFile()");
-  if (isVerbose())
+  if (verbose)
     {
     printCR();
     printValue("openOuputBinaryFile(...) Successfully opened file named",fileName);
@@ -134,11 +138,12 @@ std::ofstream & openOutputBinaryFile(const String & path,
 
 
 void copyFile(const String & inputPath,  const String & inputFileName, const String & inExtension,
-              const String & outputPath, const String & outputFileName, const String & outExtension)
+              const String & outputPath, const String & outputFileName, const String & outExtension,
+              bool verbose)
 {
   std::ifstream & inputFile  = openInputBinaryFile(inputPath,inputFileName,inExtension);
   std::ofstream & outputFile = openOutputBinaryFile(outputPath,outputFileName,outExtension);
-  if (isVerbose())
+  if (verbose)
     {
     printCR();
     printValue("copyFile(...) Copying from file",inputFileName);
@@ -148,7 +153,7 @@ void copyFile(const String & inputPath,  const String & inputFileName, const Str
   outputFile << inputFile.rdbuf();
   inputFile.close();
   outputFile.close();
-  if (isVerbose())
+  if (verbose)
     {
     printCR();
     printString("copyFile(...) Copy successfully completed");

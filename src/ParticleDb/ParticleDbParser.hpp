@@ -26,16 +26,14 @@ public:
   virtual ~ParticleDbParser() {}
   virtual void readDb(ParticleDb & _particleDb,
                       ifstream & inputFileParticles,
-                      ifstream & inputFileDecays);
+                      ifstream & inputFileDecays,
+                      bool verbose=false);
   double clebschGordan(double aJot,  double aEm,
                        double aJot1, double aEm1,
                        double aJot2, double aEm2);
   double deltaJ(double aJot1, double aJot2, double aJot);
 
-
-
   ClassDef(ParticleDbParser,0)
-
 };
 
 } // namespace CAP
