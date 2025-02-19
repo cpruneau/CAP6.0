@@ -111,28 +111,29 @@ void BasicEventGen::execute()
   LorentzVector position;
   position.SetXYZT(0.0, 0.0, 0.0, 0.0);
 
-//  r = gRandom->Rndm();
-  int nParticles; // = int(4.0*r);
+  r = gRandom->Rndm();
+  int nParticles = gRandom->Gaus(10.0,5.0);
 
-//  for (int i = 0; i < nParticles; i++)
-//    {
-//    phi      = Math::twoPi() * gRandom->Rndm();
-//    r        = gRandom->Rndm();
-//    rapidity = rapidityMin + r*(rapidityMax-rapidityMin);
-//    pt       = gRandom->Exp(ptSlope);
-//    mt       = sqrt(massSq + pt*pt);
-//    momentum.SetXYZT(pt*cos(phi),pt*sin(phi),mt*sinh(rapidity),mt*cosh(rapidity));
-//    Particle & particle = *particleFactory->getNextObject();
-//    particle.setType(typeSelected);
-//    particle.setLive(1);
-//    particle.setMomentum(momentum);
-//    particle.setPosition(position);
-//    event.addParticle(&particle);
-//    }
+  for (int i = 0; i < nParticles; i++)
+    {
+    phi      = Math::twoPi() * gRandom->Rndm();
+    r        = gRandom->Rndm();
+    rapidity = rapidityMin + r*(rapidityMax-rapidityMin);
+    pt       = gRandom->Exp(ptSlope);
+    mt       = sqrt(massSq + pt*pt);
+    momentum.SetXYZT(pt*cos(phi),pt*sin(phi),mt*sinh(rapidity),mt*cosh(rapidity));
+    Particle & particle = *particleFactory->getNextObject();
+    particle.setType(typeSelected);
+    particle.setLive(1);
+    particle.setMomentum(momentum);
+    particle.setPosition(position);
+    event.addParticle(&particle);
+    }
 
   // background 211
   r = gRandom->Rndm();
-  nParticles = int(5.0 + r*25.0);
+  nParticles = gRandom->Gaus(20.0,5.0);
+
   for (int i = 0; i < nParticles; i++)
     {
     phi      = Math::twoPi() * gRandom->Rndm();
@@ -154,8 +155,7 @@ void BasicEventGen::execute()
     }
 
   // background -211
-  r = gRandom->Rndm();
-  nParticles = int(5.0 + r*25.0);;
+
   for (int i = 0; i < nParticles; i++)
     {
     phi      = Math::twoPi() * gRandom->Rndm();

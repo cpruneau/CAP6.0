@@ -36,7 +36,8 @@ public:
   virtual void createHistograms();
   virtual void importHistograms(TFile & inputFile);
   //virtual void fill(vector<ParticleDigit*> & particle1, vector<ParticleDigit*> & particle2, bool same, double weight);
-  virtual void fill(Particle & particle1, Particle & particle2, double weight);
+  virtual void fill(Particle & particle1, Particle & particle2, double weight=1.0);
+  virtual void fillMultiplicity(double nPairs, double weigh=1.0);
 
   inline int getPtBinFor(float v) const
   {

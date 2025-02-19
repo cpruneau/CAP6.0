@@ -358,4 +358,10 @@ void ParticlePairHistos::fill(Particle & particle1, Particle & particle2, double
     }
 }
 
+void ParticlePairHistos::fillMultiplicity(double nPairs, double weight)
+{
+  h_n2->Fill(nPairs, weight);
+}
+
+
 } // namespace CAP

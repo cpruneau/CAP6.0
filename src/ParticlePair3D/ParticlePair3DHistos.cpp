@@ -48,7 +48,9 @@ void ParticlePair3DHistos::createHistograms()
 {
   const String & bn  = getName();
   const String & ptn = getParentName();
-
+  int nBins_n2  = configuration.getValueInt(ptn,   "nBins_n2");
+  double min_n2    = configuration.getValueDouble(ptn,"Min_n2");
+  double max_n2    = configuration.getValueDouble(ptn,"Max_n2");
   int    nBins_Qinv     = configuration.getValueInt(ptn,   "nBins_Qinv");
   double min_Qinv       = configuration.getValueDouble(ptn,"Min_Qinv");
   double max_Qinv       = configuration.getValueDouble(ptn,"Max_Qinv");
@@ -62,6 +64,7 @@ void ParticlePair3DHistos::createHistograms()
   double min_DeltaPl    = configuration.getValueDouble(ptn,"Min_DeltaPl");
   double max_DeltaPl    = configuration.getValueDouble(ptn,"Max_DeltaPl");
 
+  h_n2        = createHistogram(createName(bn,"n2"),nBins_n2,  min_n2,  max_n2, "n_{2}", "Yield");
   h_n2_Qinv   = createHistogram(createName(bn,"n2_Qinv"),nBins_Qinv,min_Qinv,max_Qinv, "Q_{inv}","n_{2}",2);
   h_n2_DeltaP = createHistogram(createName(bn,"n2_DeltaP"),
                                 nBins_DeltaPs,  min_DeltaPs, max_DeltaPs,
@@ -74,8 +77,9 @@ void ParticlePair3DHistos::createHistograms()
 void ParticlePair3DHistos::importHistograms(TFile & inputFile)
 {
   const String & bn = getName();
-  h_n2_Qinv   = loadH1(inputFile, createName(bn,"n2_Qinv"));
-  h_n2_DeltaP = loadH3(inputFile, createName(bn,"n2_DeltaP"));
+  h_n2        = importH1(inputFile, CAP::createName(bn,"n2"));
+  h_n2_Qinv   = importH1(inputFile, createName(bn,"n2_Qinv"));
+  h_n2_DeltaP = importH3(inputFile, createName(bn,"n2_DeltaP"));
 }
 
 void ParticlePair3DHistos::fill(Particle & particle1, Particle & particle2, double weight)
@@ -121,6 +125,12 @@ void ParticlePair3DHistos::fill(Particle & particle1, Particle & particle2, doub
 
   h_n2_Qinv->Fill(qinv,weight);
   h_n2_DeltaP->Fill(qside,qout,qlong,weight);
+}
+
+
+void ParticlePair3DHistos::fillMultiplicity(double nPairs, double weight)
+{
+  h_n2->Fill(nPairs, weight);
 }
 
 

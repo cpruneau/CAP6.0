@@ -32,7 +32,9 @@ public:
   virtual void createHistograms();
   virtual void fill(Particle & particle1, Particle & particle2, double weight);
   virtual void importHistograms(TFile & inputFile);
+  virtual void fillMultiplicity(double nPairs, double weigh=1.0);
 
+  TH1 * h_n2;
   TH1 * h_n2_Qinv;
   TH3 * h_n2_DeltaP;
 

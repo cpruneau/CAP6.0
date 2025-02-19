@@ -178,15 +178,32 @@ void ParticlePair3DAnalyzer::execute()
 
       for (unsigned int iParticleFilter2=0; iParticleFilter2<nParticleFilters;iParticleFilter2++)
         {
-        std::vector<Particle*> & particleSelected2 = allParticlesAccepted[iParticleFilter2];
-        ParticlePair3DHistos & histosPair = (ParticlePair3DHistos &) getGroupAt(1,basePair + iParticleFilter1*nParticleFilters + iParticleFilter2);
-        for (auto & particle1 : particleSelected1)
+        int n1 = particleSelected1.size();
+        if (iParticleFilter1==iParticleFilter2)
           {
-          for (auto & particle2 : particleSelected2)
+          ParticlePair3DHistos & histosPair = (ParticlePair3DHistos &) getGroupAt(1,basePair + iParticleFilter1*nParticleFilters + iParticleFilter1);
+          for (int i1=0; i1<n1; i1++)
             {
-            if (iParticleFilter1==iParticleFilter2 && particle1 == particle2) continue;
-            histosPair.fill(*particle1,*particle2,1.0);
+            for (int i2=0; i2<n1; i2++)
+              {
+              if (i1!=i2) histosPair.fill(*(particleSelected1[i1]),*(particleSelected1[i2]),1.0);
+              }
             }
+          histosPair.fillMultiplicity(double(n1*(n1-1)));
+          }
+        else
+          {
+          std::vector<Particle*> & particleSelected2 = allParticlesAccepted[iParticleFilter2];
+          int n2 = particleSelected2.size();
+          ParticlePair3DHistos  & histosPair = (ParticlePair3DHistos  &) getGroupAt(1,basePair + iParticleFilter1*nParticleFilters + iParticleFilter2);
+          for (auto & particle1 : particleSelected1)
+            {
+            for (auto & particle2 : particleSelected2)
+              {
+              histosPair.fill(*particle1,*particle2,1.0);
+              }
+            }
+          histosPair.fillMultiplicity(double(n1*n2));
           }
         }
       }
